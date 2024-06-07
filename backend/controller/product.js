@@ -82,26 +82,27 @@ router.delete(
       const product = await Product.findById(req.params.id);
 
       if (!product) {
-        return next(new ErrorHandler("Product is not found with this id", 404));
-      }    
-
-      for (let i = 0; 1 < product.images.length; i++) {
-        const result = await cloudinary.v2.uploader.destroy(
-          product.images[i].public_id
-        );
+        return next(new ErrorHandler("Product not found with this ID", 404));
       }
-    
-      await product.remove();
 
-      res.status(201).json({
+      for (let i = 0; i < product.images.length; i++) {
+        await cloudinary.v2.uploader.destroy(product.images[i].public_id);
+      }
+
+      await product.deleteOne();
+
+      res.status(200).json({
         success: true,
-        message: "Product Deleted successfully!",
+        message: "Product deleted successfully!",
       });
     } catch (error) {
-      return next(new ErrorHandler(error, 400));
+      console.error(error); // Log the error to the console
+      return next(new ErrorHandler(error.message, 400));
     }
   })
 );
+
+
 
 // get all products
 router.get(

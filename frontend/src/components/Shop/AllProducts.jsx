@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { getAllProductsShop } from "../../redux/actions/product";
 import { deleteProduct } from "../../redux/actions/product";
 import Loader from "../Layout/Loader";
+import { toast } from "react-toastify";
 
 const AllProducts = () => {
   const { products, isLoading } = useSelector((state) => state.products);
@@ -16,12 +17,20 @@ const AllProducts = () => {
 
   useEffect(() => {
     dispatch(getAllProductsShop(seller._id));
-  }, [dispatch]);
+  }, [dispatch,seller._id]);
 
-  const handleDelete = (id) => {
-    dispatch(deleteProduct(id));
-    window.location.reload();
+  const handleDelete = async (id) => {
+    try {
+      await dispatch(deleteProduct(id));
+      dispatch(getAllProductsShop(seller._id));
+      toast.success("Product deleted!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete product!");
+    }
   };
+  
+  
 
   const columns = [
     { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },

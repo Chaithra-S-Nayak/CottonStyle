@@ -84,13 +84,17 @@ export const deleteProduct = (id) => async (dispatch) => {
       type: "deleteProductSuccess",
       payload: data.message,
     });
+
+    return data; // Return the data to indicate success
   } catch (error) {
     dispatch({
       type: "deleteProductFailed",
       payload: error.response.data.message,
     });
+    throw error; // Throw the error to indicate failure
   }
 };
+
 
 // get all products
 export const getAllProducts = () => async (dispatch) => {
