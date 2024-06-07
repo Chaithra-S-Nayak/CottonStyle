@@ -91,7 +91,7 @@ const UserOrderDetails = () => {
             <img
               src={`${item.images[0]?.url}`}
               alt=""
-              className="w-[80x] h-[80px]"
+              className="w-[80px] h-[80px]"
             />
             <div className="w-full">
               <h5 className="pl-3 text-[20px]">{item.name}</h5>
