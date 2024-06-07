@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import styles from "../../styles/styles"; // Assuming this is the correct path to your styles file
 
 const CashOnDelivery = ({ orderData }) => {
-  const [select, setSelect] = useState(null); // Initialize select and setSelect
   const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
@@ -31,7 +30,7 @@ const CashOnDelivery = ({ orderData }) => {
       },
     };
 
-    await axios.post(`${server}/order/create-order`, order, config).then((res) => {
+    await axios.post(`${server}/order/create-order`, order, config).then(() => {
       navigate("/order/success");
       toast.success("Order successful!");
       localStorage.setItem("cartItems", JSON.stringify([]));

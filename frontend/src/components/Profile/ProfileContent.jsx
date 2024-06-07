@@ -30,7 +30,7 @@ const ProfileContent = ({ active }) => {
   const [email, setEmail] = useState(user && user.email);
   const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
   const [password, setPassword] = useState("");
-  const [avatar, setAvatar] = useState(null);
+  const [, setAvatar] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -63,7 +63,7 @@ const ProfileContent = ({ active }) => {
               withCredentials: true,
             }
           )
-          .then((response) => {
+          .then(() => {
             dispatch(loadUser());
             toast.success("avatar updated successfully!");
           })

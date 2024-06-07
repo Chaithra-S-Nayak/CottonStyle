@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import { toast } from "react-toastify";
-import { RxCross1 } from "react-icons/rx";
-import styles from "../../styles/styles";
-import { server } from "../../server";
 import StripePayment from "./StripePayment";
 import RazorpayPayment from "./RazorpayPayment";
 import CashOnDelivery from "./CashOnDelivery";
@@ -13,7 +9,6 @@ import CartData from "./CartData";
 
 const Payment = () => {
   const [orderData, setOrderData] = useState([]);
-  const [open, setOpen] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(1); // Default to Card payment
   const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -24,7 +19,6 @@ const Payment = () => {
   }, []);
 
   const onSuccess = () => {
-    setOpen(false);
     navigate("/order/success");
     toast.success("Order successful!");
     localStorage.setItem("cartItems", JSON.stringify([]));

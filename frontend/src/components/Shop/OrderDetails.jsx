@@ -9,7 +9,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const OrderDetails = () => {
-  const { orders, isLoading } = useSelector((state) => state.order);
+  const { orders } = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
   const dispatch = useDispatch();
   const [status, setStatus] = useState("");
@@ -19,11 +19,11 @@ const OrderDetails = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfShop(seller._id));
-  }, [dispatch]);
+  }, [dispatch, seller._id]);
 
   const data = orders && orders.find((item) => item._id === id);
 
-  const orderUpdateHandler = async (e) => {
+  const orderUpdateHandler = async () => {
     await axios
       .put(
         `${server}/order/update-order-status/${id}`,
@@ -32,7 +32,7 @@ const OrderDetails = () => {
         },
         { withCredentials: true }
       )
-      .then((res) => {
+      .then(() => {
         toast.success("Order updated!");
         navigate("/dashboard-orders");
       })
@@ -41,7 +41,7 @@ const OrderDetails = () => {
       });
   };
 
-  const refundOrderUpdateHandler = async (e) => {
+  const refundOrderUpdateHandler = async () => {
     await axios
     .put(
       `${server}/order/order-refund-success/${id}`,
@@ -50,7 +50,7 @@ const OrderDetails = () => {
       },
       { withCredentials: true }
     )
-    .then((res) => {
+    .then(() => {
       toast.success("Order updated!");
       dispatch(getAllOrdersOfShop(seller._id));
     })
@@ -91,7 +91,7 @@ const OrderDetails = () => {
       <br />
       <br />
       {data &&
-        data?.cart.map((item, index) => (
+        data?.cart.map((item) => (
           <div className="w-full flex items-start mb-5">
             <img
               src={`${item.images[0]?.url}`}
