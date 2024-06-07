@@ -16,6 +16,7 @@ const CreateProduct = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [availableSizes, setAvailableSizes] = useState([]);
   const [tags, setTags] = useState("");
   const [originalPrice, setOriginalPrice] = useState();
   const [discountPrice, setDiscountPrice] = useState();
@@ -51,28 +52,38 @@ const CreateProduct = () => {
     setImages(images.filter((_, i) => i !== index));
   };
 
+  const handleSizeChange = (size) => {
+    setAvailableSizes((prevSizes) =>
+      prevSizes.includes(size)
+        ? prevSizes.filter((s) => s !== size)
+        : [...prevSizes, size]
+    );
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const newForm = new FormData();
 
     images.forEach((image) => {
-      newForm.set("images", image);
+      newForm.append("images", image);
     });
     newForm.append("name", name);
     newForm.append("description", description);
     newForm.append("category", category);
+    newForm.append("availableSizes", availableSizes);
     newForm.append("tags", tags);
     newForm.append("originalPrice", originalPrice);
     newForm.append("discountPrice", discountPrice);
     newForm.append("stock", stock);
     newForm.append("shopId", seller._id);
-    console.log("FormData size:", newForm); // Add a log to check the FormData size
+
     dispatch(
       createProduct({
         name,
         description,
         category,
+        availableSizes,
         tags,
         originalPrice,
         discountPrice,
@@ -137,6 +148,28 @@ const CreateProduct = () => {
                 </option>
               ))}
           </select>
+        </div>
+        <br />
+        <div>
+          <label className="pb-2">
+            Available Sizes <span className="text-red-500">*</span>
+          </label>
+          <div className="flex flex-wrap">
+            {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
+              <div key={size} className="mr-5 mb-2">
+                <input
+                  type="checkbox"
+                  id={`size-${size}`}
+                  value={size}
+                  checked={availableSizes.includes(size)}
+                  onChange={() => handleSizeChange(size)}
+                />
+                <label htmlFor={`size-${size}`} className="ml-1">
+                  {size}
+                </label>
+              </div>
+            ))}
+          </div>
         </div>
         <br />
         <div>

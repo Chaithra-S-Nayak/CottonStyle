@@ -53,10 +53,10 @@ const productSchema = new mongoose.Schema({
       productId: {
         type: String,
       },
-      createdAt:{
+      createdAt: {
         type: Date,
         default: Date.now(),
-      }
+      },
     },
   ],
   ratings: {
@@ -77,6 +77,10 @@ const productSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now(),
+  },
+  availableSizes: {
+    type: [String],
+    required: [true, "Please enter available sizes for the product!"],
   },
 });
 

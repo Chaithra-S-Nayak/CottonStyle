@@ -24,11 +24,13 @@ const Cart = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState("");
+  const [availableSizes, setAvailableSizes] = useState([]);
 
   const handleEditClick = (item) => {
     setSelectedItem(item);
     setQuantity(item.qty);
     setSize(item.size || ""); // assuming item has a size property
+    setAvailableSizes(item.availableSizes || []); // assuming item has an availableSizes property
     setIsEditSidebarOpen(true);
   };
 
@@ -134,11 +136,10 @@ const Cart = () => {
             <p>₹{orderTotal}</p>
           </div>
           <Link to="/checkout">
-                <button className="mt-6 w-full bg-[#243450] text-white py-2 rounded">
-            Continue
-          </button>
-              </Link>
-          
+            <button className="mt-6 w-full bg-[#243450] text-white py-2 rounded">
+              Continue
+            </button>
+          </Link>
         </div>
       </div>
       {/* Edit Sidebar */}
@@ -176,10 +177,11 @@ const Cart = () => {
                     className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   >
                     <option value="">Select Size</option>
-                    <option value="S">S</option>
-                    <option value="M">M</option>
-                    <option value="L">L</option>
-                    <option value="XL">XL</option>
+                    {availableSizes.map((sizeOption) => (
+                      <option key={sizeOption} value={sizeOption}>
+                        {sizeOption}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="mb-4">
