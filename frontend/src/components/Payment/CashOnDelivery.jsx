@@ -41,15 +41,15 @@ const CashOnDelivery = ({ orderData }) => {
 
   return (
     <div>
-        <div className="w-full flex">
-          <form className="w-full" onSubmit={cashOnDeliveryHandler}>
-            <input
-              type="submit"
-              value="Confirm"
-              className={`${styles.button} !bg-[#f63b60] text-[#fff] h-[45px] rounded-[5px] cursor-pointer text-[18px] ml-7 font-[600]`}
-            />
-          </form>
-        </div>
+      <div className="w-full flex">
+        <form className="w-full" onSubmit={cashOnDeliveryHandler}>
+          <input
+            type="submit"
+            value="Confirm"
+            className={`${styles.button} !bg-[#243450] text-[#fff] h-[45px] rounded-[5px] cursor-pointer text-[18px] ml-7 font-[600]`}
+          />
+        </form>
+      </div>
     </div>
   );
 };

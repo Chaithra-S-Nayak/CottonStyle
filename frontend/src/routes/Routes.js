@@ -7,6 +7,7 @@ import BestSellingPage from "../pages/BestSellingPage";
 import EventsPage from "../pages/EventsPage";
 import FAQPage from "../pages/FAQPage";
 import CheckoutPage from "../pages/CheckoutPage";
+import CartPage from "../pages/CartPage";
 import PaymentPage from "../pages/PaymentPage";
 import OrderSuccessPage from "../pages/OrderSuccessPage";
 import ProductDetailsPage from "../pages/ProductDetailsPage";
@@ -19,6 +20,7 @@ import TrackOrderPage from "../pages/TrackOrderPage";
 import UserInbox from "../pages/UserInbox.jsx";
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
 
+
 export { 
     LoginPage,
     SignupPage,
@@ -29,6 +31,7 @@ export {
     EventsPage,
     FAQPage,
     CheckoutPage,
+    CartPage,
     PaymentPage,
     OrderSuccessPage,
     ProductDetailsPage,

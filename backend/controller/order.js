@@ -29,6 +29,7 @@ router.post(
       const orders = [];
 
       for (const [shopId, items] of shopItemsMap) {
+        const totalPrice = calculateTotalPrice(items);
         const order = await Order.create({
           cart: items,
           shippingAddress,
@@ -48,6 +49,15 @@ router.post(
     }
   })
 );
+
+// Function to calculate total price for items in a shop's cart
+const calculateTotalPrice = (items) => {
+  let total = 0;
+  for (const item of items) {
+    total += item.discountPrice * item.qty;
+  }
+  return total;
+};
 
 // get all orders of user
 router.get(
@@ -134,7 +144,7 @@ router.put(
       async function updateSellerInfo(amount) {
         const seller = await Shop.findById(req.seller.id);
         
-        seller.availableBalance = amount;
+        seller.availableBalance += amount;
 
         await seller.save();
       }

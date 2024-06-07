@@ -1,17 +1,17 @@
 import React from 'react'
 import Header from '../components/Layout/Header'
 import CheckoutSteps from "../components/Checkout/CheckoutSteps";
-import Checkout from "../components/Checkout/Checkout";
+import Cart from "../components/cart/Cart.jsx";
 import Footer from '../components/Layout/Footer';
 
-const CheckoutPage = () => {
+const CartPage = () => {
   return (
     <div>
         <Header />
         <br />
         <br />
-        <CheckoutSteps active={2} />
-        <Checkout />
+        <CheckoutSteps active={1} />
+        <Cart />
         <br />
         <br />
         <Footer />
@@ -19,4 +19,4 @@ const CheckoutPage = () => {
   )
 }
 
-export default CheckoutPage
+export default CartPage

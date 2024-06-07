@@ -1,14 +1,9 @@
 import React, { useState } from "react";
-import { RxCross1 } from "react-icons/rx";
-import { IoBagHandleOutline } from "react-icons/io5";
-import { HiOutlineMinus, HiPlus } from "react-icons/hi";
-import styles from "../../styles/styles";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addTocart, removeFromCart } from "../../redux/actions/cart";
-import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
-const Cart = ({ setOpenCart }) => {
+const Cart = () => {
   const { cart } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
 
@@ -25,129 +20,208 @@ const Cart = ({ setOpenCart }) => {
     dispatch(addTocart(data));
   };
 
-  return (
-    <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
-      <div className="fixed top-0 right-0 h-full w-[80%] 800px:w-[25%] bg-white flex flex-col overflow-y-scroll justify-between shadow-sm">
-        {cart && cart.length === 0 ? (
-          <div className="w-full h-screen flex items-center justify-center">
-            <div className="flex w-full justify-end pt-5 pr-5 fixed top-3 right-3">
-              <RxCross1
-                size={25}
-                className="cursor-pointer"
-                onClick={() => setOpenCart(false)}
-              />
-            </div>
-            <h5>Cart Items is empty!</h5>
-          </div>
-        ) : (
-          <>
-            <div>
-              <div className="flex w-full justify-end pt-5 pr-5">
-                <RxCross1
-                  size={25}
-                  className="cursor-pointer"
-                  onClick={() => setOpenCart(false)}
-                />
-              </div>
-              {/* Item length */}
-              <div className={`${styles.noramlFlex} p-4`}>
-                <IoBagHandleOutline size={25} />
-                <h5 className="pl-2 text-[20px] font-[500]">
-                  {cart && cart.length} items
-                </h5>
-              </div>
+  const [isEditSidebarOpen, setIsEditSidebarOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [size, setSize] = useState("");
 
-              {/* cart Single Items */}
-              <br />
-              <div className="w-full border-t">
-                {cart &&
-                  cart.map((i, index) => (
-                    <CartSingle
-                      key={index}
-                      data={i}
-                      quantityChangeHandler={quantityChangeHandler}
-                      removeFromCartHandler={removeFromCartHandler}
-                    />
-                  ))}
-              </div>
-            </div>
+  const handleEditClick = (item) => {
+    setSelectedItem(item);
+    setQuantity(item.qty);
+    setSize(item.size || ""); // assuming item has a size property
+    setIsEditSidebarOpen(true);
+  };
 
-            <div className="px-5 mb-3">
-              {/* checkout buttons */}
-              <Link to="/checkout">
-                <div
-                  className={`h-[45px] flex items-center justify-center w-[100%] bg-[#e44343] rounded-[5px]`}
-                >
-                  <h1 className="text-[#fff] text-[18px] font-[600]">
-                    Checkout Now (₹{totalPrice})
-                  </h1>
-                </div>
-              </Link>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
-  const [value, setValue] = useState(data.qty);
-  const totalPrice = data.discountPrice * value;
-
-  const increment = (data) => {
-    if (data.stock < value) {
-      toast.error("Product stock limited!");
-    } else {
-      setValue(value + 1);
-      const updateCartData = { ...data, qty: value + 1 };
-      quantityChangeHandler(updateCartData);
+  const handleQuantityChange = (type) => {
+    if (type === "increase") {
+      setQuantity((prev) => prev + 1);
+    } else if (type === "decrease" && quantity > 1) {
+      setQuantity((prev) => prev - 1);
     }
   };
 
-  const decrement = (data) => {
-    setValue(value === 1 ? 1 : value - 1);
-    const updateCartData = { ...data, qty: value === 1 ? 1 : value - 1 };
-    quantityChangeHandler(updateCartData);
+  const handleSizeChange = (event) => {
+    setSize(event.target.value);
   };
 
+  const handleUpdateItem = () => {
+    dispatch(addTocart({ ...selectedItem, qty: quantity, size }));
+    setIsEditSidebarOpen(false);
+  };
+
+  // Function to calculate total product price
+  const totalProductPrice = cart.reduce(
+    (acc, item) => {
+      console.log("Item used in totalProductPrice calculation:", item);
+      return acc + item.discountPrice * item.qty;
+    },
+    0
+  );
+
+  // Function to calculate total discount
+  const totalDiscount = cart.reduce(
+    (acc, item) =>
+      acc +
+      (item.originalPrice ? (item.originalPrice - item.discountPrice) * item.qty : 0),
+    0
+  );
+
+  // Function to calculate additional fees
+  const additionalFees = cart.reduce((acc, item) => acc + item.deliveryFee, 0);
+
+  // Function to calculate order total
+  const orderTotal = totalProductPrice - totalDiscount + additionalFees;
+
   return (
-    <div className="border-b p-4">
-      <div className="w-full flex items-center">
-        <div>
-          <div
-            className={`bg-[#e44343] border border-[#e4434373] rounded-full w-[25px] h-[25px] ${styles.noramlFlex} justify-center cursor-pointer`}
-            onClick={() => increment(data)}
-          >
-            <HiPlus size={18} color="#fff" />
-          </div>
-          <span className="pl-[10px]">{data.qty}</span>
-          <div
-            className="bg-[#a7abb14f] rounded-full w-[25px] h-[25px] flex items-center justify-center cursor-pointer"
-            onClick={() => decrement(data)}
-          >
-            <HiOutlineMinus size={16} color="#7d879c" />
-          </div>
+    <div className="container mx-auto py-8">
+      <div className="flex flex-col lg:flex-row">
+        {/* Product Details */}
+        <div className="w-full lg:w-2/3 bg-white p-5 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold mb-4">Product Details</h2>
+          {/* Iterate through cart items */}
+          {cart.map((item) => (
+            <div
+              key={item.id}
+              className="flex justify-between items-center border-b pb-4 mb-4"
+            >
+              <div className="flex items-center">
+                <button
+                  onClick={() => handleEditClick(item)}
+                  className="text-blue-500 mt-2"
+                >
+                  EDIT
+                </button>
+                <img
+                  src={`${item?.images[0]?.url}`}
+                  alt=""
+                  className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
+                />
+                <div className="ml-4">
+                  <h4 className="text-lg font-semibold">{item.name}</h4>
+                  <p className="text-gray-600">₹{item.discountPrice}</p>
+                  <p className="text-gray-600">Qty: {item.qty}</p>
+                  <button
+                    onClick={() => removeFromCartHandler(item)}
+                    className="text-red-500 mt-2"
+                  >
+                    REMOVE
+                  </button>
+                  <p className="text-gray-600">Sold by: {item.shop.name}</p>
+                </div>
+              </div>
+              <p className="text-gray-600">Delivery Fee: ₹{item.deliveryFee}</p>
+            </div>
+          ))}
         </div>
-        <img
-          src={`${data?.images[0]?.url}`}
-          alt=""
-          className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
-        />
-        <div className="pl-[5px]">
-          <h1>{data.name}</h1>
-          <h4 className="font-[400] text-[15px] text-[#00000082]">
-          ₹{data.discountPrice} * {value}
-          </h4>
-          <h4 className="font-[600] text-[17px] pt-[3px] text-[#d02222] font-Roboto">
-          ₹{totalPrice}
-          </h4>
+        {/* Price Details */}
+        <div className="w-full lg:w-1/3 bg-white p-5 rounded-lg shadow-md mt-6 lg:mt-0 lg:ml-6">
+          <h2 className="text-2xl font-bold mb-4">Price Details ({cart.length} Items)</h2>
+          {/* Display price details */}
+          <div className="flex justify-between mb-2">
+            <p>Total Product Price</p>
+            <p>₹{totalProductPrice}</p>
+          </div>
+          <div className="flex justify-between mb-2">
+            <p>Total Discounts</p>
+            <p>-₹{totalDiscount}</p>
+          </div>
+          <div className="flex justify-between mb-2">
+            <p>Additional Fees</p>
+            <p>₹{additionalFees}</p>
+          </div>
+          <div className="flex justify-between font-bold border-t pt-4 mt-4">
+            <p>Order Total</p>
+            <p>₹{orderTotal}</p>
+          </div>
+          <Link to="/checkout">
+                <button className="mt-6 w-full bg-[#243450] text-white py-2 rounded">
+            Continue
+          </button>
+              </Link>
+          
         </div>
-        <RxCross1
-          className="cursor-pointer"
-          onClick={() => removeFromCartHandler(data)}
-        />
       </div>
+      {/* Edit Sidebar */}
+      {isEditSidebarOpen && (
+        <div className="fixed inset-0 flex items-center justify-end z-50">
+          <div className="fixed inset-0 bg-black opacity-50"></div>
+          <div className="relative bg-white w-full md:w-1/3 h-full shadow-xl p-6">
+            <button
+              className="absolute top-4 right-4 text-gray-600"
+              onClick={() => setIsEditSidebarOpen(false)}
+            >
+              &times;
+            </button>
+            <h2 className="text-2xl font-bold mb-6">Edit Item</h2>
+            {selectedItem && (
+              <>
+                <div className="flex items-center mb-4">
+                  <img
+                    src={`${selectedItem?.images[0]?.url}`}
+                    alt=""
+                    className="w-20 h-20 rounded-lg mr-4"
+                  />
+                  <div>
+                    <h3 className="text-lg font-semibold">{selectedItem.name}</h3>
+                    <p className="text-gray-600">₹{selectedItem.discountPrice}</p>
+                  </div>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Size
+                  </label>
+                  <select
+                    value={size}
+                    onChange={handleSizeChange}
+                    className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  >
+                    <option value="">Select Size</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                  </select>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Quantity
+                  </label>
+                  <div className="flex items-center mt-1">
+                    <button
+                      onClick={() => handleQuantityChange("decrease")}
+                      className="px-2 py-0.5 border border-gray-300 rounded-lg"
+                    >
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      value={quantity}
+                      onChange={(e) => setQuantity(parseInt(e.target.value))}
+                      className="mx-2 w-20 text-center border-t border-b border-gray-300"
+                    />
+                    <button
+                      onClick={() => handleQuantityChange("increase")}
+                      className="px-2 py-0.5 border border-gray-300 rounded-lg"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center mb-6">
+                  <p className="text-lg font-semibold">Total Price</p>
+                  <p className="text-lg font-semibold">₹{selectedItem.discountPrice * quantity}</p>
+                </div>
+                <button
+                  onClick={handleUpdateItem}
+                  className="w-full bg-[#243450] text-white py-2 rounded-lg"
+                >
+                  Update Item
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

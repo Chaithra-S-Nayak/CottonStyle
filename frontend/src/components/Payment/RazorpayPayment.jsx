@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
@@ -48,7 +48,7 @@ const RazorpayPayment = ({ orderData, onSuccess }) => {
           address: "Razorpay Corporate Office",
         },
         theme: {
-          color: "#f63b60",
+          color: "#243450",
         },
       };
 
@@ -93,7 +93,7 @@ const RazorpayPayment = ({ orderData, onSuccess }) => {
     <div>
       <div className="w-full flex">
         <button
-          className={`${styles.button} !bg-[#f63b60] text-white h-[45px] rounded-[5px] cursor-pointer text-[18px] ml-7 font-[600]`}
+          className={`${styles.button} !bg-[#243450] text-white h-[45px] rounded-[5px] cursor-pointer text-[18px] ml-7 font-[600]`}
           onClick={handlePayment}
         >
           Pay Now
