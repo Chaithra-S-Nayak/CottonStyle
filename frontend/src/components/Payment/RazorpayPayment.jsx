@@ -71,11 +71,14 @@ const RazorpayPayment = ({ orderData, onSuccess }) => {
       shippingAddress: orderData?.shippingAddress,
       user: user && user,
       totalPrice: orderData?.totalPrice,
+      gstPercentage: orderData?.gstPercentage,
       paymentInfo: {
         id: paymentInfo.razorpay_payment_id,
         status: "succeeded",
         type: "Razorpay",
       },
+      coupon: orderData?.coupon,
+      sellerDeliveryFees: orderData?.sellerDeliveryFees,
     };
 
     await axios

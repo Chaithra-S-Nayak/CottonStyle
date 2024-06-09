@@ -1,48 +1,77 @@
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
-    cart:{
-        type: Array,
-        required: true,
+  cart: {
+    type: Array,
+    required: true,
+  },
+  shippingAddress: {
+    type: Object,
+    required: true,
+  },
+  user: {
+    type: Object,
+    required: true,
+  },
+  totalPrice: {
+    type: Number,
+    required: true,
+  },
+  gstPercentage: {
+    type: Number,
+    required: true,
+  },
+  sellerDeliveryFees: {
+    type: Number,
+  },
+  coupon: {
+    name: {
+      type: String,
     },
-    shippingAddress:{
-        type: Object,
-        required: true,
+    couponDiscountPercentage: {
+      type: Number,
     },
-    user:{
-        type: Object,
-        required: true,
+    couponDiscount: {
+      type: Number,
     },
-    totalPrice:{
-        type: Number,
-        required: true,
+    shopId: {
+      type: String,
     },
-    status:{
-        type: String,
-        default: "Processing",
+  },
+  status: {
+    type: String,
+    default: "Processing",
+  },
+  paymentInfo: {
+    id: {
+      type: String,
     },
-    paymentInfo:{
-        id:{
-            type: String,
-        },
-        status: {
-            type: String,
-        },
-        type:{
-            type: String,
-        },
+    status: {
+      type: String,
     },
-    paidAt:{
-        type: Date,
-        default: Date.now(),
+    type: {
+      type: String,
     },
-    deliveredAt: {
-        type: Date,
+  },
+  paidAt: {
+    type: Date,
+    default: Date.now(),
+  },
+  deliveredAt: {
+    type: Date,
+  },
+  invoiceId: {
+    type: String,
+    unique: true,
+    required: true,
+    default: function () {
+      return "INV" + Date.now();
     },
-    createdAt:{
-        type: Date,
-        default: Date.now(),
-    },
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 module.exports = mongoose.model("Order", orderSchema);

@@ -19,6 +19,7 @@ const Checkout = () => {
   const [couponCode, setCouponCode] = useState("");
   const [couponCodeData, setCouponCodeData] = useState(null);
   const [couponDiscount, setCouponDiscount] = useState(0);
+  const [coupon, setCoupon] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,6 +50,7 @@ const Checkout = () => {
         ...latestOrder,
         totalPrice,
         couponDiscount,
+        coupon,
         shippingAddress,
         user,
       };
@@ -83,6 +85,12 @@ const Checkout = () => {
           setCouponCodeData(res.data.couponCode);
           setCouponCode("");
           toast.success("Coupon code applied successfully!");
+          setCoupon({
+            name: res.data.couponCode.name,
+            couponDiscountPercentage: couponCodeValue,
+            couponDiscount: couponDiscount.toFixed(2),
+            shopId: res.data.couponCode.shopId,
+          });
         }
       } else {
         toast.error("Coupon code doesn't exist!");
@@ -92,12 +100,19 @@ const Checkout = () => {
   };
 
   const latestOrder = JSON.parse(localStorage.getItem("latestOrder")) || {};
-  const subTotalPrice = (parseFloat(latestOrder.totalProductPrice) || 0).toFixed(2);
+  const subTotalPrice = (
+    parseFloat(latestOrder.totalProductPrice) || 0
+  ).toFixed(2);
   const shipping = (parseFloat(latestOrder.totalDeliveryFee) || 0).toFixed(2);
   const gstAmount = (parseFloat(latestOrder.gstAmount) || 0).toFixed(2);
-  const overallProductDiscount = (parseFloat(latestOrder.OverallProductDiscount) || 0).toFixed(2);
-  const OverallProductPrice = (parseFloat(latestOrder.OverallProductPrice) || 0).toFixed(2);
-  const totalPrice = ((OverallProductPrice - couponDiscount).toFixed(2));
+  const gstPercentage = (parseFloat(latestOrder.gstPercentage) || 0).toFixed(2);
+  const overallProductDiscount = (
+    parseFloat(latestOrder.OverallProductDiscount) || 0
+  ).toFixed(2);
+  const OverallProductPrice = (
+    parseFloat(latestOrder.OverallProductPrice) || 0
+  ).toFixed(2);
+  const totalPrice = (OverallProductPrice - couponDiscount).toFixed(2);
 
   return (
     <div className="w-full flex flex-col items-center py-8">
@@ -128,6 +143,7 @@ const Checkout = () => {
             couponCode={couponCode}
             setCouponCode={setCouponCode}
             gstAmount={gstAmount}
+            gstPercentage={gstPercentage}
             OverallProductPrice={OverallProductPrice}
             couponDiscount={couponDiscount}
             cartLength={cart.length}
@@ -139,6 +155,7 @@ const Checkout = () => {
     </div>
   );
 };
+
 const ShippingInfo = ({
   user,
   country,
@@ -306,11 +323,12 @@ const CartData = ({
   couponCode,
   setCouponCode,
   gstAmount,
+  gstPercentage,
   OverallProductPrice,
   couponDiscount,
   cartLength,
   overallProductDiscount,
-  paymentSubmit, 
+  paymentSubmit,
 }) => {
   return (
     <div className="w-full bg-white rounded-md p-5 pb-8">
@@ -335,7 +353,7 @@ const CartData = ({
           <p>₹{shipping}</p>
         </div>
         <div className="flex justify-between mb-2">
-          <p>GST</p>
+          <p>GST ({gstPercentage})%</p>
           <p>₹{gstAmount}</p>
         </div>
         <div className="flex justify-between mb-2">
@@ -368,12 +386,13 @@ const CartData = ({
           <p>Order Total</p>
           <p>₹{totalPrice}</p>
         </div>
-        
-       
-          <button onClick={paymentSubmit} className="mt-6 w-full bg-[#243450] text-white py-2 rounded">
+
+        <button
+          onClick={paymentSubmit}
+          className="mt-6 w-full bg-[#243450] text-white py-2 rounded"
+        >
           Go to Payment
-          </button>
-       
+        </button>
       </div>
     </div>
   );

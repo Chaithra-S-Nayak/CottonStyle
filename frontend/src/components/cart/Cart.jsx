@@ -84,11 +84,18 @@ const Cart = () => {
   // Calculate the delivery fee based on the seller's total amount and threshold
   const calculateDeliveryFee = (total) => (total < threshold ? deliveryFee : 0);
 
-  const totalDeliveryFee = Object.values(sellerAmounts).reduce(
-    (acc, { total }) => {
-      return (
-        parseFloat(acc) + parseFloat(calculateDeliveryFee(total))
-      ).toFixed(2);
+  // Calculate the delivery fee for each seller and store it in an object
+  const sellerDeliveryFees = Object.entries(sellerAmounts).reduce(
+    (acc, [shopId, { total }]) => {
+      acc[shopId] = calculateDeliveryFee(total);
+      return acc;
+    },
+    {}
+  );
+
+  const totalDeliveryFee = Object.values(sellerDeliveryFees).reduce(
+    (acc, fee) => {
+      return (parseFloat(acc) + parseFloat(fee)).toFixed(2);
     },
     0
   );
@@ -132,6 +139,8 @@ const Cart = () => {
       totalDeliveryFee,
       gstAmount,
       OverallProductPrice,
+      gstPercentage: gstTax,
+      sellerDeliveryFees,
     };
 
     localStorage.setItem("latestOrder", JSON.stringify(orderData));
@@ -142,6 +151,8 @@ const Cart = () => {
     totalDeliveryFee,
     gstAmount,
     OverallProductPrice,
+    gstTax,
+    sellerDeliveryFees,
   ]);
 
   return (
@@ -151,50 +162,47 @@ const Cart = () => {
         <div className="w-full lg:w-2/3 bg-white p-5 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-4">Product Details</h2>
           {/* Iterate through cart items */}
-          {cart.map((item) => {
-            console.log("Item:", item); // Debugging log
-            return (
-              <div
-                key={item.id}
-                className="flex justify-between items-center border-b pb-4 mb-4"
-              >
-                <div className="flex items-center">
+          {cart.map((item) => (
+            <div
+              key={item.id}
+              className="flex justify-between items-center border-b pb-4 mb-4"
+            >
+              <div className="flex items-center">
+                <button
+                  onClick={() => handleEditClick(item)}
+                  className="text-blue-500 mt-2"
+                >
+                  EDIT
+                </button>
+                <img
+                  src={`${item?.images[0]?.url}`}
+                  alt=""
+                  className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
+                />
+                <div className="ml-4">
+                  <h4 className="text-lg font-semibold">{item.name}</h4>
+                  <p className="text-gray-600">
+                    ₹{item.discountPrice} (₹{item.originalPrice})
+                  </p>
+                  <p className="text-gray-600">Qty: {item.qty}</p>
+                  <p className="text-gray-600">
+                    total: ₹{item.discountPrice * item.qty}
+                  </p>
                   <button
-                    onClick={() => handleEditClick(item)}
-                    className="text-blue-500 mt-2"
+                    onClick={() => removeFromCartHandler(item)}
+                    className="text-red-500 mt-2"
                   >
-                    EDIT
+                    REMOVE
                   </button>
-                  <img
-                    src={`${item?.images[0]?.url}`}
-                    alt=""
-                    className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
-                  />
-                  <div className="ml-4">
-                    <h4 className="text-lg font-semibold">{item.name}</h4>
-                    <p className="text-gray-600">
-                      ₹{item.discountPrice} (₹{item.originalPrice})
-                    </p>
-                    <p className="text-gray-600">Qty: {item.qty}</p>
-                    <p className="text-gray-600">
-                      total: ₹{item.discountPrice * item.qty}
-                    </p>
-                    <button
-                      onClick={() => removeFromCartHandler(item)}
-                      className="text-red-500 mt-2"
-                    >
-                      REMOVE
-                    </button>
-                    <p className="text-gray-600">Sold by: {item.shop.name}</p>
-                  </div>
+                  <p className="text-gray-600">Sold by: {item.shop.name}</p>
                 </div>
-                <p className="text-gray-600">
-                  Delivery Fee: ₹
-                  {calculateDeliveryFee(sellerAmounts[item.shopId].total)}
-                </p>
               </div>
-            );
-          })}
+              <p className="text-gray-600">
+                Delivery Fee: ₹
+                {calculateDeliveryFee(sellerAmounts[item.shopId].total)}
+              </p>
+            </div>
+          ))}
         </div>
         {/* Price Details */}
         <div className="w-full lg:w-1/3 bg-white p-5 rounded-lg shadow-md mt-6 lg:mt-0 lg:ml-6">
@@ -215,7 +223,8 @@ const Cart = () => {
             <p>₹{totalDeliveryFee}</p>
           </div>
           <div className="flex justify-between mb-2">
-            <p>GST ({gstTax}%)</p>
+            <p>GST ({gstTax.toFixed(2)}%)</p>{" "}
+            {/* Format GST tax to 2 decimal places */}
             <p>₹{gstAmount}</p>
           </div>
           <div className="flex justify-between font-bold border-t pt-4 mt-4">

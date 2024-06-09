@@ -12,9 +12,17 @@ router.post(
   "/create-order",
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { cart, shippingAddress, user, totalPrice, paymentInfo } = req.body;
+      const {
+        cart,
+        shippingAddress,
+        user,
+        paymentInfo,
+        coupon,
+        sellerDeliveryFees,
+        gstPercentage,
+      } = req.body;
 
-      //   group cart items by shopId
+      // Group cart items by shopId
       const shopItemsMap = new Map();
 
       for (const item of cart) {
@@ -25,18 +33,36 @@ router.post(
         shopItemsMap.get(shopId).push(item);
       }
 
-      // create an order for each shop
+      // Create an order for each shop
       const orders = [];
 
       for (const [shopId, items] of shopItemsMap) {
-        const totalPrice = calculateTotalPrice(items);
+        let totalPrice = calculateTotalPrice(items);
+
+        // Apply coupon discount if applicable
+        if (coupon && coupon.shopId === shopId) {
+          totalPrice -= parseFloat(coupon.couponDiscount);
+        }
+
+        // Add seller delivery fee if applicable and greater than 0
+        const deliveryFee =
+          sellerDeliveryFees && sellerDeliveryFees[shopId] !== undefined
+            ? parseFloat(sellerDeliveryFees[shopId])
+            : 0;
+        totalPrice += deliveryFee;
+
+        // Create the order
         const order = await Order.create({
           cart: items,
           shippingAddress,
           user,
           totalPrice,
+          gstPercentage,
           paymentInfo,
+          coupon: coupon && coupon.shopId === shopId ? coupon : null, // Only include coupon if it matches the shopId
+          sellerDeliveryFees: deliveryFee > 0 ? deliveryFee : null, // Only include delivery fee if greater than 0
         });
+
         orders.push(order);
       }
 
@@ -121,7 +147,7 @@ router.put(
       if (req.body.status === "Delivered") {
         order.deliveredAt = Date.now();
         order.paymentInfo.status = "Succeeded";
-        const serviceCharge = order.totalPrice * .10;
+        const serviceCharge = order.totalPrice * 0.1; //service charge
         await updateSellerInfo(order.totalPrice - serviceCharge);
       }
 
@@ -143,7 +169,7 @@ router.put(
 
       async function updateSellerInfo(amount) {
         const seller = await Shop.findById(req.seller.id);
-        
+
         seller.availableBalance += amount;
 
         await seller.save();
@@ -198,7 +224,7 @@ router.put(
 
       res.status(200).json({
         success: true,
-        message: "Order Refund successfull!",
+        message: "Order Refund successful!",
       });
 
       if (req.body.status === "Refund Success") {

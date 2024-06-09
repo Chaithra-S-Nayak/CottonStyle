@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { useStripe, useElements, CardNumberElement, CardCvcElement, CardExpiryElement } from "@stripe/react-stripe-js";
+import {
+  useStripe,
+  useElements,
+  CardNumberElement,
+  CardCvcElement,
+  CardExpiryElement,
+} from "@stripe/react-stripe-js";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { server } from "../../server";
@@ -52,13 +58,16 @@ const StripePayment = ({ orderData }) => {
           const order = {
             cart: orderData?.cart,
             shippingAddress: orderData?.shippingAddress,
-            user: user,
+            user: user && user,
             totalPrice: orderData?.totalPrice,
+            gstPercentage: orderData?.gstPercentage,
             paymentInfo: {
               id: result.paymentIntent.id,
               status: result.paymentIntent.status,
-              type: "Credit Card",
+              type: "stripe",
             },
+            coupon: orderData?.coupon,
+            sellerDeliveryFees: orderData?.sellerDeliveryFees,
           };
 
           await axios

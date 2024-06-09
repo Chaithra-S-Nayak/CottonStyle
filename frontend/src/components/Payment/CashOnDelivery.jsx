@@ -4,7 +4,7 @@ import { server } from "../../server";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import styles from "../../styles/styles"; // Assuming this is the correct path to your styles file
+import styles from "../../styles/styles";
 
 const CashOnDelivery = ({ orderData }) => {
   const { user } = useSelector((state) => state.user);
@@ -24,10 +24,13 @@ const CashOnDelivery = ({ orderData }) => {
       shippingAddress: orderData?.shippingAddress,
       user: user && user,
       totalPrice: orderData?.totalPrice,
+      gstPercentage: orderData?.gstPercentage,
       paymentInfo: {
         status: "succeeded",
         type: "Cash On Delivery",
       },
+      coupon: orderData?.coupon,
+      sellerDeliveryFees: orderData?.sellerDeliveryFees,
     };
 
     await axios.post(`${server}/order/create-order`, order, config).then(() => {
