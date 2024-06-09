@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import {
   AiFillHeart,
-  AiOutlineEye,
   AiOutlineHeart,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import styles from "../../../styles/styles";
 import { useDispatch, useSelector } from "react-redux";
-import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard";
 import {
   addToWishlist,
   removeFromWishlist,
@@ -22,7 +20,6 @@ const ProductCard = ({ data, isEvent }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
   const [click, setClick] = useState(false);
-  const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -130,21 +127,13 @@ const ProductCard = ({ data, isEvent }) => {
               title="Add to wishlist"
             />
           )}
-          <AiOutlineEye
-            size={22}
-            className="cursor-pointer absolute right-2 top-14"
-            onClick={() => setOpen(!open)}
-            color="#333"
-            title="Quick view"
-          />
           <AiOutlineShoppingCart
             size={25}
-            className="cursor-pointer absolute right-2 top-24"
+            className="cursor-pointer absolute right-2 top-14"
             onClick={() => addToCartHandler(data._id)}
             color="#444"
             title="Add to cart"
           />
-          {open ? <ProductDetailsCard setOpen={setOpen} data={data} /> : null}
         </div>
       </div>
     </>

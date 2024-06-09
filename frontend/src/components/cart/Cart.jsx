@@ -1,23 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addTocart, removeFromCart } from "../../redux/actions/cart";
+import { fetchAdminOptions } from "../../redux/actions/adminOptions";
 import { Link } from "react-router-dom";
 
 const Cart = () => {
   const { cart } = useSelector((state) => state.cart);
+  const { adminOptions } = useSelector((state) => state.adminOptions);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchAdminOptions());
+  }, [dispatch]);
 
   const removeFromCartHandler = (data) => {
     dispatch(removeFromCart(data));
-  };
-
-  const totalPrice = cart.reduce(
-    (acc, item) => acc + item.qty * item.discountPrice,
-    0
-  );
-
-  const quantityChangeHandler = (data) => {
-    dispatch(addTocart(data));
   };
 
   const [isEditSidebarOpen, setIsEditSidebarOpen] = useState(false);
@@ -29,8 +26,8 @@ const Cart = () => {
   const handleEditClick = (item) => {
     setSelectedItem(item);
     setQuantity(item.qty);
-    setSize(item.size || ""); // assuming item has a size property
-    setAvailableSizes(item.availableSizes || []); // assuming item has an availableSizes property
+    setSize(item.size || "");
+    setAvailableSizes(item.availableSizes || []);
     setIsEditSidebarOpen(true);
   };
 
@@ -51,28 +48,101 @@ const Cart = () => {
     setIsEditSidebarOpen(false);
   };
 
+  // Function to calculate total amount for each seller
+  const sellerAmounts = cart.reduce((acc, item) => {
+    const { shopId, discountPrice, qty } = item;
+    const total = discountPrice * qty;
+    if (!acc[shopId]) {
+      acc[shopId] = { total: 0, items: [] };
+    }
+    acc[shopId].total += total;
+    acc[shopId].items.push(item);
+    return acc;
+  }, {});
+
+  const deliveryFee = adminOptions.deliveryFee || 0;
+  const gstTax = adminOptions.gstTax || 0;
+  const threshold = adminOptions.thresholdFee || 0;
+
   // Function to calculate total product price
-  const totalProductPrice = cart.reduce(
-    (acc, item) => {
-      console.log("Item used in totalProductPrice calculation:", item);
-      return acc + item.discountPrice * item.qty;
+  const totalProductPrice = cart
+    .reduce((acc, item) => acc + item.originalPrice * item.qty, 0)
+    .toFixed(2);
+
+  // Function to calculate total discount
+  const OverallProductDiscount = cart
+    .reduce(
+      (acc, item) =>
+        acc +
+        (item.originalPrice
+          ? (item.originalPrice - item.discountPrice) * item.qty
+          : 0),
+      0
+    )
+    .toFixed(2);
+
+  // Calculate the delivery fee based on the seller's total amount and threshold
+  const calculateDeliveryFee = (total) => (total < threshold ? deliveryFee : 0);
+
+  const totalDeliveryFee = Object.values(sellerAmounts).reduce(
+    (acc, { total }) => {
+      return (
+        parseFloat(acc) + parseFloat(calculateDeliveryFee(total))
+      ).toFixed(2);
     },
     0
   );
 
-  // Function to calculate total discount
-  const totalDiscount = cart.reduce(
-    (acc, item) =>
-      acc +
-      (item.originalPrice ? (item.originalPrice - item.discountPrice) * item.qty : 0),
-    0
-  );
+  // Calculate the GST amount
+  const gstAmount = (
+    ((parseFloat(totalProductPrice) - parseFloat(OverallProductDiscount)) *
+      parseFloat(gstTax)) /
+    100
+  ).toFixed(2);
 
-  // Function to calculate additional fees
-  const additionalFees = cart.reduce((acc, item) => acc + item.deliveryFee, 0);
+  // Calculate order total
+  const OverallProductPrice = (
+    parseFloat(totalProductPrice) +
+    parseFloat(gstAmount) -
+    parseFloat(OverallProductDiscount) +
+    parseFloat(totalDeliveryFee)
+  ).toFixed(2);
 
-  // Function to calculate order total
-  const orderTotal = totalProductPrice - totalDiscount + additionalFees;
+  // Calculate suggestions for each seller
+  const suggestions = Object.values(sellerAmounts)
+    .map(({ total, items }) => {
+      const remainingAmount = threshold - total;
+      if (remainingAmount > 0) {
+        return {
+          shopId: items[0].shopId,
+          shopName: items[0].shop.name,
+          remainingAmount,
+        };
+      }
+      return null;
+    })
+    .filter((suggestion) => suggestion !== null);
+
+  // Store order data in local storage
+  useEffect(() => {
+    const orderData = {
+      cart,
+      totalProductPrice,
+      OverallProductDiscount,
+      totalDeliveryFee,
+      gstAmount,
+      OverallProductPrice,
+    };
+
+    localStorage.setItem("latestOrder", JSON.stringify(orderData));
+  }, [
+    cart,
+    totalProductPrice,
+    OverallProductDiscount,
+    totalDeliveryFee,
+    gstAmount,
+    OverallProductPrice,
+  ]);
 
   return (
     <div className="container mx-auto py-8">
@@ -81,59 +151,76 @@ const Cart = () => {
         <div className="w-full lg:w-2/3 bg-white p-5 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-4">Product Details</h2>
           {/* Iterate through cart items */}
-          {cart.map((item) => (
-            <div
-              key={item.id}
-              className="flex justify-between items-center border-b pb-4 mb-4"
-            >
-              <div className="flex items-center">
-                <button
-                  onClick={() => handleEditClick(item)}
-                  className="text-blue-500 mt-2"
-                >
-                  EDIT
-                </button>
-                <img
-                  src={`${item?.images[0]?.url}`}
-                  alt=""
-                  className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
-                />
-                <div className="ml-4">
-                  <h4 className="text-lg font-semibold">{item.name}</h4>
-                  <p className="text-gray-600">₹{item.discountPrice}</p>
-                  <p className="text-gray-600">Qty: {item.qty}</p>
+          {cart.map((item) => {
+            console.log("Item:", item); // Debugging log
+            return (
+              <div
+                key={item.id}
+                className="flex justify-between items-center border-b pb-4 mb-4"
+              >
+                <div className="flex items-center">
                   <button
-                    onClick={() => removeFromCartHandler(item)}
-                    className="text-red-500 mt-2"
+                    onClick={() => handleEditClick(item)}
+                    className="text-blue-500 mt-2"
                   >
-                    REMOVE
+                    EDIT
                   </button>
-                  <p className="text-gray-600">Sold by: {item.shop.name}</p>
+                  <img
+                    src={`${item?.images[0]?.url}`}
+                    alt=""
+                    className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
+                  />
+                  <div className="ml-4">
+                    <h4 className="text-lg font-semibold">{item.name}</h4>
+                    <p className="text-gray-600">
+                      ₹{item.discountPrice} (₹{item.originalPrice})
+                    </p>
+                    <p className="text-gray-600">Qty: {item.qty}</p>
+                    <p className="text-gray-600">
+                      total: ₹{item.discountPrice * item.qty}
+                    </p>
+                    <button
+                      onClick={() => removeFromCartHandler(item)}
+                      className="text-red-500 mt-2"
+                    >
+                      REMOVE
+                    </button>
+                    <p className="text-gray-600">Sold by: {item.shop.name}</p>
+                  </div>
                 </div>
+                <p className="text-gray-600">
+                  Delivery Fee: ₹
+                  {calculateDeliveryFee(sellerAmounts[item.shopId].total)}
+                </p>
               </div>
-              <p className="text-gray-600">Delivery Fee: ₹{item.deliveryFee}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
         {/* Price Details */}
         <div className="w-full lg:w-1/3 bg-white p-5 rounded-lg shadow-md mt-6 lg:mt-0 lg:ml-6">
-          <h2 className="text-2xl font-bold mb-4">Price Details ({cart.length} Items)</h2>
+          <h2 className="text-2xl font-bold mb-4">
+            Price Details ({cart.length} Items)
+          </h2>
           {/* Display price details */}
           <div className="flex justify-between mb-2">
             <p>Total Product Price</p>
             <p>₹{totalProductPrice}</p>
           </div>
           <div className="flex justify-between mb-2">
-            <p>Total Discounts</p>
-            <p>-₹{totalDiscount}</p>
+            <p>Overall Product Discount</p>
+            <p>-₹{OverallProductDiscount}</p>
           </div>
           <div className="flex justify-between mb-2">
-            <p>Additional Fees</p>
-            <p>₹{additionalFees}</p>
+            <p>Total Delivery Fee</p>
+            <p>₹{totalDeliveryFee}</p>
+          </div>
+          <div className="flex justify-between mb-2">
+            <p>GST ({gstTax}%)</p>
+            <p>₹{gstAmount}</p>
           </div>
           <div className="flex justify-between font-bold border-t pt-4 mt-4">
-            <p>Order Total</p>
-            <p>₹{orderTotal}</p>
+            <p>Overall Product Price</p>
+            <p>₹{OverallProductPrice}</p>
           </div>
           <Link to="/checkout">
             <button className="mt-6 w-full bg-[#243450] text-white py-2 rounded">
@@ -142,6 +229,23 @@ const Cart = () => {
           </Link>
         </div>
       </div>
+      {/* Suggestions */}
+      {suggestions.length > 0 && (
+        <div className="mt-6 bg-yellow-100 p-4 rounded-lg shadow-md">
+          <h3 className="text-xl font-bold mb-4">
+            Suggestions to Avoid Delivery Fee
+          </h3>
+          {suggestions.map((suggestion) => (
+            <div key={suggestion.shopId} className="mb-4">
+              <p className="text-gray-800">
+                Add products worth ₹{suggestion.remainingAmount} more from{" "}
+                {suggestion.shopName} to avoid the delivery fee.
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Edit Sidebar */}
       {isEditSidebarOpen && (
         <div className="fixed inset-0 flex items-center justify-end z-50">
@@ -163,8 +267,12 @@ const Cart = () => {
                     className="w-20 h-20 rounded-lg mr-4"
                   />
                   <div>
-                    <h3 className="text-lg font-semibold">{selectedItem.name}</h3>
-                    <p className="text-gray-600">₹{selectedItem.discountPrice}</p>
+                    <h3 className="text-lg font-semibold">
+                      {selectedItem.name}
+                    </h3>
+                    <p className="text-gray-600">
+                      ₹{selectedItem.discountPrice}
+                    </p>
                   </div>
                 </div>
                 <div className="mb-4">
@@ -211,7 +319,9 @@ const Cart = () => {
                 </div>
                 <div className="flex justify-between items-center mb-6">
                   <p className="text-lg font-semibold">Total Price</p>
-                  <p className="text-lg font-semibold">₹{selectedItem.discountPrice * quantity}</p>
+                  <p className="text-lg font-semibold">
+                    ₹{selectedItem.discountPrice * quantity}
+                  </p>
                 </div>
                 <button
                   onClick={handleUpdateItem}

@@ -6,10 +6,9 @@ import {
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { getAllProductsShop } from "../../redux/actions/product";
 import { server } from "../../server";
-import styles from "../../styles/styles";
 import {
   addToWishlist,
   removeFromWishlist,
@@ -27,6 +26,7 @@ const ProductDetails = ({ data }) => {
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
+  const [selectedSize, setSelectedSize] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -47,6 +47,9 @@ const ProductDetails = ({ data }) => {
       setCount(count - 1);
     }
   };
+  const handleSizeSelection = (size) => {
+    setSelectedSize(size); // Update selected size state
+  };
 
   const removeFromWishlistHandler = (data) => {
     setClick(!click);
@@ -66,9 +69,13 @@ const ProductDetails = ({ data }) => {
       if (data.stock < 1) {
         toast.error("Product stock limited!");
       } else {
-        const cartData = { ...data, qty: count };
-        dispatch(addTocart(cartData));
-        toast.success("Item added to cart successfully!");
+        if (!selectedSize) {
+          toast.error("Please select a size!");
+        } else {
+          const cartData = { ...data, qty: count, size: selectedSize };
+          dispatch(addTocart(cartData));
+          toast.success("Item added to cart successfully!");
+        }
       }
     }
   };
@@ -85,10 +92,9 @@ const ProductDetails = ({ data }) => {
       0
     );
 
-  const avg =  totalRatings / totalReviewsLength || 0;
+  const avg = totalRatings / totalReviewsLength || 0;
 
   const averageRating = avg.toFixed(2);
-
 
   const handleMessageSubmit = async () => {
     if (isAuthenticated) {
@@ -113,278 +119,222 @@ const ProductDetails = ({ data }) => {
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-white p-4">
       {data ? (
-        <div className={`${styles.section} w-[90%] 800px:w-[80%]`}>
-          <div className="w-full py-5">
-            <div className="block w-full 800px:flex">
-              <div className="w-full 800px:w-[50%]">
+        <div className="flex flex-col lg:flex-row w-full lg:w-4/5 mx-auto gap-6">
+          {/* Left side - Product images */}
+          <div className="lg:w-1/2 lg:pr-20">
+            <img
+              src={data.images[select]?.url}
+              alt=""
+              className="w-full h-auto"
+            />
+            <div className="flex gap-2 mt-2">
+              {data.images.map((image, index) => (
                 <img
-                  src={`${data && data.images[select]?.url}`}
+                  key={index}
+                  src={image.url}
                   alt=""
-                  className="w-[80%]"
+                  className={`w-20 h-20 object-cover cursor-pointer ${
+                    select === index && "border-2 border-gray-500"
+                  }`}
+                  onClick={() => setSelect(index)}
                 />
-                <div className="w-full flex">
+              ))}
+            </div>
+          </div>
+
+          {/* Right side - Product details */}
+          <div className="lg:w-1/2 space-y-6">
+            <div className="p-4 bg-white shadow-md rounded-lg">
+              <h1 className="text-2xl font-bold text-gray-800">{data.name}</h1>
+              <div className="py-4 flex items-center justify-between">
+                <div className="flex items-baseline space-x-2">
+                  <h5 className="text-2xl font-semibold text-teal-600">
+                    ₹
+                    {data.originalPrice === 0
+                      ? data.originalPrice
+                      : data.discountPrice}
+                  </h5>
+                  {data.originalPrice !== 0 && (
+                    <h4 className="text-xl text-gray-500 line-through">
+                      ₹{data.originalPrice}
+                    </h4>
+                  )}
+                </div>
+                <span className="font-medium text-lg text-green-500">
+                  {data.sold_out} sold
+                </span>
+              </div>
+              <div className="mt-4 flex items-center">
+                <span className="text-lg font-bold text-yellow-500">
+                  {data.rating}★
+                </span>
+                <span className="ml-2 text-sm text-gray-500">
+                  {data.ratings} | {data.reviews.length} Reviews
+                </span>
+              </div>
+            </div>
+            <div className="mt-4">
+              <div className="space-y-2">
+                <label className="block text-gray-700">Select Size</label>
+                <div className="grid grid-cols-8 gap-2">
+                  {data.availableSizes.map((size, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleSizeSelection(size)} // Add onClick handler
+                      className={`px-2 py-1 border rounded text-gray-700 ${
+                        selectedSize === size ? "bg-gray-300" : ""
+                      }`} // Add conditional class for selected size
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center mt-4">
+              <button
+                className="px-4 py-2 bg-teal-500 text-white rounded-l"
+                onClick={decrementCount}
+              >
+                -
+              </button>
+              <span className="px-4 py-2 bg-gray-200 text-gray-800">
+                {count}
+              </span>
+              <button
+                className="px-4 py-2 bg-teal-500 text-white rounded-r"
+                onClick={incrementCount}
+              >
+                +
+              </button>
+              <button
+                className="ml-4"
+                onClick={() =>
+                  click
+                    ? removeFromWishlistHandler(data)
+                    : addToWishlistHandler(data)
+                }
+              >
+                {click ? (
+                  <AiFillHeart size={30} className="text-red-500" />
+                ) : (
+                  <AiOutlineHeart size={30} className="text-gray-500" />
+                )}
+              </button>
+            </div>
+
+            <button
+              className="mt-4 px-4 py-2 bg-teal-500 text-white rounded w-full"
+              onClick={() => addToCartHandler(data._id)}
+            >
+              Add to Cart
+              <AiOutlineShoppingCart className="inline-block ml-2" />
+            </button>
+
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-lg font-semibold">Product Details</h2>
+                <p className="text-gray-600 whitespace-pre-line">
+                  {data.description}
+                </p>
+                <p className="text-gray-600">
+                  The Crepe Fully Stretchable Palazzo by Beera Fashion Hub will
+                  add total color and beautiful vibe in your life style. A Cloth
+                  must have your wardrobe to make it extremely trendy, stylish
+                  and hit a perfect comfortable styling. Style it with tank top,
+                  span top, long straight top or kurti to complete the beautiful
+                  & elegant look. Our products are with high quality at
+                  competitive pricing for 100% customer satisfaction & lots of
+                  designs, fit & quality.
+                </p>
+                <div className="mt-2 text-gray-600">
+                  <p>Size:</p>
+                  <ul>
+                    {[
+                      "26 (Waist Size: 26 in, Length Size: 37 in)",
+                      "28 (Waist Size: 28 in, Length Size: 37 in)",
+                      "30 (Waist Size: 30 in, Length Size: 37 in)",
+                      "32 (Waist Size: 32 in, Length Size: 37 in)",
+                      "34 (Waist Size: 34 in, Length Size: 37 in)",
+                      "36 (Waist Size: 36 in, Length Size: 37 in)",
+                      "38 (Waist Size: 38 in, Length Size: 37 in)",
+                      "Free Size (Waist Size: 50 in, Length Size: 37 in)",
+                    ].map((size, idx) => (
+                      <li key={idx}>{size}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div>
+                <h2 className="text-lg font-semibold">Seller Information</h2>
+                <div className="flex items-center">
+                  <img
+                    src={data.shop.avatar.url}
+                    alt=""
+                    className="w-10 h-10 rounded-full"
+                  />
+                  <div className="ml-3">
+                    <h4 className="font-medium">{data.shop.name}</h4>
+                    <p className="text-sm text-gray-500">
+                      ({averageRating}/5) Ratings
+                    </p>
+                  </div>
+                </div>
+                <p className="mt-2 text-gray-600">{data.shop.description}</p>
+                <button
+                  className="mt-4 px-4 py-2 bg-teal-500 text-white rounded"
+                  onClick={handleMessageSubmit}
+                >
+                  Contact Seller
+                  <AiOutlineMessage className="inline-block ml-2" />
+                </button>
+              </div>
+
+              <div>
+                <div className="mb-4">
+                  <h2 className="text-lg font-semibold">
+                    Product Ratings & Reviews
+                  </h2>
+                </div>
+
+                <div>
                   {data &&
-                    data.images.map((i, index) => (
-                      <div
-                        className={`${
-                          select === 0 ? "border" : "null"
-                        } cursor-pointer`}
-                      >
+                    data.reviews.map((item, index) => (
+                      <div key={index} className="w-full flex my-4">
                         <img
-                          src={`${i?.url}`}
+                          src={`${item.user.avatar?.url}`}
                           alt=""
-                          className="h-[200px] overflow-hidden mr-3 mt-3"
-                          onClick={() => setSelect(index)}
+                          className="w-12 h-12 rounded-full"
                         />
+                        <div className="ml-4">
+                          <div className="flex items-center mb-1">
+                            <h3 className="text-lg font-semibold">
+                              {item.user.name}
+                            </h3>
+                            <span className="ml-2">
+                              <Ratings rating={item.rating} />{" "}
+                            </span>
+                          </div>
+                          <p className="text-gray-700">{item.comment}</p>
+                        </div>
                       </div>
                     ))}
-                  <div
-                    className={`${
-                      select === 1 ? "border" : "null"
-                    } cursor-pointer`}
-                  ></div>
-                </div>
-              </div>
-              <div className="w-full 800px:w-[50%] pt-5">
-                <h1 className={`${styles.productTitle}`}>{data.name}</h1>
-                <p>{data.description}</p>
-                <div className="flex pt-3">
-                  <h4 className={`${styles.productDiscountPrice}`}>
-                    {data.discountPrice}₹
-                  </h4>
-                  <h3 className={`${styles.price}`}>
-                    {data.originalPrice ? data.originalPrice + "₹" : null}
-                  </h3>
-                </div>
 
-                <div className="flex items-center mt-12 justify-between pr-3">
-                  <div>
-                    <button
-                      className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
-                      onClick={decrementCount}
-                    >
-                      -
-                    </button>
-                    <span className="bg-gray-200 text-gray-800 font-medium px-4 py-[11px]">
-                      {count}
-                    </span>
-                    <button
-                      className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
-                      onClick={incrementCount}
-                    >
-                      +
-                    </button>
-                  </div>
-                  <div>
-                    {click ? (
-                      <AiFillHeart
-                        size={30}
-                        className="cursor-pointer"
-                        onClick={() => removeFromWishlistHandler(data)}
-                        color={click ? "red" : "#333"}
-                        title="Remove from wishlist"
-                      />
-                    ) : (
-                      <AiOutlineHeart
-                        size={30}
-                        className="cursor-pointer"
-                        onClick={() => addToWishlistHandler(data)}
-                        color={click ? "red" : "#333"}
-                        title="Add to wishlist"
-                      />
-                    )}
-                  </div>
-                </div>
-                <div
-                  className={`${styles.button} !mt-6 !rounded !h-11 flex items-center`}
-                  onClick={() => addToCartHandler(data._id)}
-                >
-                  <span className="text-white flex items-center">
-                    Add to cart <AiOutlineShoppingCart className="ml-1" />
-                  </span>
-                </div>
-                <div className="flex items-center pt-8">
-                  <Link to={`/shop/preview/${data?.shop._id}`}>
-                    <img
-                      src={`${data?.shop?.avatar?.url}`}
-                      alt=""
-                      className="w-[50px] h-[50px] rounded-full mr-2"
-                    />
-                  </Link>
-                  <div className="pr-8">
-                    <Link to={`/shop/preview/${data?.shop._id}`}>
-                      <h3 className={`${styles.shop_name} pb-1 pt-1`}>
-                        {data.shop.name}
-                      </h3>
-                    </Link>
-                    <h5 className="pb-3 text-[15px]">
-                      ({averageRating}/5) Ratings
-                    </h5>
-                  </div>
-                  <div
-                    className={`${styles.button} bg-[#6443d1] mt-4 !rounded !h-11`}
-                    onClick={handleMessageSubmit}
-                  >
-                    <span className="text-white flex items-center">
-                      Send Message <AiOutlineMessage className="ml-1" />
-                    </span>
-                  </div>
+                  {data && data.reviews.length === 0 && (
+                    <div className="mt-4">
+                      <h5>No Reviews!</h5>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
-          <ProductDetailsInfo
-            data={data}
-            products={products}
-            totalReviewsLength={totalReviewsLength}
-            averageRating={averageRating}
-          />
-          <br />
-          <br />
         </div>
       ) : null}
-    </div>
-  );
-};
-
-const ProductDetailsInfo = ({
-  data,
-  products,
-  totalReviewsLength,
-  averageRating,
-}) => {
-  const [active, setActive] = useState(1);
-
-  return (
-    <div className="bg-[#f5f6fb] px-3 800px:px-10 py-2 rounded">
-      <div className="w-full flex justify-between border-b pt-10 pb-2">
-        <div className="relative">
-          <h5
-            className={
-              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
-            }
-            onClick={() => setActive(1)}
-          >
-            Product Details
-          </h5>
-          {active === 1 ? (
-            <div className={`${styles.active_indicator}`} />
-          ) : null}
-        </div>
-        <div className="relative">
-          <h5
-            className={
-              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
-            }
-            onClick={() => setActive(2)}
-          >
-            Product Reviews
-          </h5>
-          {active === 2 ? (
-            <div className={`${styles.active_indicator}`} />
-          ) : null}
-        </div>
-        <div className="relative">
-          <h5
-            className={
-              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
-            }
-            onClick={() => setActive(3)}
-          >
-            Seller Information
-          </h5>
-          {active === 3 ? (
-            <div className={`${styles.active_indicator}`} />
-          ) : null}
-        </div>
-      </div>
-      {active === 1 ? (
-        <>
-          <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
-            {data.description}
-          </p>
-        </>
-      ) : null}
-
-      {active === 2 ? (
-        <div className="w-full min-h-[40vh] flex flex-col items-center py-3 overflow-y-scroll">
-          {data &&
-            data.reviews.map((item, index) => (
-              <div className="w-full flex my-2">
-                <img
-                  src={`${item.user.avatar?.url}`}
-                  alt=""
-                  className="w-[50px] h-[50px] rounded-full"
-                />
-                <div className="pl-2 ">
-                  <div className="w-full flex items-center">
-                    <h1 className="font-[500] mr-3">{item.user.name}</h1>
-                    <Ratings rating={data?.ratings} />
-                  </div>
-                  <p>{item.comment}</p>
-                </div>
-              </div>
-            ))}
-
-          <div className="w-full flex justify-center">
-            {data && data.reviews.length === 0 && (
-              <h5>No Reviews have for this product!</h5>
-            )}
-          </div>
-        </div>
-      ) : null}
-
-      {active === 3 && (
-        <div className="w-full block 800px:flex p-5">
-          <div className="w-full 800px:w-[50%]">
-            <Link to={`/shop/preview/${data.shop._id}`}>
-              <div className="flex items-center">
-                <img
-                  src={`${data?.shop?.avatar?.url}`}
-                  className="w-[50px] h-[50px] rounded-full"
-                  alt=""
-                />
-                <div className="pl-3">
-                  <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
-                  <h5 className="pb-2 text-[15px]">
-                    ({averageRating}/5) Ratings
-                  </h5>
-                </div>
-              </div>
-            </Link>
-            <p className="pt-2">{data.shop.description}</p>
-          </div>
-          <div className="w-full 800px:w-[50%] mt-5 800px:mt-0 800px:flex flex-col items-end">
-            <div className="text-left">
-              <h5 className="font-[600]">
-                Joined on:{" "}
-                <span className="font-[500]">
-                  {data.shop?.createdAt?.slice(0, 10)}
-                </span>
-              </h5>
-              <h5 className="font-[600] pt-3">
-                Total Products:{" "}
-                <span className="font-[500]">
-                  {products && products.length}
-                </span>
-              </h5>
-              <h5 className="font-[600] pt-3">
-                Total Reviews:{" "}
-                <span className="font-[500]">{totalReviewsLength}</span>
-              </h5>
-              <Link to="/">
-                <div
-                  className={`${styles.button} !rounded-[4px] !h-[39.5px] mt-3`}
-                >
-                  <h4 className="text-white">Visit Shop</h4>
-                </div>
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -39,3 +39,17 @@ export const updateAdminOptions = (options) => async (dispatch) => {
 export const resetAdminOptionsState = () => (dispatch) => {
   dispatch({ type: 'RESET_ADMIN_OPTIONS_STATE' });
 };
+
+
+// Action to fetch admin options
+export const getAdminOptions = () => async (dispatch) => {
+  try {
+    const response = await axios.get(`${server}/adminoptions`);
+    dispatch({
+      type: 'GET_ADMIN_OPTIONS',
+      payload: response.data,
+    });
+  } catch (error) {
+    console.error("Failed to fetch admin options", error);
+  }
+};
