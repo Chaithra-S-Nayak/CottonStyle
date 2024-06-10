@@ -25,20 +25,20 @@ router.post(
         } else {
           images = req.body.images;
         }
-      
+
         const imagesLinks = [];
-      
+
         for (let i = 0; i < images.length; i++) {
           const result = await cloudinary.v2.uploader.upload(images[i], {
             folder: "products",
           });
-      
+
           imagesLinks.push({
             public_id: result.public_id,
             url: result.secure_url,
           });
         }
-      
+
         const productData = req.body;
         productData.images = imagesLinks;
         productData.shop = shop;
@@ -52,6 +52,94 @@ router.post(
       }
     } catch (error) {
       return next(new ErrorHandler(error, 400));
+    }
+  })
+);
+
+// update product
+router.put(
+  "/update-product/:id",
+  isSeller,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const productId = req.params.id;
+      const product = await Product.findById(productId);
+
+      if (!product) {
+        return next(new ErrorHandler("Product not found with this ID", 404));
+      }
+
+      const {
+        name,
+        description,
+        category,
+        tags,
+        originalPrice,
+        discountPrice,
+        stock,
+        newImages, // New images to be uploaded
+        oldImages, // Old images that were retained
+      } = req.body;
+
+      // Only update the images if new images are provided
+      if (newImages && newImages.length > 0) {
+        // First upload the new images to Cloudinary
+        const imagesLinks = [];
+
+        for (let i = 0; i < newImages.length; i++) {
+          const result = await cloudinary.v2.uploader.upload(newImages[i], {
+            folder: "products",
+          });
+
+          imagesLinks.push({
+            public_id: result.public_id,
+            url: result.secure_url,
+          });
+        }
+
+        // Combine old images that were retained with the newly uploaded images
+        product.images = [...oldImages, ...imagesLinks];
+      } else {
+        product.images = oldImages; // If no new images, keep the old images as is
+      }
+
+      if (name) product.name = name;
+      if (description) product.description = description;
+      if (category) product.category = category;
+      if (tags) product.tags = tags;
+      if (originalPrice) product.originalPrice = originalPrice;
+      if (discountPrice) product.discountPrice = discountPrice;
+      if (stock) product.stock = stock;
+
+      await product.save();
+
+      res.status(200).json({
+        success: true,
+        product,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  })
+);
+
+// get product details
+router.get(
+  "/get-product/:id",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const product = await Product.findById(req.params.id);
+
+      if (!product) {
+        return next(new ErrorHandler("Product not found with this ID", 404));
+      }
+
+      res.status(200).json({
+        success: true,
+        product,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );
@@ -101,8 +189,6 @@ router.delete(
     }
   })
 );
-
-
 
 // get all products
 router.get(

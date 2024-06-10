@@ -28,6 +28,7 @@ import {
 import {
   ShopDashboardPage,
   ShopCreateProduct,
+  ShopUpdateProduct,
   ShopAllProducts,
   ShopCreateEvents,
   ShopAllEvents,
@@ -201,6 +202,14 @@ const App = () => {
           }
         />
         <Route
+          path="/dashboard-update-product/:id"
+          element={
+            <SellerProtectedRoute>
+              <ShopUpdateProduct />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
           path="/dashboard-orders"
           element={
             <SellerProtectedRoute>
@@ -306,7 +315,7 @@ const App = () => {
             </ProtectedAdminRoute>
           }
         />
-         <Route
+        <Route
           path="/admin-products"
           element={
             <ProtectedAdminRoute>
@@ -314,7 +323,7 @@ const App = () => {
             </ProtectedAdminRoute>
           }
         />
-         <Route
+        <Route
           path="/admin-events"
           element={
             <ProtectedAdminRoute>
@@ -322,7 +331,7 @@ const App = () => {
             </ProtectedAdminRoute>
           }
         />
-         <Route
+        <Route
           path="/admin-withdraw-request"
           element={
             <ProtectedAdminRoute>
@@ -330,7 +339,7 @@ const App = () => {
             </ProtectedAdminRoute>
           }
         />
-                 <Route
+        <Route
           path="/admin-options"
           element={
             <ProtectedAdminRoute>
