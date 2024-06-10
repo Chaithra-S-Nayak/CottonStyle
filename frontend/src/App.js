@@ -20,6 +20,7 @@ import {
   SellerActivationPage,
   ShopLoginPage,
   OrderDetailsPage,
+  InvoicePage,
   TrackOrderPage,
   UserInbox,
   ForgotPasswordPage,
@@ -144,6 +145,14 @@ const App = () => {
           element={
             <ProtectedRoute>
               <OrderDetailsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/order/invoice/:id"
+          element={
+            <ProtectedRoute>
+              <InvoicePage />
             </ProtectedRoute>
           }
         />

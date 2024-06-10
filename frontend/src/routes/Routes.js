@@ -16,6 +16,7 @@ import ShopCreatePage from "../pages/ShopCreate";
 import SellerActivationPage from "../pages/SellerActivationPage";
 import ShopLoginPage from "../pages/ShopLoginPage";
 import OrderDetailsPage from "../pages/OrderDetailsPage";
+import InvoicePage from "../pages/InvoicePage";
 import TrackOrderPage from "../pages/TrackOrderPage";
 import UserInbox from "../pages/UserInbox.jsx";
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
@@ -40,6 +41,7 @@ export {
     SellerActivationPage,
     ShopLoginPage,
     OrderDetailsPage,
+    InvoicePage,
     TrackOrderPage,
     UserInbox,
     ForgotPasswordPage

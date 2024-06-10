@@ -26,7 +26,7 @@ const UserOrderDetails = () => {
   }, [dispatch,user._id]);
 
   const data = orders && orders.find((item) => item._id === id);
-
+  
   const reviewHandler = async (e) => {
     await axios
       .put(
@@ -236,6 +236,10 @@ const UserOrderDetails = () => {
       <Link to="/">
         <div className={`${styles.button} text-white`}>Send Message</div>
       </Link>
+      <Link to={`/user/order/invoice/${id}`}>
+  <div className={`${styles.button} text-white`}>View Invoice</div>
+</Link>
+
       <br />
       <br />
     </div>
