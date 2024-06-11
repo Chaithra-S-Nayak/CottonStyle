@@ -16,9 +16,11 @@ import Wishlist from "../Wishlist/Wishlist";
 import { RxCross1 } from "react-icons/rx";
 import logo from "../../Assests/CottonStyle.png";
 
+
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const { isSeller } = useSelector((state) => state.seller);
+  const { isAdmin } = useSelector((state) => state.admin);
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
   const { allProducts } = useSelector((state) => state.products);
@@ -55,11 +57,7 @@ const Header = ({ activeHeading }) => {
         <div className="hidden 800px:h-[50px] 800px:my-[20px] 800px:flex items-center justify-between">
           <div>
             <Link to="/">
-              <img
-                src={logo}
-                alt="Logo"
-                className="w-auto h-16"
-              />
+              <img src={logo} alt="Logo" className="w-auto h-16" />
             </Link>
           </div>
           {/* search box */}
@@ -99,7 +97,15 @@ const Header = ({ activeHeading }) => {
           <div className={`${styles.button}`}>
             <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
               <h1 className="text-[#fff] flex items-center">
-                {isSeller ? "Go to Dashboard" : "Become Seller"}{" "}
+                {isSeller ? "Go to Seller Dashboard" : "Become Seller"}{" "}
+                <IoIosArrowForward className="ml-1" />
+              </h1>
+            </Link>
+          </div>
+          <div className={`${styles.button}`}>
+            <Link to={`${isAdmin ? "admin/dashboard" : "/admin-login"}`}>
+              <h1 className="text-[#fff] flex items-center">
+                {isAdmin ? "Go to Admin Dashboard" : "Login as Admin"}{" "}
                 <IoIosArrowForward className="ml-1" />
               </h1>
             </Link>
@@ -191,15 +197,6 @@ const Header = ({ activeHeading }) => {
             />
           </div>
           <div>
-            <Link to="/">
-              <img
-                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-                alt=""
-                className="mt-3 cursor-pointer"
-              />
-            </Link>
-          </div>
-          <div>
             <div
               className="relative mr-[20px]"
               onClick={() => setOpenCart(true)}
@@ -281,9 +278,6 @@ const Header = ({ activeHeading }) => {
                   </h1>
                 </Link>
               </div>
-              <br />
-              <br />
-              <br />
 
               <div className="flex w-full justify-center">
                 {isAuthenticated ? (

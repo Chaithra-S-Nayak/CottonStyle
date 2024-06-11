@@ -6,6 +6,7 @@ import AdminDashboardProducts from "../pages/AdminDashboardProducts";
 import AdminDashboardEvents from "../pages/AdminDashboardEvents";
 import AdminDashboardWithdraw from "../pages/AdminDashboardWithdraw";
 import AdminDashboardOptions from "../pages/AdminDashboardOptions";
+import AdminLoginPage from "../pages/AdminLoginPage";
 
 export {
   AdminDashboardPage,
@@ -16,4 +17,5 @@ export {
   AdminDashboardEvents,
   AdminDashboardWithdraw,
   AdminDashboardOptions,
+  AdminLoginPage,
 };

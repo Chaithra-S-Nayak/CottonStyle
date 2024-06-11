@@ -3,13 +3,14 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const Shop = require("../model/shop");
 const Event = require("../model/event");
 const ErrorHandler = require("../utils/ErrorHandler");
-const { isSeller, isAdmin, isAuthenticated } = require("../middleware/auth");
+const { isSeller, isAdmin } = require("../middleware/auth");
 const router = express.Router();
 const cloudinary = require("cloudinary");
 
-// create event
+// Create event - only for sellers
 router.post(
   "/create-event",
+  isSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
       const shopId = req.body.shopId;
@@ -55,7 +56,7 @@ router.post(
   })
 );
 
-// get all events
+// Get all events
 router.get("/get-all-events", async (req, res, next) => {
   try {
     const events = await Event.find();
@@ -68,7 +69,7 @@ router.get("/get-all-events", async (req, res, next) => {
   }
 });
 
-// get all events of a shop
+// Get all events of a shop
 router.get(
   "/get-all-events/:id",
   catchAsyncErrors(async (req, res, next) => {
@@ -85,28 +86,40 @@ router.get(
   })
 );
 
-// delete event of a shop
+// Delete event of a shop - for sellers and admins
 router.delete(
   "/delete-shop-event/:id",
   catchAsyncErrors(async (req, res, next) => {
     try {
       const event = await Event.findById(req.params.id);
 
-      if (!product) {
-        return next(new ErrorHandler("Product is not found with this id", 404));
-      }    
+      if (!event) {
+        return next(new ErrorHandler("Event is not found with this id", 404));
+      }
 
-      for (let i = 0; 1 < product.images.length; i++) {
-        const result = await cloudinary.v2.uploader.destroy(
-          event.images[i].public_id
+      // Check if the user is the event's seller or an admin
+      const shop = await Shop.findById(event.shop);
+      if (
+        req.user.id !== shop.owner.toString() &&
+        (!req.admin || req.admin.role !== "admin")
+      ) {
+        return next(
+          new ErrorHandler(
+            "You do not have permission to delete this event",
+            403
+          )
         );
       }
-    
+
+      for (let i = 0; i < event.images.length; i++) {
+        await cloudinary.v2.uploader.destroy(event.images[i].public_id);
+      }
+
       await event.remove();
 
       res.status(201).json({
         success: true,
-        message: "Event Deleted successfully!",
+        message: "Event deleted successfully!",
       });
     } catch (error) {
       return next(new ErrorHandler(error, 400));
@@ -114,11 +127,10 @@ router.delete(
   })
 );
 
-// all events --- for admin
+// All events - for admin
 router.get(
   "/admin-all-events",
-  isAuthenticated,
-  isAdmin("Admin"),
+  isAdmin,
   catchAsyncErrors(async (req, res, next) => {
     try {
       const events = await Event.find().sort({

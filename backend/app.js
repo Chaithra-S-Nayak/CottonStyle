@@ -1,55 +1,63 @@
+// Import required modules
 const express = require("express");
-const ErrorHandler = require("./middleware/error");
-const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const ErrorHandler = require("./middleware/error");
 
-app.use(cors({
-  origin: ['http://localhost:3000'],
-  credentials: true
-}));
+// Create Express app
+const app = express();
 
+// Middleware
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
-
-// config
+// Configuration
 if (process.env.NODE_ENV !== "PRODUCTION") {
   require("dotenv").config({
     path: "config/.env",
   });
 }
 
-// import routes
-const user = require("./controller/user");
-const shop = require("./controller/shop");
-const product = require("./controller/product");
-const event = require("./controller/event");
-const coupon = require("./controller/coupounCode");
-const payment = require("./controller/payment");
-const order = require("./controller/order");
-const conversation = require("./controller/conversation");
-const message = require("./controller/message");
-const withdraw = require("./controller/withdraw");
-const adminOptions = require('./controller/adminOptions');
-const notificationRoutes = require('./controller/notification');
+// Import routes
+const userRoutes = require("./controller/user");
+const shopRoutes = require("./controller/shop");
+const adminRoutes = require("./controller/admin");
+const productRoutes = require("./controller/product");
+const eventRoutes = require("./controller/event");
+const couponRoutes = require("./controller/coupounCode");
+const paymentRoutes = require("./controller/payment");
+const orderRoutes = require("./controller/order");
+const conversationRoutes = require("./controller/conversation");
+const messageRoutes = require("./controller/message");
+const withdrawRoutes = require("./controller/withdraw");
+const adminOptionsRoutes = require("./controller/adminOptions");
+const notificationRoutes = require("./controller/notification");
 
-app.use("/api/v2/user", user);
-app.use("/api/v2/conversation", conversation);
-app.use("/api/v2/message", message);
-app.use("/api/v2/order", order);
-app.use("/api/v2/shop", shop);
-app.use("/api/v2/product", product);
-app.use("/api/v2/event", event);
-app.use("/api/v2/coupon", coupon);
-app.use("/api/v2/payment", payment);
-app.use("/api/v2/withdraw", withdraw);
-app.use('/api/v2/adminOptions', adminOptions);
-app.use('/api/v2/notifications', notificationRoutes);
+// Route Middleware
+app.use("/api/v2/user", userRoutes);
+app.use("/api/v2/admin", adminRoutes);
+app.use("/api/v2/conversation", conversationRoutes);
+app.use("/api/v2/message", messageRoutes);
+app.use("/api/v2/order", orderRoutes);
+app.use("/api/v2/shop", shopRoutes);
+app.use("/api/v2/product", productRoutes);
+app.use("/api/v2/event", eventRoutes);
+app.use("/api/v2/coupon", couponRoutes);
+app.use("/api/v2/payment", paymentRoutes);
+app.use("/api/v2/withdraw", withdrawRoutes);
+app.use("/api/v2/adminOptions", adminOptionsRoutes);
+app.use("/api/v2/notifications", notificationRoutes);
 
 // Error handling middleware
 app.use(ErrorHandler);
 
+// Export Express app
 module.exports = app;

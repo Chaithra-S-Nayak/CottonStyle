@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
-const crypto = require('crypto'); // Node.js built-in module
+const crypto = require("crypto"); // Node.js built-in module
 
 // create user
 router.post("/create-user", async (req, res, next) => {
@@ -149,94 +149,102 @@ router.post(
 const generateOtp = () => {
   const otp = crypto.randomInt(100000, 999999); // Generate a 6-digit random number
   return otp.toString();
-}
+};
 // Send OTP Endpoint
-router.post('/forgot-password', catchAsyncErrors(async (req, res, next) => {
-  const { email } = req.body;
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    return next(new ErrorHandler('User not found', 404));
-  }
-
-  const otp = generateOtp();
-  user.otp = otp;
-  user.otpExpiry = Date.now() + 300000; // OTP expires in 5 minutes
-  await user.save();
-
-  console.log('Generated OTP:', otp, 'for email:', email); // Log the generated OTP
-
-  try {
-    await sendMail({
-      email: user.email,
-      subject: 'Password Reset OTP',
-      message: `Your OTP for password reset is: ${otp}. It will expire in 5 minutes.`,
-    });
-    res.status(200).json({
-      success: true,
-      message: 'OTP sent to email',
-    });
-  } catch (error) {
-    user.otp = undefined;
-    user.otpExpiry = undefined;
-    await user.save();
-    return next(new ErrorHandler('Error sending OTP email', 500));
-  }
-}));
-
-//verify-otp
-router.post('/verify-otp', catchAsyncErrors(async (req, res, next) => {
-  const { email, otp } = req.body;
-  console.log('Verifying OTP for email:', email, 'with OTP:', otp);
-
-  const user = await User.findOne({ email }).select('+otp +otpExpiry');
-  console.log('Retrieved user:', user); // Log the user object
-
-  if (!user) {
-    console.log('User not found');
-    return next(new ErrorHandler('User not found', 404));
-  }
-
-  console.log('Stored OTP:', user.otp, 'OTP Expiry:', user.otpExpiry); // Log stored OTP and expiry
-
-  if (user.otp === otp && user.otpExpiry > Date.now()) {
-    console.log('OTP is valid');
-    res.status(200).json({
-      success: true,
-      message: 'OTP is valid. You can now reset your password.',
-    });
-  } else {
-    console.log('Invalid or expired OTP');
-    return next(new ErrorHandler('Invalid or expired OTP', 400));
-  }
-}));
-// Reset Password Endpoint
-// Reset Password Endpoint with error logging
-router.post('/reset-password', catchAsyncErrors(async (req, res, next) => {
-  try {
-    const { email, newPassword } = req.body;
-    const user = await User.findOne({ email }).select('+otp +otpExpiry');
+router.post(
+  "/forgot-password",
+  catchAsyncErrors(async (req, res, next) => {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
 
     if (!user) {
-      return next(new ErrorHandler('User not found', 404));
+      return next(new ErrorHandler("User not found", 404));
     }
 
-    // Hash the new password before saving
-    user.password = newPassword; 
-    user.otp = undefined;
-    user.otpExpiry = undefined;
+    const otp = generateOtp();
+    user.otp = otp;
+    user.otpExpiry = Date.now() + 300000; // OTP expires in 5 minutes
     await user.save();
 
-    res.status(200).json({
-      success: true,
-      message: 'Password has been reset successfully',
-    });
-  } catch (error) {
-    console.error('Error resetting password:', error);
-    return next(new ErrorHandler('Internal Server Error', 500));
-  }
-}));
+    console.log("Generated OTP:", otp, "for email:", email); // Log the generated OTP
 
+    try {
+      await sendMail({
+        email: user.email,
+        subject: "Password Reset OTP",
+        message: `Your OTP for password reset is: ${otp}. It will expire in 5 minutes.`,
+      });
+      res.status(200).json({
+        success: true,
+        message: "OTP sent to email",
+      });
+    } catch (error) {
+      user.otp = undefined;
+      user.otpExpiry = undefined;
+      await user.save();
+      return next(new ErrorHandler("Error sending OTP email", 500));
+    }
+  })
+);
+
+//verify-otp
+router.post(
+  "/verify-otp",
+  catchAsyncErrors(async (req, res, next) => {
+    const { email, otp } = req.body;
+    console.log("Verifying OTP for email:", email, "with OTP:", otp);
+
+    const user = await User.findOne({ email }).select("+otp +otpExpiry");
+    console.log("Retrieved user:", user); // Log the user object
+
+    if (!user) {
+      console.log("User not found");
+      return next(new ErrorHandler("User not found", 404));
+    }
+
+    console.log("Stored OTP:", user.otp, "OTP Expiry:", user.otpExpiry); // Log stored OTP and expiry
+
+    if (user.otp === otp && user.otpExpiry > Date.now()) {
+      console.log("OTP is valid");
+      res.status(200).json({
+        success: true,
+        message: "OTP is valid. You can now reset your password.",
+      });
+    } else {
+      console.log("Invalid or expired OTP");
+      return next(new ErrorHandler("Invalid or expired OTP", 400));
+    }
+  })
+);
+// Reset Password Endpoint
+// Reset Password Endpoint with error logging
+router.post(
+  "/reset-password",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { email, newPassword } = req.body;
+      const user = await User.findOne({ email }).select("+otp +otpExpiry");
+
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+
+      // Hash the new password before saving
+      user.password = newPassword;
+      user.otp = undefined;
+      user.otpExpiry = undefined;
+      await user.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Password has been reset successfully",
+      });
+    } catch (error) {
+      console.error("Error resetting password:", error);
+      return next(new ErrorHandler("Internal Server Error", 500));
+    }
+  })
+);
 
 // load user
 router.get(
@@ -474,8 +482,7 @@ router.get(
 // all users --- for admin
 router.get(
   "/admin-all-users",
-  isAuthenticated,
-  isAdmin("Admin"),
+  isAdmin,
   catchAsyncErrors(async (req, res, next) => {
     try {
       const users = await User.find().sort({
@@ -494,8 +501,7 @@ router.get(
 // delete users --- admin
 router.delete(
   "/delete-user/:id",
-  isAuthenticated,
-  isAdmin("Admin"),
+  isAdmin,
   catchAsyncErrors(async (req, res, next) => {
     try {
       const user = await User.findById(req.params.id);

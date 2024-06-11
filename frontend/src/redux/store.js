@@ -7,7 +7,7 @@ import { cartReducer } from "./reducers/cart";
 import { wishlistReducer } from "./reducers/wishlist";
 import { orderReducer } from "./reducers/order";
 import { adminOptionsReducer } from "./reducers/adminOptionsReducer";
-
+import { adminReducer } from "./reducers/admin";
 
 const Store = configureStore({
   reducer: {
@@ -19,6 +19,7 @@ const Store = configureStore({
     wishlist: wishlistReducer,
     order: orderReducer,
     adminOptions:adminOptionsReducer,
+    admin:adminReducer,
   },
 });
 
