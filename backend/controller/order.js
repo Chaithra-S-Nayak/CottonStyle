@@ -6,6 +6,7 @@ const { isAuthenticated, isSeller, isAdmin } = require("../middleware/auth");
 const Order = require("../model/order");
 const Shop = require("../model/shop");
 const Product = require("../model/product");
+const sendNotification = require("../utils/notification");
 
 // create new order
 router.post(
@@ -64,6 +65,17 @@ router.post(
         });
 
         orders.push(order);
+
+        const shop = await Shop.findById(shopId);
+        if (shop) {
+          await sendNotification(
+            "order",
+            `New order created with ID: ${order._id}`,
+            null,
+            shop._id,
+            shop.email
+          );
+        }
       }
 
       res.status(201).json({
@@ -103,7 +115,8 @@ router.get(
     }
   })
 );
-// Add a new route handler to fetch a single order by its ID
+
+// Route handler to fetch a single order by its ID
 router.get(
   "/get-order/:orderId",
   catchAsyncErrors(async (req, res, next) => {
@@ -123,7 +136,6 @@ router.get(
     }
   })
 );
-
 
 // get all orders of seller
 router.get(
@@ -157,6 +169,26 @@ router.put(
       if (!order) {
         return next(new ErrorHandler("Order not found with this id", 400));
       }
+
+      // Check if stock is available before processing
+      for (const item of order.cart) {
+        const product = await Product.findById(item._id);
+        if (!product) {
+          return next(
+            new ErrorHandler(`Product not found with ID: ${item._id}`, 404)
+          );
+        }
+        if (product.stock < item.qty) {
+          return next(
+            new ErrorHandler(
+              `Not enough stock for product ${product.name}. Available stock: ${product.stock}, requested: ${item.qty}`,
+              400
+            )
+          );
+        }
+      }
+
+      // If status is not "Processing", update stock quantities
       if (req.body.status !== "Processing") {
         order.cart.forEach(async (o) => {
           await updateOrder(o._id, o.qty);
@@ -185,11 +217,31 @@ router.put(
         product.stock -= qty;
         product.sold_out += qty;
 
+        if (product.stock <= 0) {
+          const shop = await Shop.findById(product.shopId);
+          if (shop) {
+            await sendNotification(
+              "stock",
+              `Product ${product.name} (ID: ${product._id}) is out of stock`,
+              null,
+              shop._id,
+              shop.email
+            );
+          } else {
+            console.error(`Shop not found with ID: ${product.shopId}`);
+          }
+        }
+
         await product.save({ validateBeforeSave: false });
       }
 
       async function updateSellerInfo(amount) {
         const seller = await Shop.findById(req.seller.id);
+
+        if (!seller) {
+          console.error(`Seller not found with ID: ${req.seller.id}`);
+          return;
+        }
 
         seller.availableBalance += amount;
 

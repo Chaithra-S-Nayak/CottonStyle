@@ -9,6 +9,8 @@ const cloudinary = require("cloudinary");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
 const sendShopToken = require("../utils/shopToken");
+const sendNotification = require("../utils/notification");
+require('dotenv').config();
 
 // create shop
 router.post("/create-shop", catchAsyncErrors(async (req, res, next) => {
@@ -51,6 +53,13 @@ router.post("/create-shop", catchAsyncErrors(async (req, res, next) => {
         success: true,
         message: `please check your email:- ${seller.email} to activate your shop!`,
       });
+      await sendNotification(
+        "seller_registration",
+        `New seller registered with email: ${seller.email}`,
+        null,
+        null,
+        process.env.ADMIN_EMAIL
+      );      
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }

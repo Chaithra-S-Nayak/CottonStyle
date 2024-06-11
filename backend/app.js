@@ -2,7 +2,6 @@ const express = require("express");
 const ErrorHandler = require("./middleware/error");
 const app = express();
 const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser");
 const cors = require("cors");
 
 app.use(cors({
@@ -35,6 +34,7 @@ const conversation = require("./controller/conversation");
 const message = require("./controller/message");
 const withdraw = require("./controller/withdraw");
 const adminOptions = require('./controller/adminOptions');
+const notificationRoutes = require('./controller/notification');
 
 app.use("/api/v2/user", user);
 app.use("/api/v2/conversation", conversation);
@@ -47,5 +47,9 @@ app.use("/api/v2/coupon", coupon);
 app.use("/api/v2/payment", payment);
 app.use("/api/v2/withdraw", withdraw);
 app.use('/api/v2/adminOptions', adminOptions);
+app.use('/api/v2/notifications', notificationRoutes);
+
+// Error handling middleware
+app.use(ErrorHandler);
 
 module.exports = app;
