@@ -12,6 +12,9 @@ const adminSchema = new mongoose.Schema({
     required: [true, "Please enter your email!"],
     unique: true,
   },
+  phoneNumber: {
+    type: Number,
+  },
   password: {
     type: String,
     required: [true, "Please enter your password"],
@@ -35,6 +38,10 @@ const adminSchema = new mongoose.Schema({
   otpExpiry: {
     type: Date,
     select: false,
+  },
+  avatar: {
+    public_id: String,
+    url: String,
   },
 });
 

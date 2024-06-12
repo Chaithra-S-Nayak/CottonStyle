@@ -22,6 +22,28 @@ export const loadAdmin = () => async (dispatch) => {
   }
 };
 
+export const updateAdminProfile =
+  (email, name, phoneNumber, password) => async (dispatch) => {
+    try {
+      dispatch({ type: "ADMIN_UPDATE_PROFILE_REQUEST" });
+
+      const { data } = await axios.put(
+        `${server}/admin/update-admin-info`,
+        { email, name, phoneNumber, password },
+        { withCredentials: true }
+      );
+
+      dispatch({ type: "ADMIN_UPDATE_PROFILE_SUCCESS", payload: data.admin });
+      toast.success("Profile updated successfully!");
+    } catch (error) {
+      dispatch({
+        type: "ADMIN_UPDATE_PROFILE_FAIL",
+        payload: error.response?.data?.message || "Unknown error occurred",
+      });
+      toast.error(error.response?.data?.message || "Failed to update profile");
+    }
+  };
+
 export const loginAdmin = (email, password) => async (dispatch) => {
   try {
     const response = await axios.post(`${server}/admin/login-admin`, {
@@ -63,7 +85,7 @@ export const verifyAdminOtp = (email, otp) => async (dispatch) => {
 
 // Admin logout
 export const logoutAdmin = () => async (dispatch) => {
-  await axios.get(`${server}/logout`, { withCredentials: true });
+  await axios.get(`${server}/admin/logout`, { withCredentials: true });
 
   dispatch({ type: "ADMIN_LOGOUT_SUCCESS" });
 };
@@ -83,46 +105,6 @@ export const forgotAdminPassword = (email) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "ADMIN_FORGOT_PASSWORD_FAIL",
-      payload: error.response?.data?.message || "Unknown error occurred",
-    });
-  }
-};
-
-// Reset password
-export const resetAdminPassword = (email, newPassword) => async (dispatch) => {
-  try {
-    dispatch({ type: "ADMIN_RESET_PASSWORD_REQUEST" });
-
-    const { data } = await axios.post(
-      `${server}/admin/reset-password`,
-      { email, newPassword },
-      { withCredentials: true }
-    );
-
-    dispatch({ type: "ADMIN_RESET_PASSWORD_SUCCESS", payload: data.message });
-  } catch (error) {
-    dispatch({
-      type: "ADMIN_RESET_PASSWORD_FAIL",
-      payload: error.response?.data?.message || "Unknown error occurred",
-    });
-  }
-};
-
-// Update profile
-export const updateAdminProfile = (email, name) => async (dispatch) => {
-  try {
-    dispatch({ type: "ADMIN_UPDATE_PROFILE_REQUEST" });
-
-    const { data } = await axios.put(
-      `${server}/admin/update-admin-info`,
-      { email, name },
-      { withCredentials: true }
-    );
-
-    dispatch({ type: "ADMIN_UPDATE_PROFILE_SUCCESS", payload: data.admin });
-  } catch (error) {
-    dispatch({
-      type: "ADMIN_UPDATE_PROFILE_FAIL",
       payload: error.response?.data?.message || "Unknown error occurred",
     });
   }

@@ -7,7 +7,7 @@ import AdminDashboardEvents from "../pages/AdminDashboardEvents";
 import AdminDashboardWithdraw from "../pages/AdminDashboardWithdraw";
 import AdminDashboardOptions from "../pages/AdminDashboardOptions";
 import AdminLoginPage from "../pages/AdminLoginPage";
-
+import AdminSettingsPage from "../pages/AdminSettingsPage";
 export {
   AdminDashboardPage,
   AdminDashboardUsers,
@@ -18,4 +18,5 @@ export {
   AdminDashboardWithdraw,
   AdminDashboardOptions,
   AdminLoginPage,
+  AdminSettingsPage,
 };

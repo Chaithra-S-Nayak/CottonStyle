@@ -12,7 +12,6 @@ const sendAdminToken = require("../utils/sendAdminToken");
 
 router.get("/load", isAdmin, async (req, res) => {
   try {
-    console.log(req);
     const admin = await Admin.findById(req.admin.id);
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
@@ -158,26 +157,34 @@ router.post(
   })
 );
 
-// Reset password endpoint
-router.post(
-  "/reset-password",
+router.put(
+  "/change-password",
+  isAdmin,
   catchAsyncErrors(async (req, res, next) => {
-    const { email, newPassword } = req.body;
-    const admin = await Admin.findOne({ email }).select("+otp +otpExpiry");
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+
+    if (newPassword !== confirmPassword) {
+      return next(
+        new ErrorHandler("New password and confirm password do not match", 400)
+      );
+    }
+
+    const admin = await Admin.findById(req.admin.id).select("+password");
 
     if (!admin) {
       return next(new ErrorHandler("Admin not found", 404));
     }
 
+    const isPasswordValid = await admin.comparePassword(oldPassword);
+
+    if (!isPasswordValid) {
+      return next(new ErrorHandler("Old password is incorrect", 400));
+    }
+
     admin.password = newPassword;
-    admin.otp = undefined;
-    admin.otpExpiry = undefined;
     await admin.save();
 
-    res.status(200).json({
-      success: true,
-      message: "Password has been reset successfully",
-    });
+    res.status(200).json({ success: "Password changed successfully" });
   })
 );
 
@@ -203,51 +210,29 @@ router.put(
   "/update-admin-info",
   isAdmin,
   catchAsyncErrors(async (req, res, next) => {
-    const { email, name } = req.body;
-
+    const { email, name, password, phoneNumber, avatar } = req.body;
     const admin = await Admin.findById(req.admin.id);
 
     if (!admin) {
       return next(new ErrorHandler("Admin not found", 404));
     }
 
-    admin.name = name;
-    admin.email = email;
-
-    await admin.save();
-
-    res.status(200).json({
-      success: true,
-      admin,
-    });
-  })
-);
-
-// Update admin avatar
-router.put(
-  "/update-avatar",
-  isAdmin,
-  catchAsyncErrors(async (req, res, next) => {
-    const { avatar } = req.body;
-
-    const admin = await Admin.findById(req.admin.id);
-
-    if (!admin) {
-      return next(new ErrorHandler("Admin not found", 404));
-    }
-
-    if (avatar !== "") {
-      const imageId = admin.avatar.public_id;
-      await cloudinary.v2.uploader.destroy(imageId);
-
-      const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+    if (email) admin.email = email;
+    if (name) admin.name = name;
+    if (phoneNumber) admin.phoneNumber = phoneNumber;
+    if (password) admin.password = password;
+    if (avatar) {
+      if (admin.avatar && admin.avatar.public_id) {
+        await cloudinary.uploader.destroy(admin.avatar.public_id);
+      }
+      const result = await cloudinary.uploader.upload(avatar, {
         folder: "avatars",
         width: 150,
+        crop: "scale",
       });
-
       admin.avatar = {
-        public_id: myCloud.public_id,
-        url: myCloud.secure_url,
+        public_id: result.public_id,
+        url: result.secure_url,
       };
     }
 

@@ -51,6 +51,7 @@ import {
   AdminDashboardWithdraw,
   AdminDashboardOptions,
   AdminLoginPage,
+  AdminSettingsPage,
 } from "./routes/AdminRoutes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -347,6 +348,14 @@ const App = () => {
           element={
             <ProtectedAdminRoute>
               <AdminDashboardOptions />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin-profile"
+          element={
+            <ProtectedAdminRoute>
+              <AdminSettingsPage />
             </ProtectedAdminRoute>
           }
         />
