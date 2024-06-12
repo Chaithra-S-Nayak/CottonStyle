@@ -7,8 +7,8 @@ const { isAuthenticated, isSeller, isAdmin } = require("../middleware/auth");
 
 router.get(
   "/",
-  isAuthenticated,
-  isSeller, 
+  isAdmin,
+  isSeller,
   catchAsyncErrors(async (req, res, next) => {
     const { context } = req.query; // 'context' will be 'seller' or 'admin'
     let notifications = [];
@@ -21,12 +21,12 @@ router.get(
         req.seller._id,
         notifications
       );
-    } else if (context === "admin" && req.user) {
+    } else if (context === "admin" && req.admin) {
       // Fetch notifications for admin/user
-      notifications = await Notification.find({ userId: req.user._id });
+      notifications = await Notification.find({ adminId: req.admin._id });
       console.log(
-        "Fetched Notifications for User:",
-        req.user._id,
+        "Fetched Notifications for Admin:",
+        req.admin._id,
         notifications
       );
     } else {
@@ -44,7 +44,7 @@ router.get(
 
 router.put(
   "/:id/mark-as-read",
-  isAuthenticated,
+  isAdmin,
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
     const { context } = req.query; // 'context' will be 'seller' or 'admin'
@@ -55,10 +55,10 @@ router.put(
         _id: req.params.id,
         shopId: req.seller._id,
       });
-    } else if (context === "admin" && req.user) {
+    } else if (context === "admin" && req.admin) {
       notification = await Notification.findOne({
         _id: req.params.id,
-        userId: req.user._id,
+        adminId: req.admin._id,
       });
     }
 
@@ -80,7 +80,6 @@ module.exports = router;
 
 router.put(
   "/:id/mark-as-read",
-  isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
     const notification = await Notification.findById(req.params.id);
 

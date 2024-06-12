@@ -56,7 +56,7 @@ router.post(
         await sendNotification(
           "seller_registration",
           `New seller registered with email: ${seller.email}`,
-          null,
+          process.env.ADMIN_ID,
           null,
           process.env.ADMIN_EMAIL
         );
