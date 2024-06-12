@@ -33,19 +33,22 @@ exports.isSeller = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.isAdmin = catchAsyncErrors(async (req, res, next) => {
-    const { admin_token } = req.cookies;
-  
-    if (!admin_token) {
-      return next(new ErrorHandler("Please login to continue", 401));
-    }
-  
+  const { admin_token } = req.cookies;
+
+  if (!admin_token) {
+    return next(new ErrorHandler("Unauthorized access", 401));
+  }
+
+  try {
     const decoded = jwt.verify(admin_token, process.env.JWT_SECRET_KEY);
     req.admin = await Admin.findById(decoded.id);
-  
+
     if (!req.admin) {
       return next(new ErrorHandler("Admin not found", 404));
     }
-  
-    next();
-  });
 
+    next();
+  } catch (error) {
+    return next(new ErrorHandler("Unauthorized access", 401));
+  }
+});

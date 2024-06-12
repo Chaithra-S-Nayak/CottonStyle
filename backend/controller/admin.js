@@ -10,6 +10,20 @@ const { isAdmin } = require("../middleware/auth");
 const cloudinary = require("cloudinary");
 const sendAdminToken = require("../utils/sendAdminToken");
 
+router.get("/load", isAdmin, async (req, res) => {
+  try {
+    console.log(req);
+    const admin = await Admin.findById(req.admin.id);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    res.status(200).json({ admin });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // Generate OTP
 const generateOtp = () => {
   const otp = crypto.randomInt(100000, 999999).toString();

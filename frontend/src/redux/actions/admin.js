@@ -1,12 +1,34 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import { server } from '../../server';
+import { server } from "../../server";
+
+export const loadAdmin = () => async (dispatch) => {
+  try {
+    dispatch({ type: "LOAD_ADMIN_REQUEST" });
+
+    const { data } = await axios.get(`${server}/admin/load`, {
+      withCredentials: true,
+    });
+
+    dispatch({
+      type: "LOAD_ADMIN_SUCCESS",
+      payload: data.admin,
+    });
+  } catch (error) {
+    dispatch({
+      type: "LOAD_ADMIN_FAIL",
+      payload: error.response.data.message,
+    });
+  }
+};
 
 export const loginAdmin = (email, password) => async (dispatch) => {
   try {
-    const response = await axios.post(`${server}/admin/login-admin`, { email, password });
+    const response = await axios.post(`${server}/admin/login-admin`, {
+      email,
+      password,
+    });
     if (response.data.success) {
-      // No need to dispatch a success action since OTP is sent and verified separately
       return Promise.resolve();
     }
   } catch (error) {
@@ -15,11 +37,15 @@ export const loginAdmin = (email, password) => async (dispatch) => {
   }
 };
 
-export const verifyAdminOtp = ( email, otp) => async (dispatch) => {
+export const verifyAdminOtp = (email, otp) => async (dispatch) => {
   dispatch({ type: "ADMIN_VERIFY_OTP_REQUEST" });
-  
+
   try {
-    const response = await axios.post(`${server}/admin/verify-admin-otp`, { email, otp },{ withCredentials: true });
+    const response = await axios.post(
+      `${server}/admin/verify-admin-otp`,
+      { email, otp },
+      { withCredentials: true }
+    );
     if (response.data.success) {
       dispatch({ type: "ADMIN_VERIFY_OTP_SUCCESS", payload: response.data });
       return Promise.resolve();
@@ -27,32 +53,37 @@ export const verifyAdminOtp = ( email, otp) => async (dispatch) => {
       throw new Error(response.data.message || "OTP verification failed");
     }
   } catch (error) {
-    dispatch({ type: "ADMIN_VERIFY_OTP_FAIL", payload: error.response?.data?.message || "OTP verification failed" });
+    dispatch({
+      type: "ADMIN_VERIFY_OTP_FAIL",
+      payload: error.response?.data?.message || "OTP verification failed",
+    });
     return Promise.reject(error);
   }
 };
-
-
 
 // Admin logout
 export const logoutAdmin = () => async (dispatch) => {
   await axios.get(`${server}/logout`, { withCredentials: true });
 
-  dispatch({ type: 'ADMIN_LOGOUT_SUCCESS' });
+  dispatch({ type: "ADMIN_LOGOUT_SUCCESS" });
 };
 
 // Forgot password
 export const forgotAdminPassword = (email) => async (dispatch) => {
   try {
-    dispatch({ type: 'ADMIN_FORGOT_PASSWORD_REQUEST' });
+    dispatch({ type: "ADMIN_FORGOT_PASSWORD_REQUEST" });
 
-    const { data } = await axios.post(`${server}/admin/forgot-password`, { email }, { withCredentials: true });
+    const { data } = await axios.post(
+      `${server}/admin/forgot-password`,
+      { email },
+      { withCredentials: true }
+    );
 
-    dispatch({ type: 'ADMIN_FORGOT_PASSWORD_SUCCESS', payload: data.message });
+    dispatch({ type: "ADMIN_FORGOT_PASSWORD_SUCCESS", payload: data.message });
   } catch (error) {
     dispatch({
-      type: 'ADMIN_FORGOT_PASSWORD_FAIL',
-      payload: error.response?.data?.message || 'Unknown error occurred',
+      type: "ADMIN_FORGOT_PASSWORD_FAIL",
+      payload: error.response?.data?.message || "Unknown error occurred",
     });
   }
 };
@@ -60,15 +91,19 @@ export const forgotAdminPassword = (email) => async (dispatch) => {
 // Reset password
 export const resetAdminPassword = (email, newPassword) => async (dispatch) => {
   try {
-    dispatch({ type: 'ADMIN_RESET_PASSWORD_REQUEST' });
+    dispatch({ type: "ADMIN_RESET_PASSWORD_REQUEST" });
 
-    const { data } = await axios.post(`${server}/admin/reset-password`, { email, newPassword }, { withCredentials: true });
+    const { data } = await axios.post(
+      `${server}/admin/reset-password`,
+      { email, newPassword },
+      { withCredentials: true }
+    );
 
-    dispatch({ type: 'ADMIN_RESET_PASSWORD_SUCCESS', payload: data.message });
+    dispatch({ type: "ADMIN_RESET_PASSWORD_SUCCESS", payload: data.message });
   } catch (error) {
     dispatch({
-      type: 'ADMIN_RESET_PASSWORD_FAIL',
-      payload: error.response?.data?.message || 'Unknown error occurred',
+      type: "ADMIN_RESET_PASSWORD_FAIL",
+      payload: error.response?.data?.message || "Unknown error occurred",
     });
   }
 };
@@ -76,15 +111,19 @@ export const resetAdminPassword = (email, newPassword) => async (dispatch) => {
 // Update profile
 export const updateAdminProfile = (email, name) => async (dispatch) => {
   try {
-    dispatch({ type: 'ADMIN_UPDATE_PROFILE_REQUEST' });
+    dispatch({ type: "ADMIN_UPDATE_PROFILE_REQUEST" });
 
-    const { data } = await axios.put(`${server}/admin/update-admin-info`, { email, name }, { withCredentials: true });
+    const { data } = await axios.put(
+      `${server}/admin/update-admin-info`,
+      { email, name },
+      { withCredentials: true }
+    );
 
-    dispatch({ type: 'ADMIN_UPDATE_PROFILE_SUCCESS', payload: data.admin });
+    dispatch({ type: "ADMIN_UPDATE_PROFILE_SUCCESS", payload: data.admin });
   } catch (error) {
     dispatch({
-      type: 'ADMIN_UPDATE_PROFILE_FAIL',
-      payload: error.response?.data?.message || 'Unknown error occurred',
+      type: "ADMIN_UPDATE_PROFILE_FAIL",
+      payload: error.response?.data?.message || "Unknown error occurred",
     });
   }
 };

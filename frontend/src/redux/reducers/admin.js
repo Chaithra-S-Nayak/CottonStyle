@@ -2,7 +2,7 @@ import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
   admin: null,
-  isLoading: false,
+  isLoading: true,
   isAdmin: false,
   success: false,
   error: null,
@@ -11,6 +11,19 @@ const initialState = {
 
 export const adminReducer = createReducer(initialState, (builder) => {
   builder
+    .addCase("LOAD_ADMIN_REQUEST", (state) => {
+      state.isLoading = true;
+    })
+    .addCase("LOAD_ADMIN_SUCCESS", (state, action) => {
+      state.isAdmin = true;
+      state.isLoading = false;
+      state.admin = action.payload;
+    })
+    .addCase("LOAD_ADMIN_FAIL", (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+      state.isAdmin = false;
+    })
     .addCase("ADMIN_LOGIN_REQUEST", (state) => {
       state.isLoading = true;
       state.error = null;
