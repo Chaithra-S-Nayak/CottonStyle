@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AiOutlinePlusCircle } from "react-icons/ai";
+import { AiOutlinePlusCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { categoriesData } from "../../static/data";
@@ -25,13 +25,12 @@ const CreateEvent = () => {
 
   const handleStartDateChange = (e) => {
     const startDate = new Date(e.target.value);
-    const minEndDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000);
+    const minEndDate = new Date(startDate.getTime() + 1 * 24 * 60 * 60 * 1000);
     setStartDate(startDate);
     setEndDate(null);
-    document.getElementById("end-date").min = minEndDate.toISOString.slice(
-      0,
-      10
-    );
+    document.getElementById("end-date").min = minEndDate
+      .toISOString()
+      .slice(0, 10);
   };
 
   const handleEndDateChange = (e) => {
@@ -42,7 +41,7 @@ const CreateEvent = () => {
   const today = new Date().toISOString().slice(0, 10);
 
   const minEndDate = startDate
-    ? new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000)
+    ? new Date(startDate.getTime() + 1 * 24 * 60 * 60 * 1000)
         .toISOString()
         .slice(0, 10)
     : "";
@@ -56,12 +55,10 @@ const CreateEvent = () => {
       navigate("/dashboard-events");
       window.location.reload();
     }
-  }, [dispatch, error, success]);
+  }, [dispatch, error, success, navigate]);
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-
-    setImages([]);
 
     files.forEach((file) => {
       const reader = new FileReader();
@@ -74,7 +71,9 @@ const CreateEvent = () => {
       reader.readAsDataURL(file);
     });
   };
-
+  const handleRemoveImage = (index) => {
+    setImages((old) => old.filter((_, i) => i !== index));
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -100,7 +99,7 @@ const CreateEvent = () => {
   };
 
   return (
-    <div className="w-[90%] 800px:w-[50%] bg-white  shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
+    <div className="w-[90%] 800px:w-[50%] bg-white shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
       <h5 className="text-[30px] font-Poppins text-center">Create Event</h5>
       {/* create event form */}
       <form onSubmit={handleSubmit}>
@@ -115,7 +114,7 @@ const CreateEvent = () => {
             value={name}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setName(e.target.value)}
-            placeholder="Enter your event product name..."
+            placeholder="Enter your event product name"
           />
         </div>
         <br />
@@ -132,7 +131,7 @@ const CreateEvent = () => {
             value={description}
             className="mt-2 appearance-none block w-full pt-2 px-3 border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter your event product description..."
+            placeholder="Enter your event product description"
           ></textarea>
         </div>
         <br />
@@ -163,7 +162,7 @@ const CreateEvent = () => {
             value={tags}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setTags(e.target.value)}
-            placeholder="Enter your event product tags..."
+            placeholder="Enter your event product tags"
           />
         </div>
         <br />
@@ -189,7 +188,7 @@ const CreateEvent = () => {
             value={discountPrice}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setDiscountPrice(e.target.value)}
-            placeholder="Enter your event product price with discount..."
+            placeholder="Enter your event product price with discount"
           />
         </div>
         <br />
@@ -203,7 +202,7 @@ const CreateEvent = () => {
             value={stock}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setStock(e.target.value)}
-            placeholder="Enter your event product stock..."
+            placeholder="Enter your event product stock"
           />
         </div>
         <br />
@@ -219,7 +218,7 @@ const CreateEvent = () => {
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={handleStartDateChange}
             min={today}
-            placeholder="Enter your event product stock..."
+            placeholder="Enter your event Start Date"
           />
         </div>
         <br />
@@ -230,12 +229,12 @@ const CreateEvent = () => {
           <input
             type="date"
             name="price"
-            id="start-date"
+            id="end-date"
             value={endDate ? endDate.toISOString().slice(0, 10) : ""}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={handleEndDateChange}
             min={minEndDate}
-            placeholder="Enter your event product stock..."
+            placeholder="Enter your event End Date"
           />
         </div>
         <br />
@@ -256,13 +255,20 @@ const CreateEvent = () => {
               <AiOutlinePlusCircle size={30} className="mt-3" color="#555" />
             </label>
             {images &&
-              images.map((i) => (
-                <img
-                  src={i}
-                  key={i}
-                  alt=""
-                  className="h-[120px] w-[120px] object-cover m-2"
-                />
+              images.map((i, index) => (
+                <div key={index} className="relative">
+                  <img
+                    src={i}
+                    alt=""
+                    className="h-[120px] w-[120px] object-cover m-2"
+                  />
+                  <AiOutlineCloseCircle
+                    size={20}
+                    color="#555"
+                    className="absolute top-0 right-0 cursor-pointer"
+                    onClick={() => handleRemoveImage(index)}
+                  />
+                </div>
               ))}
           </div>
           <br />

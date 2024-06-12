@@ -103,7 +103,7 @@ const Header = ({ activeHeading }) => {
             </Link>
           </div>
           <div className={`${styles.button}`}>
-            <Link to={`${isAdmin ? "admin/dashboard" : "/admin-login"}`}>
+            <Link to={`${isAdmin ? "/admin/dashboard" : "/admin-login"}`}>
               <h1 className="text-[#fff] flex items-center">
                 {isAdmin ? "Go to Admin Dashboard" : "Login as Admin"}{" "}
                 <IoIosArrowForward className="ml-1" />

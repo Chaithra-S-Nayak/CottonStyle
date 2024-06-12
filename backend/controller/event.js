@@ -86,7 +86,6 @@ router.get(
   })
 );
 
-// Delete event of a shop - for sellers and admins
 router.delete(
   "/delete-shop-event/:id",
   catchAsyncErrors(async (req, res, next) => {
@@ -97,25 +96,11 @@ router.delete(
         return next(new ErrorHandler("Event is not found with this id", 404));
       }
 
-      // Check if the user is the event's seller or an admin
-      const shop = await Shop.findById(event.shop);
-      if (
-        req.user.id !== shop.owner.toString() &&
-        (!req.admin || req.admin.role !== "admin")
-      ) {
-        return next(
-          new ErrorHandler(
-            "You do not have permission to delete this event",
-            403
-          )
-        );
-      }
-
       for (let i = 0; i < event.images.length; i++) {
         await cloudinary.v2.uploader.destroy(event.images[i].public_id);
       }
 
-      await event.remove();
+      await event.deleteOne();
 
       res.status(201).json({
         success: true,

@@ -5,27 +5,27 @@ import { AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { deleteEvent, getAllEventsShop } from "../../redux/actions/event";
-import { getAllProductsShop } from "../../redux/actions/product";
-import { deleteProduct } from "../../redux/actions/product";
 import Loader from "../Layout/Loader";
 
 const AllEvents = () => {
-  const { events, isLoading } = useSelector((state) => state.events);
+  const { events = [], isLoading } = useSelector((state) => state.events);
   const { seller } = useSelector((state) => state.seller);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllEventsShop(seller._id));
-  }, [dispatch]);
+    if (seller && seller._id) {
+      dispatch(getAllEventsShop(seller._id));
+    }
+  }, [dispatch, seller]);
 
   const handleDelete = (id) => {
     dispatch(deleteEvent(id));
     window.location.reload();
-  }
+  };
 
   const columns = [
-    { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: "Event Id", minWidth: 150, flex: 0.7 },
     {
       field: "name",
       headerName: "Name",
@@ -45,7 +45,6 @@ const AllEvents = () => {
       minWidth: 80,
       flex: 0.5,
     },
-
     {
       field: "sold",
       headerName: "Sold out",
@@ -61,16 +60,14 @@ const AllEvents = () => {
       type: "number",
       sortable: false,
       renderCell: (params) => {
-        const d = params.row.name;
-        const product_name = d.replace(/\s+/g, "-");
+        const productName = params.row.name.replace(/\s+/g, "-");
         return (
-          <>
-            <Link to={`/product/${product_name}`}>
-              <Button>
-                <AiOutlineEye size={20} />
-              </Button>
-            </Link>
-          </>
+          // <Link to={`/product/${productName}`}>
+          <Link to={"/events"}>
+            <Button>
+              <AiOutlineEye size={20} />
+            </Button>
+          </Link>
         );
       },
     },
@@ -83,30 +80,24 @@ const AllEvents = () => {
       sortable: false,
       renderCell: (params) => {
         return (
-          <>
-            <Button
-            onClick={() => handleDelete(params.id)}
-            >
-              <AiOutlineDelete size={20} />
-            </Button>
-          </>
+          <Button onClick={() => handleDelete(params.row.id)}>
+            <AiOutlineDelete size={20} />
+          </Button>
         );
       },
     },
   ];
 
-  const row = [];
-
-  events &&
-  events.forEach((item) => {
-      row.push({
-        id: item._id,
-        name: item.name,
-        price: "₹" + item.discountPrice,
-        Stock: item.stock,
-        sold: item.sold_out,
-      });
-    });
+  // Check if events is an array before mapping
+  const rows = Array.isArray(events)
+    ? events.map((event) => ({
+        id: event._id,
+        name: event.name,
+        price: `₹${event.discountPrice}`,
+        Stock: event.stock,
+        sold: event.sold_out,
+      }))
+    : [];
 
   return (
     <>
@@ -115,7 +106,7 @@ const AllEvents = () => {
       ) : (
         <div className="w-full mx-8 pt-1 mt-10 bg-white">
           <DataGrid
-            rows={row}
+            rows={rows}
             columns={columns}
             pageSize={10}
             disableSelectionOnClick

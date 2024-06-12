@@ -8,15 +8,22 @@ export const createevent = (data) => async (dispatch) => {
       type: "eventCreateRequest",
     });
 
-    const { d } = await axios.post(`${server}/event/create-event`, data);
-    dispatch({
-      type: "eventCreateSuccess",
-      payload: d.event,
+    const response = await axios.post(`${server}/event/create-event`, data, {
+      withCredentials: true,
     });
+
+    if (response && response.data) {
+      dispatch({
+        type: "eventCreateSuccess",
+        payload: response.data.event,
+      });
+    } else {
+      throw new Error("Invalid response from server");
+    }
   } catch (error) {
     dispatch({
       type: "eventCreateFail",
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || error.message,
     });
   }
 };

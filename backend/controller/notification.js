@@ -16,19 +16,19 @@ router.get(
     if (context === "seller" && req.seller) {
       // Fetch notifications for seller
       notifications = await Notification.find({ shopId: req.seller._id });
-      console.log(
-        "Fetched Notifications for Shop:",
-        req.seller._id,
-        notifications
-      );
+      // console.log(
+      //   "Fetched Notifications for Shop:",
+      //   req.seller._id,
+      //   notifications
+      // );
     } else if (context === "admin" && req.admin) {
       // Fetch notifications for admin/user
       notifications = await Notification.find({ adminId: req.admin._id });
-      console.log(
-        "Fetched Notifications for Admin:",
-        req.admin._id,
-        notifications
-      );
+      // console.log(
+      //   "Fetched Notifications for Admin:",
+      //   req.admin._id,
+      //   notifications
+      // );
     } else {
       return next(
         new ErrorHandler("Invalid context or authentication failed", 400)
