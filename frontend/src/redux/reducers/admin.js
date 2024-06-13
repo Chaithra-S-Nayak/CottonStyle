@@ -61,19 +61,6 @@ export const adminReducer = createReducer(initialState, (builder) => {
       state.isAdmin = false;
       state.success = false;
     })
-    .addCase("ADMIN_FORGOT_PASSWORD_REQUEST", (state) => {
-      state.isLoading = true;
-      state.error = null;
-    })
-    .addCase("ADMIN_FORGOT_PASSWORD_SUCCESS", (state, action) => {
-      state.isLoading = false;
-      state.success = true;
-      state.message = action.payload.message;
-    })
-    .addCase("ADMIN_FORGOT_PASSWORD_FAIL", (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    })
     .addCase("ADMIN_UPDATE_PROFILE_REQUEST", (state) => {
       state.isLoading = true;
       state.error = null;

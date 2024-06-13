@@ -3,12 +3,12 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { server } from "../../server";
 
-const OTPInput = ({ email, onSuccess }) => {
+const SellerOTPInput = ({ email, onSuccess }) => {
   const [otp, setOtp] = useState("");
 
   const verifyOtp = async () => {
     try {
-      const response = await axios.post(`${server}/user/user-verify-otp`, {
+      const response = await axios.post(`${server}/shop/seller-verify-otp`, {
         email,
         otp,
       });
@@ -73,4 +73,4 @@ const OTPInput = ({ email, onSuccess }) => {
   );
 };
 
-export default OTPInput;
+export default SellerOTPInput;

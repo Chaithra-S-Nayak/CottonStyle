@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styles from "../../styles/styles";
 import {
@@ -42,13 +42,21 @@ const Header = ({ activeHeading }) => {
     setSearchData(filteredProducts);
   };
 
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 70) {
-      setActive(true);
-    } else {
-      setActive(false);
-    }
-  });
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 95) {
+        setActive(true);
+      } else {
+        setActive(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <>
@@ -77,7 +85,7 @@ const Header = ({ activeHeading }) => {
                 {searchData &&
                   searchData.map((i, index) => {
                     return (
-                      <Link to={`/product/${i._id}`}>
+                      <Link to={`/product/${i._id}`} key={index}>
                         <div className="w-full flex items-start-py-3">
                           <img
                             src={`${i.images[0]?.url}`}
@@ -96,7 +104,7 @@ const Header = ({ activeHeading }) => {
           <div className={`${styles.button}`}>
             <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
               <h1 className="text-[#fff] flex items-center">
-                {isSeller ? "Go to Seller Dashboard" : "Become Seller"}{" "}
+                {isSeller ? "Seller Dashboard" : "Become Seller"}{" "}
                 <IoIosArrowForward className="ml-1" />
               </h1>
             </Link>
@@ -104,7 +112,7 @@ const Header = ({ activeHeading }) => {
           <div className={`${styles.button}`}>
             <Link to={`${isAdmin ? "/admin/dashboard" : "/admin-login"}`}>
               <h1 className="text-[#fff] flex items-center">
-                {isAdmin ? "Go to Admin Dashboard" : "Login as Admin"}{" "}
+                {isAdmin ? "Admin Dashboard" : "Login as Admin"}{" "}
                 <IoIosArrowForward className="ml-1" />
               </h1>
             </Link>
@@ -113,8 +121,10 @@ const Header = ({ activeHeading }) => {
       </div>
       <div
         className={`${
-          active === true ? "shadow-sm fixed top-0 left-0 z-10" : null
-        } transition hidden 800px:flex items-center justify-between w-full bg-[#243450] h-[70px]`}
+          active
+            ? "shadow-sm fixed top-0 left-0 z-10 bg-[#243450] transition-all duration-300"
+            : "bg-[#243450]"
+        } transition hidden 800px:flex items-center justify-between w-full h-[70px]`}
       >
         <div
           className={`${styles.section} relative ${styles.noramlFlex} justify-between`}
@@ -183,9 +193,10 @@ const Header = ({ activeHeading }) => {
       {/* mobile header */}
       <div
         className={`${
-          active === true ? "shadow-sm fixed top-0 left-0 z-10" : null
-        }
-      w-full h-[60px] bg-[#fff] z-50 top-0 left-0 shadow-sm 800px:hidden`}
+          active
+            ? "shadow-sm fixed top-0 left-0 z-10 transition-all duration-300"
+            : "transition-all duration-300"
+        } w-full h-[60px] bg-[#fff] z-50 top-0 left-0 shadow-sm 800px:hidden`}
       >
         <div className="w-full flex items-center justify-between">
           <div>
@@ -253,7 +264,7 @@ const Header = ({ activeHeading }) => {
 
                       const Product_name = d.replace(/\s+/g, "-");
                       return (
-                        <Link to={`/product/${Product_name}`}>
+                        <Link to={`/product/${Product_name}`} key={i._id}>
                           <div className="flex items-center">
                             <img
                               src={i.image_Url[0]?.url}

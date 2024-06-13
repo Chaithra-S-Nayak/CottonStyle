@@ -56,11 +56,41 @@ router.post(
     admin.otpExpiry = Date.now() + 300000; // OTP expires in 5 minutes
     await admin.save();
 
+    const AdminLoginHtmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          color: #333;
+        }
+      </style>
+    </head>
+    <body style="margin: 0; padding: 0;">
+      <div style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+        <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc;">
+          <div style="font-size: 20px; font-weight: 300; margin: 0;">CottonStyle</div>
+        </div>
+        <p>Hello ${admin.name},</p>
+        <p>We received a request to log into your admin account. Please use the OTP below to proceed with the login:</p>
+        <p style="font-size: 20px; font-weight: 300; margin: 20px 0;">${otp}</p>
+        <p>The OTP will expire in 5 minutes.</p>
+        <p>If you did not request this, please ignore this email.</p>
+        <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-top: 1px solid #ccc; font-size: 12px; color: #999;">
+          <p>&copy; 2024 CottonStyle. All rights reserved.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+    `;
+
     try {
       await sendMail({
         email: admin.email,
         subject: "Admin Login OTP",
         message: `Your OTP for admin login is: ${otp}. It will expire in 5 minutes.`,
+        html: AdminLoginHtmlContent,
       });
       res.status(200).json({
         success: true,
@@ -101,7 +131,7 @@ router.post(
 
 // Forgot password endpoint
 router.post(
-  "/forgot-password",
+  "/admin-forgot-password",
   catchAsyncErrors(async (req, res, next) => {
     const { email } = req.body;
     const admin = await Admin.findOne({ email });
@@ -115,11 +145,41 @@ router.post(
     admin.otpExpiry = Date.now() + 300000; // OTP expires in 5 minutes
     await admin.save();
 
+    const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          color: #333;
+        }
+      </style>
+    </head>
+    <body style="margin: 0; padding: 0;">
+      <div style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+        <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc;">
+          <div style="font-size: 20px; font-weight: 300; margin: 0;">CottonStyle</div>
+        </div>
+        <p>Hello ${admin.name},</p>
+        <p>We received a request to reset your password. Please use the OTP below to reset your password:</p>
+        <p style="font-size: 20px; font-weight: 300; margin: 20px 0;">${otp}</p>
+        <p>The OTP will expire in 5 minutes.</p>
+        <p>If you did not request a password reset, please ignore this email.</p>
+        <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-top: 1px solid #ccc; font-size: 12px; color: #999;">
+          <p>&copy; 2024 CottonStyle. All rights reserved.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+    `;
+
     try {
       await sendMail({
         email: admin.email,
         subject: "Password Reset OTP",
         message: `Your OTP for password reset is: ${otp}. It will expire in 5 minutes.`,
+        html: htmlContent,
       });
       res.status(200).json({
         success: true,
@@ -136,7 +196,7 @@ router.post(
 
 // Verify forgot password OTP endpoint
 router.post(
-  "/verify-forgot-password-otp",
+  "/admin-verify-otp",
   catchAsyncErrors(async (req, res, next) => {
     const { email, otp } = req.body;
 
@@ -158,7 +218,7 @@ router.post(
 );
 
 router.put(
-  "/change-password",
+  "/admin-reset-password",
   isAdmin,
   catchAsyncErrors(async (req, res, next) => {
     const { oldPassword, newPassword, confirmPassword } = req.body;

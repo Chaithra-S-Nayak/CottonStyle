@@ -89,23 +89,3 @@ export const logoutAdmin = () => async (dispatch) => {
 
   dispatch({ type: "ADMIN_LOGOUT_SUCCESS" });
 };
-
-// Forgot password
-export const forgotAdminPassword = (email) => async (dispatch) => {
-  try {
-    dispatch({ type: "ADMIN_FORGOT_PASSWORD_REQUEST" });
-
-    const { data } = await axios.post(
-      `${server}/admin/forgot-password`,
-      { email },
-      { withCredentials: true }
-    );
-
-    dispatch({ type: "ADMIN_FORGOT_PASSWORD_SUCCESS", payload: data.message });
-  } catch (error) {
-    dispatch({
-      type: "ADMIN_FORGOT_PASSWORD_FAIL",
-      payload: error.response?.data?.message || "Unknown error occurred",
-    });
-  }
-};

@@ -76,8 +76,14 @@ const shopSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-  resetPasswordToken: String,
-  resetPasswordTime: Date,
+  otp: {
+    type: String,
+    select: false,
+  },
+  otpExpiry: {
+    type: Date,
+    select: false,
+  },
 });
 
 // Hash password

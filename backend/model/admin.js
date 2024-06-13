@@ -29,8 +29,6 @@ const adminSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-  resetPasswordToken: String,
-  resetPasswordTime: Date,
   otp: {
     type: String,
     select: false,

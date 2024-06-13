@@ -75,8 +75,6 @@ router.post("/create-user", async (req, res, next) => {
     </body>
     </html>
   `;
-  
-  
 
     try {
       await sendMail({
@@ -98,8 +96,6 @@ router.post("/create-user", async (req, res, next) => {
     return next(new ErrorHandler(error.message, 400));
   }
 });
-
-
 
 // create activation token
 const createActivationToken = (user) => {
@@ -183,9 +179,10 @@ const generateOtp = () => {
   const otp = crypto.randomInt(100000, 999999); // Generate a 6-digit random number
   return otp.toString();
 };
+
 // Send OTP Endpoint
 router.post(
-  "/forgot-password",
+  "/user-forgot-password",
   catchAsyncErrors(async (req, res, next) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
@@ -201,11 +198,41 @@ router.post(
 
     console.log("Generated OTP:", otp, "for email:", email); // Log the generated OTP
 
+    const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          color: #333;
+        }
+      </style>
+    </head>
+    <body style="margin: 0; padding: 0;">
+      <div style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+        <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc;">
+          <div style="font-size: 20px; font-weight: 300; margin: 0;">CottonStyle</div>
+        </div>
+        <p>Hello ${user.name},</p>
+        <p>We received a request to reset your password. Please use the OTP below to reset your password:</p>
+        <p style="font-size: 20px; font-weight: 300; margin: 20px 0;">${otp}</p>
+        <p>The OTP will expire in 5 minutes.</p>
+        <p>If you did not request a password reset, please ignore this email.</p>
+        <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-top: 1px solid #ccc; font-size: 12px; color: #999;">
+          <p>&copy; 2024 CottonStyle. All rights reserved.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+    `;
+
     try {
       await sendMail({
         email: user.email,
         subject: "Password Reset OTP",
         message: `Your OTP for password reset is: ${otp}. It will expire in 5 minutes.`,
+        html: htmlContent,
       });
       res.status(200).json({
         success: true,
@@ -222,20 +249,15 @@ router.post(
 
 //verify-otp
 router.post(
-  "/verify-otp",
+  "/user-verify-otp",
   catchAsyncErrors(async (req, res, next) => {
     const { email, otp } = req.body;
-    console.log("Verifying OTP for email:", email, "with OTP:", otp);
 
     const user = await User.findOne({ email }).select("+otp +otpExpiry");
-    console.log("Retrieved user:", user); // Log the user object
 
     if (!user) {
-      console.log("User not found");
       return next(new ErrorHandler("User not found", 404));
     }
-
-    console.log("Stored OTP:", user.otp, "OTP Expiry:", user.otpExpiry); // Log stored OTP and expiry
 
     if (user.otp === otp && user.otpExpiry > Date.now()) {
       console.log("OTP is valid");
@@ -244,15 +266,14 @@ router.post(
         message: "OTP is valid. You can now reset your password.",
       });
     } else {
-      console.log("Invalid or expired OTP");
       return next(new ErrorHandler("Invalid or expired OTP", 400));
     }
   })
 );
+
 // Reset Password Endpoint
-// Reset Password Endpoint with error logging
 router.post(
-  "/reset-password",
+  "/user-reset-password",
   catchAsyncErrors(async (req, res, next) => {
     try {
       const { email, newPassword } = req.body;

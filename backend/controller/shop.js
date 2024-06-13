@@ -11,6 +11,7 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const sendShopToken = require("../utils/shopToken");
 const sendNotification = require("../utils/notification");
 require("dotenv").config();
+const crypto = require("crypto");
 
 // create shop
 router.post(
@@ -30,7 +31,7 @@ router.post(
         public_id: "default_avatar_id",
         url: "https://res.cloudinary.com/dqyauy2y8/image/upload/v1714366014/avatars/crwcaulv68csvcqlbidq.png",
       };
-  
+
       if (req.body.avatar) {
         const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
           folder: "avatars",
@@ -105,7 +106,6 @@ router.post(
     }
   })
 );
-
 
 // create activation token
 const createActivationToken = (seller) => {
@@ -182,7 +182,7 @@ router.post(
           "seller_activation",
           `New seller activated with email: ${seller.email}`,
           process.env.ADMIN_ID,
-          null,
+          null
         );
 
         await sendMail({
@@ -191,7 +191,9 @@ router.post(
           message: `New seller activated with email: ${seller.email}`,
           html: adminHtmlContent,
         });
-        console.log(`Admin notification email sent to ${process.env.ADMIN_EMAIL}`);
+        console.log(
+          `Admin notification email sent to ${process.env.ADMIN_EMAIL}`
+        );
       } catch (error) {
         console.error("Error sending admin notification:", error);
         return next(new ErrorHandler(error.message, 500));
@@ -232,6 +234,131 @@ router.post(
       sendShopToken(user, 201, res);
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// Generate OTP
+const generateOtp = () => {
+  const otp = crypto.randomInt(100000, 999999); // Generate a 6-digit random number
+  return otp.toString();
+};
+
+// Send OTP Endpoint
+router.post(
+  "/seller-forgot-password",
+  catchAsyncErrors(async (req, res, next) => {
+    const { email } = req.body;
+    const seller = await Shop.findOne({ email });
+
+    if (!seller) {
+      return next(new ErrorHandler("Seller not found", 404));
+    }
+
+    const otp = generateOtp();
+    seller.otp = otp;
+    seller.otpExpiry = Date.now() + 300000; // OTP expires in 5 minutes
+    await seller.save();
+
+    console.log("Generated OTP:", otp, "for email:", email);
+
+    const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          color: #333;
+        }
+      </style>
+    </head>
+    <body style="margin: 0; padding: 0;">
+      <div style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+        <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc;">
+          <div style="font-size: 20px; font-weight: 300; margin: 0;">CottonStyle</div>
+        </div>
+        <p>Hello ${seller.name},</p>
+        <p>We received a request to reset your password. Please use the OTP below to reset your password:</p>
+        <p style="font-size: 20px; font-weight: 300; margin: 20px 0;">${otp}</p>
+        <p>The OTP will expire in 5 minutes.</p>
+        <p>If you did not request a password reset, please ignore this email.</p>
+        <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-top: 1px solid #ccc; font-size: 12px; color: #999;">
+          <p>&copy; 2024 CottonStyle. All rights reserved.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+    `;
+
+    try {
+      await sendMail({
+        email: seller.email,
+        subject: "Password Reset OTP",
+        message: `Your OTP for password reset is: ${otp}. It will expire in 5 minutes.`,
+        html: htmlContent,
+      });
+      res.status(200).json({
+        success: true,
+        message: "OTP sent to email",
+      });
+    } catch (error) {
+      seller.otp = undefined;
+      seller.otpExpiry = undefined;
+      await user.save();
+      return next(new ErrorHandler("Error sending OTP email", 500));
+    }
+  })
+);
+
+//verify-otp
+router.post(
+  "/seller-verify-otp",
+  catchAsyncErrors(async (req, res, next) => {
+    const { email, otp } = req.body;
+
+    const seller = await Shop.findOne({ email }).select("+otp +otpExpiry");
+
+    if (!seller) {
+      return next(new ErrorHandler("Seller not found", 404));
+    }
+
+    if (seller.otp === otp && seller.otpExpiry > Date.now()) {
+      res.status(200).json({
+        success: true,
+        message: "OTP is valid. You can now reset your password.",
+      });
+    } else {
+      return next(new ErrorHandler("Invalid or expired OTP", 400));
+    }
+  })
+);
+
+// Reset Password Endpoint
+router.post(
+  "/seller-reset-password",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { email, newPassword } = req.body;
+      const seller = await Shop.findOne({ email }).select("+otp +otpExpiry");
+
+      if (!seller) {
+        return next(new ErrorHandler("Seller not found", 404));
+      }
+
+      // Hash the new password before saving
+      seller.password = newPassword;
+      seller.otp = undefined;
+      seller.otpExpiry = undefined;
+      await seller.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Password has been reset successfully",
+      });
+    } catch (error) {
+      console.error("Error resetting password:", error);
+      return next(new ErrorHandler("Internal Server Error", 500));
     }
   })
 );

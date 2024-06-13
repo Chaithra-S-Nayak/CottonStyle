@@ -18,31 +18,30 @@ import ShopLoginPage from "../pages/ShopLoginPage";
 import OrderDetailsPage from "../pages/OrderDetailsPage";
 import InvoicePage from "../pages/InvoicePage";
 import TrackOrderPage from "../pages/TrackOrderPage";
-import UserInbox from "../pages/UserInbox.jsx";
-import ForgotPasswordPage from '../pages/ForgotPasswordPage';
+import UserInbox from "../pages/UserInbox";
+import UserForgotPasswordPage from "../pages/UserForgotPasswordPage";
 
-
-export { 
-    LoginPage,
-    SignupPage,
-    ActivationPage,
-    HomePage,
-    ProductsPage,
-    BestSellingPage,
-    EventsPage,
-    FAQPage,
-    CheckoutPage,
-    CartPage,
-    PaymentPage,
-    OrderSuccessPage,
-    ProductDetailsPage,
-    ProfilePage,
-    ShopCreatePage,
-    SellerActivationPage,
-    ShopLoginPage,
-    OrderDetailsPage,
-    InvoicePage,
-    TrackOrderPage,
-    UserInbox,
-    ForgotPasswordPage
+export {
+  LoginPage,
+  SignupPage,
+  ActivationPage,
+  HomePage,
+  ProductsPage,
+  BestSellingPage,
+  EventsPage,
+  FAQPage,
+  CheckoutPage,
+  CartPage,
+  PaymentPage,
+  OrderSuccessPage,
+  ProductDetailsPage,
+  ProfilePage,
+  ShopCreatePage,
+  SellerActivationPage,
+  ShopLoginPage,
+  OrderDetailsPage,
+  InvoicePage,
+  TrackOrderPage,
+  UserInbox,
+  UserForgotPasswordPage,
 };

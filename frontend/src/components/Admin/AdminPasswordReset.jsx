@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { server } from "../../server";
 import { useNavigate } from "react-router-dom";
 
-const PasswordReset = ({ email }) => {
+const AdminPasswordReset = ({ email }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
@@ -15,13 +15,16 @@ const PasswordReset = ({ email }) => {
       return;
     }
     try {
-      const response = await axios.post(`${server}/user/user-reset-password`, {
-        email,
-        newPassword: password,
-      });
+      const response = await axios.post(
+        `${server}/admin/admin-reset-password`,
+        {
+          email,
+          newPassword: password,
+        }
+      );
       if (response.data.success) {
         toast.success("Password has been reset successfully.");
-        navigate("/login"); // Navigate to the login page upon success
+        navigate("/admin-login");
       } else {
         toast.error("Failed to reset password.");
       }
@@ -94,4 +97,4 @@ const PasswordReset = ({ email }) => {
   );
 };
 
-export default PasswordReset;
+export default AdminPasswordReset;

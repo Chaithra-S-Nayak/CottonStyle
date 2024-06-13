@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import AdminLogin from "../components/Admin/AdminLogin";
-import OtpVerification from "../components/Admin/OtpVerification"; // Import your OTP component
+import OtpVerification from "../components/Admin/OtpVerification";
+import Header from "../components/Layout/Header";
+import Footer from "../components/Layout/Footer";
 
 const AdminLoginPage = () => {
   const navigate = useNavigate();
   const { isAdmin } = useSelector((state) => state.admin);
   const [otpSent, setOtpSent] = useState(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     if (isAdmin === true) {
@@ -17,14 +19,16 @@ const AdminLoginPage = () => {
   }, [isAdmin, navigate]);
 
   return (
-    <div>
+    <>
+      <Header />
       {!otpSent ? (
         <AdminLogin setOtpSent={setOtpSent} setEmail={setEmail} />
       ) : (
         <OtpVerification email={email} />
       )}
-    </div>
+      <Footer />
+    </>
   );
-}
+};
 
 export default AdminLoginPage;

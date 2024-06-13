@@ -23,7 +23,7 @@ import {
   InvoicePage,
   TrackOrderPage,
   UserInbox,
-  ForgotPasswordPage,
+  UserForgotPasswordPage,
 } from "./routes/Routes.js";
 import {
   ShopDashboardPage,
@@ -40,6 +40,7 @@ import {
   ShopSettingsPage,
   ShopWithDrawMoneyPage,
   ShopInboxPage,
+  SellerForgotPasswordPage,
 } from "./routes/ShopRoutes";
 import {
   AdminDashboardPage,
@@ -52,6 +53,7 @@ import {
   AdminDashboardOptions,
   AdminLoginPage,
   AdminSettingsPage,
+  AdminForgotPasswordPage,
 } from "./routes/AdminRoutes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -104,7 +106,10 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route
+          path="/user-forgot-password"
+          element={<UserForgotPasswordPage />}
+        />
         <Route path="/sign-up" element={<SignupPage />} />
         <Route
           path="/activation/:activation_token"
@@ -286,6 +291,10 @@ const App = () => {
             </SellerProtectedRoute>
           }
         />
+        <Route
+          path="/seller-forgot-password"
+          element={<SellerForgotPasswordPage />}
+        />
         {/* Admin Routes */}
         <Route
           path="/admin/dashboard"
@@ -360,6 +369,10 @@ const App = () => {
           }
         />
         <Route path="/admin-login" element={<AdminLoginPage />} />
+        <Route
+          path="/admin-forgot-password"
+          element={<AdminForgotPasswordPage />}
+        />
       </Routes>
       <ToastContainer
         position="bottom-center"
