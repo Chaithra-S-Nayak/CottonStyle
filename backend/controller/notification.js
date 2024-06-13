@@ -3,7 +3,7 @@ const router = express.Router();
 const Notification = require("../model/notification");
 const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-const { isAuthenticated, isSeller, isAdmin } = require("../middleware/auth");
+const { isSeller, isAdmin } = require("../middleware/auth");
 
 router.get(
   "/",
@@ -22,7 +22,7 @@ router.get(
       //   notifications
       // );
     } else if (context === "admin" && req.admin) {
-      // Fetch notifications for admin/user
+      // Fetch notifications for admin
       notifications = await Notification.find({ adminId: req.admin._id });
       // console.log(
       //   "Fetched Notifications for Admin:",

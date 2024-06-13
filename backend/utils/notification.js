@@ -1,7 +1,6 @@
 const Notification = require("../model/notification");
-const sendMail = require("./sendMail");
 
-const sendNotification = async (type, message, adminId, shopId, email) => {
+const sendNotification = async (type, message, adminId, shopId) => {
   try {
     // Save notification to the database
     await Notification.create({
@@ -10,15 +9,6 @@ const sendNotification = async (type, message, adminId, shopId, email) => {
       message,
       type,
     });
-
-    // Send email notification
-    if (email) {
-      await sendMail({
-        email,
-        subject: `Notification: ${type}`,
-        message,
-      });
-    }
 
     console.log(`Notification sent: Type - ${type}, Message - ${message}`);
   } catch (error) {

@@ -18,23 +18,34 @@ router.post(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const { email } = req.body;
+      console.log("Creating new shop with email:", email);
+
       const sellerEmail = await Shop.findOne({ email });
       if (sellerEmail) {
+        console.error("User already exists with email:", email);
         return next(new ErrorHandler("User already exists", 400));
       }
 
-      const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-        folder: "avatars",
-      });
+      let sellerAvatar = {
+        public_id: "default_avatar_id",
+        url: "https://res.cloudinary.com/dqyauy2y8/image/upload/v1714366014/avatars/crwcaulv68csvcqlbidq.png",
+      };
+  
+      if (req.body.avatar) {
+        const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+          folder: "avatars",
+        });
 
+        sellerAvatar = {
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
+        };
+      }
       const seller = {
         name: req.body.name,
         email: email,
         password: req.body.password,
-        avatar: {
-          public_id: myCloud.public_id,
-          url: myCloud.secure_url,
-        },
+        avatar: sellerAvatar,
         address: req.body.address,
         phoneNumber: req.body.phoneNumber,
         zipCode: req.body.zipCode,
@@ -43,31 +54,58 @@ router.post(
       const activationToken = createActivationToken(seller);
       const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`;
 
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              color: #333;
+            }
+          </style>
+        </head>
+        <body style="margin: 0; padding: 0;">
+          <div style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+            <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc;">
+              <div style="font-size: 20px; font-weight: 300; margin: 0;">CottonStyle</div>
+            </div>
+            <p>Hello ${seller.name},</p>
+            <p>Thank you for registering with CottonStyle! Please click the button below to activate your shop:</p>
+            <a href="${activationUrl}" style="display: inline-block; padding: 10px 20px; margin: 20px 0; font-size: 16px; color: white; background-color: #4CAF50; text-decoration: none; border-radius: 5px;">Activate Shop</a>
+            <p>If you did not sign up for this shop, you can ignore this email.</p>
+            <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-top: 1px solid #ccc; font-size: 12px; color: #999;">
+              <p>&copy; 2024 CottonStyle. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
       try {
         await sendMail({
           email: seller.email,
           subject: "Activate your Shop",
           message: `Hello ${seller.name}, please click on the link to activate your shop: ${activationUrl}`,
+          html: htmlContent,
         });
+        console.log(`Activation email sent to ${seller.email}`);
+
         res.status(201).json({
           success: true,
-          message: `please check your email:- ${seller.email} to activate your shop!`,
+          message: `Please check your email: ${seller.email} to activate your shop!`,
         });
-        await sendNotification(
-          "seller_registration",
-          `New seller registered with email: ${seller.email}`,
-          process.env.ADMIN_ID,
-          null,
-          process.env.ADMIN_EMAIL
-        );
       } catch (error) {
+        console.error("Error sending emails:", error);
         return next(new ErrorHandler(error.message, 500));
       }
     } catch (error) {
+      console.error("Error creating shop:", error);
       return next(new ErrorHandler(error.message, 400));
     }
   })
 );
+
 
 // create activation token
 const createActivationToken = (seller) => {
@@ -109,6 +147,55 @@ router.post(
         address,
         phoneNumber,
       });
+
+      const adminHtmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              color: #333;
+            }
+          </style>
+        </head>
+        <body style="margin: 0; padding: 0;">
+          <div style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+            <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc;">
+              <div style="font-size: 20px; font-weight: 300; margin: 0;">CottonStyle</div>
+            </div>
+            <p>Hello Admin,</p>
+            <p>A new seller has activated their account with the following details:</p>
+            <p>Name: ${seller.name}</p>
+            <p>Email: ${seller.email}</p>
+            <p>Phone Number: ${seller.phoneNumber}</p>
+            <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-top: 1px solid #ccc; font-size: 12px; color: #999;">
+              <p>&copy; 2024 CottonStyle. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      try {
+        await sendNotification(
+          "seller_activation",
+          `New seller activated with email: ${seller.email}`,
+          process.env.ADMIN_ID,
+          null,
+        );
+
+        await sendMail({
+          email: process.env.ADMIN_EMAIL,
+          subject: "New Seller Activation",
+          message: `New seller activated with email: ${seller.email}`,
+          html: adminHtmlContent,
+        });
+        console.log(`Admin notification email sent to ${process.env.ADMIN_EMAIL}`);
+      } catch (error) {
+        console.error("Error sending admin notification:", error);
+        return next(new ErrorHandler(error.message, 500));
+      }
 
       sendShopToken(seller, 201, res);
     } catch (error) {

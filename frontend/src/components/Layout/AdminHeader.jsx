@@ -5,7 +5,7 @@ import { FiPackage, FiShoppingBag } from "react-icons/fi";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import logo from "../../Assests/CottonStyle.png";
+import logo from "../../Assets/CottonStyle.png";
 import NotificationIcon from "../../components/NotificationIcon";
 import { NotificationProvider } from "../../context/NotificationContext";
 

@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
-const crypto = require("crypto"); // Node.js built-in module
+const crypto = require("crypto");
 
 // create user
 router.post("/create-user", async (req, res, next) => {
@@ -48,15 +48,46 @@ router.post("/create-user", async (req, res, next) => {
 
     const activationUrl = `http://localhost:3000/activation/${activationToken}`;
 
+    const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          color: #333;
+        }
+      </style>
+    </head>
+    <body style="margin: 0; padding: 0;">
+      <div style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+        <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc;">
+          <div style="font-size: 20px; font-weight: 300; margin: 0;">CottonStyle</div>
+        </div>
+        <p>Hello ${name},</p>
+        <p>Thank you for registering with CottonStyle! Please click the button below to activate your account:</p>
+        <a href="${activationUrl}" style="display: inline-block; padding: 10px 20px; margin: 20px 0; font-size: 16px; color: white; background-color: #4CAF50; text-decoration: none; border-radius: 5px;">Activate Account</a>
+        <p>If you did not sign up for this account, you can ignore this email.</p>
+        <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-top: 1px solid #ccc; font-size: 12px; color: #999;">
+          <p>&copy; 2024 CottonStyle. All rights reserved.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+  
+  
+
     try {
       await sendMail({
         email: user.email,
         subject: "Activate your account",
-        message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}`,
+        message: `Hello ${name}, please click on the link to activate your account: ${activationUrl}`,
+        html: htmlContent,
       });
       res.status(201).json({
         success: true,
-        message: `please check your email:- ${user.email} to activate your account!`,
+        message: `please check your email: ${user.email} to activate your account!`,
       });
     } catch (error) {
       console.error("Error sending email:", error);
@@ -67,6 +98,8 @@ router.post("/create-user", async (req, res, next) => {
     return next(new ErrorHandler(error.message, 400));
   }
 });
+
+
 
 // create activation token
 const createActivationToken = (user) => {

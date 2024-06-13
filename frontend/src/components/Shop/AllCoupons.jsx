@@ -14,7 +14,7 @@ const AllCoupons = () => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [coupouns,setCoupouns] = useState([]);
+  const [Coupons, setCoupons] = useState([]);
   const [minAmount, setMinAmout] = useState(null);
   const [maxAmount, setMaxAmount] = useState(null);
   const [selectedProducts, setSelectedProducts] = useState(null);
@@ -32,7 +32,7 @@ const AllCoupons = () => {
       })
       .then((res) => {
         setIsLoading(false);
-        setCoupouns(res.data.couponCodes);
+        setCoupons(res.data.couponCodes);
       })
       .catch((error) => {
         setIsLoading(false);
@@ -40,9 +40,11 @@ const AllCoupons = () => {
   }, [dispatch]);
 
   const handleDelete = async (id) => {
-    axios.delete(`${server}/coupon/delete-coupon/${id}`,{withCredentials: true}).then((res) => {
-      toast.success("Coupon code deleted succesfully!")
-    })
+    axios
+      .delete(`${server}/coupon/delete-coupon/${id}`, { withCredentials: true })
+      .then((res) => {
+        toast.success("Coupon code deleted succesfully!");
+      });
     window.location.reload();
   };
 
@@ -63,9 +65,9 @@ const AllCoupons = () => {
         { withCredentials: true }
       )
       .then((res) => {
-       toast.success("Coupon code created successfully!");
-       setOpen(false);
-       window.location.reload();
+        toast.success("Coupon code created successfully!");
+        setOpen(false);
+        window.location.reload();
       })
       .catch((error) => {
         toast.error(error.response.data.message);
@@ -107,8 +109,8 @@ const AllCoupons = () => {
 
   const row = [];
 
-  coupouns &&
-  coupouns.forEach((item) => {
+  Coupons &&
+    Coupons.forEach((item) => {
       row.push({
         id: item._id,
         name: item.name,
@@ -151,7 +153,7 @@ const AllCoupons = () => {
                 <h5 className="text-[30px] font-Poppins text-center">
                   Create Coupon code
                 </h5>
-                {/* create coupoun code */}
+                {/* create Coupon code */}
                 <form onSubmit={handleSubmit} aria-required={true}>
                   <br />
                   <div>

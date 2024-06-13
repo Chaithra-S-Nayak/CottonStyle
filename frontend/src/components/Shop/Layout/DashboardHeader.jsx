@@ -5,7 +5,7 @@ import { FiPackage, FiShoppingBag } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { BiMessageSquareDetail } from "react-icons/bi";
-import logo from "../../../Assests/CottonStyle.png";
+import logo from "../../../Assets/CottonStyle.png";
 import NotificationIcon from "../../../components/NotificationIcon";
 import { NotificationProvider } from "../../../context/NotificationContext"; // Import NotificationProvider
 
@@ -21,7 +21,7 @@ const DashboardHeader = () => {
         </div>
         <div className="flex items-center">
           <div className="flex items-center mr-4">
-            <Link to="/dashboard-coupouns" className="800px:block hidden">
+            <Link to="/dashboard-Coupons" className="800px:block hidden">
               <AiOutlineGift
                 color="#555"
                 size={30}
@@ -55,8 +55,8 @@ const DashboardHeader = () => {
                 size={30}
                 className="mx-5 cursor-pointer"
               />
-            </Link >
-            <NotificationIcon/> 
+            </Link>
+            <NotificationIcon />
             <Link to={`/shop/${seller._id}`}>
               <img
                 src={`${seller.avatar?.url}`}
