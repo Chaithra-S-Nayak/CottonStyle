@@ -483,7 +483,7 @@ router.delete(
 
 // update user password
 router.put(
-  "/update-user-password",
+  "/change-user-password",
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
     try {

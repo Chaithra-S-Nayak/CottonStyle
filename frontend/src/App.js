@@ -41,6 +41,7 @@ import {
   ShopWithDrawMoneyPage,
   ShopInboxPage,
   SellerForgotPasswordPage,
+  ShopChangePasswordPage,
 } from "./routes/ShopRoutes";
 import {
   AdminDashboardPage,
@@ -288,6 +289,14 @@ const App = () => {
           element={
             <SellerProtectedRoute>
               <ShopInboxPage />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/seller-change-password"
+          element={
+            <SellerProtectedRoute>
+              <ShopChangePasswordPage />
             </SellerProtectedRoute>
           }
         />

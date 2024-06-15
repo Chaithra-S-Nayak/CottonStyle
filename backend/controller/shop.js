@@ -488,6 +488,41 @@ router.put(
   })
 );
 
+// update seller password
+router.put(
+  "/change-seller-password",
+  isSeller,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const seller = await Shop.findById(req.seller.id).select("+password");
+
+      const isPasswordMatched = await seller.comparePassword(
+        req.body.oldPassword
+      );
+
+      if (!isPasswordMatched) {
+        return next(new ErrorHandler("Old password is incorrect!", 400));
+      }
+
+      if (req.body.newPassword !== req.body.confirmPassword) {
+        return next(
+          new ErrorHandler("Password doesn't matched with each other!", 400)
+        );
+      }
+      seller.password = req.body.newPassword;
+
+      await seller.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Password updated successfully!",
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
 // all sellers --- for admin
 router.get(
   "/admin-all-sellers",

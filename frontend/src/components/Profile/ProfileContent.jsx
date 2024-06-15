@@ -468,12 +468,12 @@ const ChangePassword = () => {
 
     await axios
       .put(
-        `${server}/user/update-user-password`,
+        `${server}/user/change-user-password`,
         { oldPassword, newPassword, confirmPassword },
         { withCredentials: true }
       )
       .then((res) => {
-        toast.success(res.data.success);
+        toast.success("Password updated successfully");
         setOldPassword("");
         setNewPassword("");
         setConfirmPassword("");

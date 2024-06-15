@@ -305,4 +305,39 @@ router.put(
   })
 );
 
+// update admin password
+router.put(
+  "/change-admin-password",
+  isAdmin,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const admin = await Admin.findById(req.admin.id).select("+password");
+
+      const isPasswordMatched = await admin.comparePassword(
+        req.body.oldPassword
+      );
+
+      if (!isPasswordMatched) {
+        return next(new ErrorHandler("Old password is incorrect!", 400));
+      }
+
+      if (req.body.newPassword !== req.body.confirmPassword) {
+        return next(
+          new ErrorHandler("Password doesn't matched with each other!", 400)
+        );
+      }
+      admin.password = req.body.newPassword;
+
+      await admin.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Password updated successfully!",
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
 module.exports = router;

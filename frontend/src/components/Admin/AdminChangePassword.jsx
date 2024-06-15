@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { server } from "../../server";
 import styles from "../../styles/styles";
 
-const ChangeAdminPassword = () => {
+const AdminChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -19,12 +19,12 @@ const ChangeAdminPassword = () => {
 
     await axios
       .put(
-        `${server}/admin/change-password`,
+        `${server}/admin/change-admin-password`,
         { oldPassword, newPassword, confirmPassword },
         { withCredentials: true }
       )
       .then((res) => {
-        toast.success(res.data.success);
+        toast.success("Password updated successfully");
         setOldPassword("");
         setNewPassword("");
         setConfirmPassword("");
@@ -86,4 +86,4 @@ const ChangeAdminPassword = () => {
   );
 };
 
-export default ChangeAdminPassword;
+export default AdminChangePassword;

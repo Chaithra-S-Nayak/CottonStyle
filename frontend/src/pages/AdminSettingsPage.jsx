@@ -2,7 +2,7 @@ import React from "react";
 import AdminSettings from "../components/Admin/AdminSettings";
 import AdminHeader from "../components/Layout/AdminHeader";
 import AdminSideBar from "../components/Admin/Layout/AdminSideBar";
-import ChangeAdminPassword from "../components/Admin/ChangeAdminPassword"; // Import the new component
+import AdminChangePassword from "../components/Admin/AdminChangePassword";
 
 const AdminSettingsPage = () => {
   return (
@@ -15,7 +15,7 @@ const AdminSettingsPage = () => {
           </div>
           <div className="flex-grow">
             <AdminSettings />
-            <ChangeAdminPassword /> 
+            <AdminChangePassword />
           </div>
         </div>
       </div>
