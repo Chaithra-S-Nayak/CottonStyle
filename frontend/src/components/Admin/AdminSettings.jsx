@@ -12,7 +12,6 @@ const AdminSettings = () => {
   const [name, setName] = useState(admin && admin.name);
   const [email, setEmail] = useState(admin && admin.email);
   const [phoneNumber, setPhoneNumber] = useState(admin && admin.phoneNumber);
-  const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState(null);
   const dispatch = useDispatch();
 
@@ -29,7 +28,7 @@ const AdminSettings = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(updateAdminProfile(email, name, phoneNumber, password));
+    dispatch(updateAdminProfile(email, name, phoneNumber));
   };
 
   const handleImage = async (e) => {
@@ -119,15 +118,6 @@ const AdminSettings = () => {
                 required
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
-              />
-            </div>
-            <div className="w-[100%] 800px:w-[50%]">
-              <label className="block pb-2">Password</label>
-              <input
-                type="password"
-                className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </div>

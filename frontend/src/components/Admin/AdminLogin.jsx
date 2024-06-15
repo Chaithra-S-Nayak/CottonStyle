@@ -10,17 +10,21 @@ const AdminLogin = ({ setOtpSent, setEmail }) => {
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(loginAdmin(email, password))
-      .then(() => {
-        toast.success("Login Successful! OTP sent to your email.");
-        setEmail(email); // Pass the email to parent component
-        setOtpSent(true);
-      })
-      .catch((err) => {
-        toast.error(err.message);
-      });
+    try {
+      await dispatch(loginAdmin(email, password));
+      toast.success("OTP sent to your email for admin verification.");
+      setEmail(email); // Pass the email to parent component
+      setOtpSent(true);
+    } catch (err) {
+      // Check if the error response has a message
+      if (err.response && err.response.data && err.response.data.message) {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    }
   };
 
   return (

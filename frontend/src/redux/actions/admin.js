@@ -54,7 +54,6 @@ export const loginAdmin = (email, password) => async (dispatch) => {
       return Promise.resolve();
     }
   } catch (error) {
-    toast.error(error.response?.data?.message || "Login failed");
     return Promise.reject(error);
   }
 };

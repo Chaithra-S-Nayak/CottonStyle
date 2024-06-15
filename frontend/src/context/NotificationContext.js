@@ -15,12 +15,15 @@ export const NotificationProvider = ({ children, context }) => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const { data } = await axios.get(`${server}/notifications?context=${context}`, {
-          withCredentials: true 
-        });
-        console.log("Fetched Notifications:", data.notifications);
+        const { data } = await axios.get(
+          `${server}/notifications?context=${context}`,
+          {
+            withCredentials: true,
+          }
+        );
+        // console.log("Fetched Notifications:", data.notifications);
         setNotifications(data.notifications);
-        setUnreadCount(data.notifications.filter(n => !n.isRead).length);
+        setUnreadCount(data.notifications.filter((n) => !n.isRead).length);
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
@@ -31,12 +34,16 @@ export const NotificationProvider = ({ children, context }) => {
 
   const markAsRead = async (id) => {
     try {
-      await axios.put(`${server}/notifications/${id}/mark-as-read?context=${context}`, null, {
-        withCredentials: true 
-      });
-      setNotifications(notifications.map(n => 
-        n._id === id ? { ...n, isRead: true } : n
-      ));
+      await axios.put(
+        `${server}/notifications/${id}/mark-as-read?context=${context}`,
+        null,
+        {
+          withCredentials: true,
+        }
+      );
+      setNotifications(
+        notifications.map((n) => (n._id === id ? { ...n, isRead: true } : n))
+      );
       setUnreadCount(unreadCount - 1);
     } catch (error) {
       console.error("Error marking notification as read:", error);
@@ -44,7 +51,9 @@ export const NotificationProvider = ({ children, context }) => {
   };
 
   return (
-    <NotificationContext.Provider value={{ notifications, unreadCount, markAsRead }}>
+    <NotificationContext.Provider
+      value={{ notifications, unreadCount, markAsRead }}
+    >
       {children}
     </NotificationContext.Provider>
   );

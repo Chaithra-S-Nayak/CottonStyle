@@ -9,16 +9,20 @@ const OtpVerification = ({ email }) => {
   const [otp, setOtp] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(verifyAdminOtp(email, otp))
-      .then(() => {
-        toast.success("OTP Verified! Redirecting to dashboard.");
-        navigate("/admin/dashboard");
-      })
-      .catch((err) => {
-        toast.error(err.message);
-      });
+    try {
+      await dispatch(verifyAdminOtp(email, otp));
+      toast.success("OTP Verified! Redirecting to dashboard.");
+      navigate("/admin/dashboard");
+    } catch (err) {
+      // Check if the error response has a message
+      if (err.response && err.response.data && err.response.data.message) {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    }
   };
 
   return (
