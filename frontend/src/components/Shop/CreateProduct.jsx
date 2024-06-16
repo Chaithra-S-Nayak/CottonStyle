@@ -3,24 +3,19 @@ import { AiOutlinePlusCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../redux/actions/product";
-import { categoriesData } from "../../static/data";
+import { fetchAdminOptions } from "../../redux/actions/adminOptions";
 import { toast } from "react-toastify";
 
 const CreateProduct = () => {
   const { seller } = useSelector((state) => state.seller);
   const { success, error } = useSelector((state) => state.products);
+  const { adminOptions } = useSelector((state) => state.adminOptions);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [images, setImages] = useState([]);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
-  const [availableSizes, setAvailableSizes] = useState([]);
-  const [tags, setTags] = useState("");
-  const [originalPrice, setOriginalPrice] = useState();
-  const [discountPrice, setDiscountPrice] = useState();
-  const [stock, setStock] = useState();
+  useEffect(() => {
+    dispatch(fetchAdminOptions());
+  }, [dispatch]);
 
   useEffect(() => {
     if (error) {
@@ -32,6 +27,16 @@ const CreateProduct = () => {
       window.location.reload();
     }
   }, [dispatch, error, success, navigate]);
+
+  const [images, setImages] = useState([]);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [fabric, setFabric] = useState("");
+  const [color, setColor] = useState("");
+  const [availableSizes, setAvailableSizes] = useState([]);
+  const [originalPrice, setOriginalPrice] = useState();
+  const [discountPrice, setDiscountPrice] = useState();
+  const [stock, setStock] = useState();
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
@@ -70,9 +75,9 @@ const CreateProduct = () => {
     });
     newForm.append("name", name);
     newForm.append("description", description);
-    newForm.append("category", category);
+    newForm.append("fabric", fabric);
+    newForm.append("color", color);
     newForm.append("availableSizes", availableSizes);
-    newForm.append("tags", tags);
     newForm.append("originalPrice", originalPrice);
     newForm.append("discountPrice", discountPrice);
     newForm.append("stock", stock);
@@ -82,9 +87,9 @@ const CreateProduct = () => {
       createProduct({
         name,
         description,
-        category,
+        fabric,
+        color,
         availableSizes,
-        tags,
         originalPrice,
         discountPrice,
         stock,
@@ -97,7 +102,6 @@ const CreateProduct = () => {
   return (
     <div className="w-[90%] 800px:w-[50%] bg-white shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
       <h5 className="text-[30px] font-Poppins text-center">Create Product</h5>
-      {/* create product form */}
       <form onSubmit={handleSubmit}>
         <br />
         <div>
@@ -110,7 +114,7 @@ const CreateProduct = () => {
             value={name}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setName(e.target.value)}
-            placeholder="Enter your product name..."
+            placeholder="Enter your product name"
           />
         </div>
         <br />
@@ -127,61 +131,68 @@ const CreateProduct = () => {
             value={description}
             className="mt-2 appearance-none block w-full pt-2 px-3 border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter your product description..."
+            placeholder="Enter your product description"
           ></textarea>
         </div>
         <br />
         <div>
           <label className="pb-2">
-            Category <span className="text-red-500">*</span>
+            Fabric <span className="text-red-500">*</span>
           </label>
           <select
             className="w-full mt-2 border h-[35px] rounded-[5px]"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            value={fabric}
+            onChange={(e) => setFabric(e.target.value)}
           >
-            <option value="Choose a category">Choose a category</option>
-            {categoriesData &&
-              categoriesData.map((i) => (
-                <option value={i.title} key={i.title}>
-                  {i.title}
+            <option value="Choose the Fabric">Choose the Fabric</option>
+            {adminOptions.fabric &&
+              adminOptions.fabric.map((i) => (
+                <option value={i} key={i}>
+                  {i}
                 </option>
               ))}
           </select>
         </div>
         <br />
         <div>
+          <div>
+            <label className="pb-2">
+              Color <span className="text-red-500">*</span>
+            </label>
+            <select
+              className="w-full mt-2 border h-[35px] rounded-[5px]"
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+            >
+              <option value="Choose a color">Choose a color</option>
+              {adminOptions.color &&
+                adminOptions.color.map((i) => (
+                  <option value={i} key={i}>
+                    {i}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <br />
           <label className="pb-2">
             Available Sizes <span className="text-red-500">*</span>
           </label>
           <div className="flex flex-wrap">
-            {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
-              <div key={size} className="mr-5 mb-2">
+            {adminOptions.sizeChart?.map((sizeObj) => (
+              <div key={sizeObj.size} className="mr-5 mb-2">
                 <input
                   type="checkbox"
-                  id={`size-${size}`}
-                  value={size}
-                  checked={availableSizes.includes(size)}
-                  onChange={() => handleSizeChange(size)}
+                  id={`size-${sizeObj.size}`}
+                  value={sizeObj.size}
+                  checked={availableSizes.includes(sizeObj.size)}
+                  onChange={() => handleSizeChange(sizeObj.size)}
                 />
-                <label htmlFor={`size-${size}`} className="ml-1">
-                  {size}
+                <label htmlFor={`size-${sizeObj.size}`} className="ml-1">
+                  {sizeObj.size}
                 </label>
               </div>
             ))}
           </div>
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">Tags</label>
-          <input
-            type="text"
-            name="tags"
-            value={tags}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={(e) => setTags(e.target.value)}
-            placeholder="Enter your product tags..."
-          />
         </div>
         <br />
         <div>
@@ -192,7 +203,7 @@ const CreateProduct = () => {
             value={originalPrice}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setOriginalPrice(e.target.value)}
-            placeholder="Enter your product price..."
+            placeholder="Enter your product price"
           />
         </div>
         <br />
@@ -206,7 +217,7 @@ const CreateProduct = () => {
             value={discountPrice}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setDiscountPrice(e.target.value)}
-            placeholder="Enter your product price with discount..."
+            placeholder="Enter your product price with discount"
           />
         </div>
         <br />
@@ -220,7 +231,7 @@ const CreateProduct = () => {
             value={stock}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setStock(e.target.value)}
-            placeholder="Enter your product stock..."
+            placeholder="Enter your product stock"
           />
         </div>
         <br />

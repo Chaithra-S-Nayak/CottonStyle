@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAdminOptions } from "../../redux/actions/adminOptions";
 
 const Filters = ({ onFilterChange }) => {
+  const dispatch = useDispatch();
+  const { adminOptions } = useSelector((state) => state.adminOptions);
   const [price, setPrice] = useState({ min: "", max: "" });
   const [ratings, setRatings] = useState({ min: "", max: "" });
   const [sizes, setSizes] = useState([]);
@@ -8,10 +12,13 @@ const Filters = ({ onFilterChange }) => {
   const [fabrics, setFabrics] = useState([]);
   const [mostSold, setMostSold] = useState(false);
   const [inStock, setInStock] = useState(false);
-
   const [visibleSizeCount, setVisibleSizeCount] = useState(4);
   const [visibleColorCount, setVisibleColorCount] = useState(4);
   const [visibleFabricCount, setVisibleFabricCount] = useState(4);
+
+  useEffect(() => {
+    dispatch(fetchAdminOptions());
+  }, [dispatch]);
 
   useEffect(() => {
     handleFiltersChange();
@@ -48,10 +55,6 @@ const Filters = ({ onFilterChange }) => {
   const handleShowMoreFabrics = () => {
     setVisibleFabricCount((prev) => prev + 4);
   };
-
-  const sizeOptions = ["XS", "S", "M", "L", "XL"];
-  const colorOptions = ["Red", "Blue", "Green", "Black", "White"];
-  const fabricOptions = ["Cotton", "Polyester", "Silk"];
 
   return (
     <div className="flex flex-wrap justify-around items-start py-4">
@@ -96,18 +99,18 @@ const Filters = ({ onFilterChange }) => {
       <div className="flex flex-col m-2">
         <label className="font-semibold mb-1">Size</label>
         <div className="overflow-hidden">
-          {sizeOptions.slice(0, visibleSizeCount).map((size, index) => (
-            <div key={index} className="flex items-center">
+          {adminOptions.sizeChart?.slice(0, visibleSizeCount).map((sizeObj) => (
+            <div key={sizeObj.size} className="flex items-center">
               <input
                 type="checkbox"
-                checked={sizes.includes(size)}
-                onChange={() => handleCheckboxChange(setSizes, size)}
+                checked={sizes.includes(sizeObj.size)}
+                onChange={() => handleCheckboxChange(setSizes, sizeObj.size)}
                 className="mr-2"
               />
-              <label>{size}</label>
+              <label>{sizeObj.size}</label>
             </div>
           ))}
-          {sizeOptions.length > visibleSizeCount && (
+          {adminOptions.sizeChart?.length > visibleSizeCount && (
             <button onClick={handleShowMoreSizes} className="text-blue-600">
               Show more
             </button>
@@ -117,18 +120,20 @@ const Filters = ({ onFilterChange }) => {
       <div className="flex flex-col m-2">
         <label className="font-semibold mb-1">Color</label>
         <div className="overflow-hidden">
-          {colorOptions.slice(0, visibleColorCount).map((color, index) => (
-            <div key={index} className="flex items-center">
-              <input
-                type="checkbox"
-                checked={colors.includes(color)}
-                onChange={() => handleCheckboxChange(setColors, color)}
-                className="mr-2"
-              />
-              <label>{color}</label>
-            </div>
-          ))}
-          {colorOptions.length > visibleColorCount && (
+          {adminOptions.color
+            ?.slice(0, visibleColorCount)
+            .map((color, index) => (
+              <div key={index} className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={colors.includes(color)}
+                  onChange={() => handleCheckboxChange(setColors, color)}
+                  className="mr-2"
+                />
+                <label>{color}</label>
+              </div>
+            ))}
+          {adminOptions.color?.length > visibleColorCount && (
             <button onClick={handleShowMoreColors} className="text-blue-600">
               Show more
             </button>
@@ -138,18 +143,20 @@ const Filters = ({ onFilterChange }) => {
       <div className="flex flex-col m-2">
         <label className="font-semibold mb-1">Fabric</label>
         <div className="overflow-hidden">
-          {fabricOptions.slice(0, visibleFabricCount).map((fabric, index) => (
-            <div key={index} className="flex items-center">
-              <input
-                type="checkbox"
-                checked={fabrics.includes(fabric)}
-                onChange={() => handleCheckboxChange(setFabrics, fabric)}
-                className="mr-2"
-              />
-              <label>{fabric}</label>
-            </div>
-          ))}
-          {fabricOptions.length > visibleFabricCount && (
+          {adminOptions.fabric
+            ?.slice(0, visibleFabricCount)
+            .map((fabric, index) => (
+              <div key={index} className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={fabrics.includes(fabric)}
+                  onChange={() => handleCheckboxChange(setFabrics, fabric)}
+                  className="mr-2"
+                />
+                <label>{fabric}</label>
+              </div>
+            ))}
+          {adminOptions.fabric?.length > visibleFabricCount && (
             <button onClick={handleShowMoreFabrics} className="text-blue-600">
               Show more
             </button>

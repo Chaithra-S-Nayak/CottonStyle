@@ -72,11 +72,12 @@ router.put(
       const {
         name,
         description,
-        category,
-        tags,
+        fabric,
+        color,
         originalPrice,
         discountPrice,
         stock,
+        availableSizes,
         newImages, // New images to be uploaded
         oldImages, // Old images that were retained
       } = req.body;
@@ -105,11 +106,12 @@ router.put(
 
       if (name) product.name = name;
       if (description) product.description = description;
-      if (category) product.category = category;
-      if (tags) product.tags = tags;
+      if (fabric) product.fabric = fabric;
+      if (color) product.color = color;
       if (originalPrice) product.originalPrice = originalPrice;
       if (discountPrice) product.discountPrice = discountPrice;
       if (stock) product.stock = stock;
+      if (availableSizes) product.availableSizes = availableSizes;
 
       await product.save();
 

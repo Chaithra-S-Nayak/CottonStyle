@@ -1,41 +1,39 @@
-import { createReducer } from '@reduxjs/toolkit';
+import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
   adminOptions: {},
   loading: false,
-  success: false,
+  fetchSuccess: false,
+  updateSuccess: false,
   error: null,
 };
 
 export const adminOptionsReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase('FETCH_ADMIN_OPTIONS_SUCCESS', (state, action) => {
+    .addCase("FETCH_ADMIN_OPTIONS_SUCCESS", (state, action) => {
       state.adminOptions = action.payload;
       state.loading = false;
-      state.success = true;
+      state.fetchSuccess = true;
       state.error = null;
     })
-    .addCase('FETCH_ADMIN_OPTIONS_FAIL', (state, action) => {
+    .addCase("FETCH_ADMIN_OPTIONS_FAIL", (state, action) => {
       state.loading = false;
       state.error = action.payload;
-      state.success = false;
+      state.fetchSuccess = false;
     })
-    .addCase('UPDATE_ADMIN_OPTIONS_SUCCESS', (state, action) => {
+    .addCase("UPDATE_ADMIN_OPTIONS_SUCCESS", (state, action) => {
       state.adminOptions = action.payload;
       state.loading = false;
-      state.success = true;
+      state.updateSuccess = true;
       state.error = null;
     })
-    .addCase('UPDATE_ADMIN_OPTIONS_FAIL', (state, action) => {
+    .addCase("UPDATE_ADMIN_OPTIONS_FAIL", (state, action) => {
       state.loading = false;
       state.error = action.payload;
-      state.success = false;
+      state.updateSuccess = false;
     })
-    .addCase('RESET_ADMIN_OPTIONS_STATE', (state) => {
-      state.success = false;
+    .addCase("RESET_ADMIN_OPTIONS_STATE", (state) => {
+      state.updateSuccess = false;
       state.error = null;
-    })
-    .addCase('GET_ADMIN_OPTIONS', (state, action) => {
-      state.adminOptions = action.payload;
     });
 });

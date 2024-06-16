@@ -1,18 +1,21 @@
-import axios from 'axios';
-import { server } from '../../server';
+import axios from "axios";
+import { server } from "../../server";
 
 // Fetch Admin Options
 export const fetchAdminOptions = () => async (dispatch) => {
   try {
-    const { data } = await axios.get(`${server}/adminOptions/admin-options`, { withCredentials: true });
+    const { data } = await axios.get(`${server}/adminOptions/admin-options`, {
+      withCredentials: true,
+    });
     dispatch({
-      type: 'FETCH_ADMIN_OPTIONS_SUCCESS',
+      type: "FETCH_ADMIN_OPTIONS_SUCCESS",
       payload: data.options,
     });
   } catch (error) {
-    const errorMessage = error.response?.data?.error || 'Unknown error occurred';
+    const errorMessage =
+      error.response?.data?.error || "Unknown error occurred";
     dispatch({
-      type: 'FETCH_ADMIN_OPTIONS_FAIL',
+      type: "FETCH_ADMIN_OPTIONS_FAIL",
       payload: errorMessage,
     });
   }
@@ -21,15 +24,20 @@ export const fetchAdminOptions = () => async (dispatch) => {
 // Update Admin Options
 export const updateAdminOptions = (options) => async (dispatch) => {
   try {
-    const { data } = await axios.put(`${server}/adminOptions/admin-options`, options, { withCredentials: true });
+    const { data } = await axios.put(
+      `${server}/adminOptions/admin-options`,
+      options,
+      { withCredentials: true }
+    );
     dispatch({
-      type: 'UPDATE_ADMIN_OPTIONS_SUCCESS',
+      type: "UPDATE_ADMIN_OPTIONS_SUCCESS",
       payload: data.options,
     });
   } catch (error) {
-    const errorMessage = error.response?.data?.error || 'Unknown error occurred';
+    const errorMessage =
+      error.response?.data?.error || "Unknown error occurred";
     dispatch({
-      type: 'UPDATE_ADMIN_OPTIONS_FAIL',
+      type: "UPDATE_ADMIN_OPTIONS_FAIL",
       payload: errorMessage,
     });
   }
@@ -37,19 +45,5 @@ export const updateAdminOptions = (options) => async (dispatch) => {
 
 // Reset Admin Options State
 export const resetAdminOptionsState = () => (dispatch) => {
-  dispatch({ type: 'RESET_ADMIN_OPTIONS_STATE' });
-};
-
-
-// Action to fetch admin options
-export const getAdminOptions = () => async (dispatch) => {
-  try {
-    const response = await axios.get(`${server}/adminoptions`);
-    dispatch({
-      type: 'GET_ADMIN_OPTIONS',
-      payload: response.data,
-    });
-  } catch (error) {
-    console.error("Failed to fetch admin options", error);
-  }
+  dispatch({ type: "RESET_ADMIN_OPTIONS_STATE" });
 };

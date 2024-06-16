@@ -6,10 +6,11 @@ import {
   resetAdminOptionsState,
 } from "../../redux/actions/adminOptions";
 import { toast } from "react-toastify";
+import styles from "../../styles/styles";
 
 const AdminOptions = () => {
   const dispatch = useDispatch();
-  const { adminOptions, success, error } = useSelector(
+  const { adminOptions, updateSuccess, error } = useSelector(
     (state) => state.adminOptions
   );
 
@@ -20,8 +21,9 @@ const AdminOptions = () => {
   const [gstTax, setGstTax] = useState(0);
   const [deliveryFee, setDeliveryFee] = useState(0);
   const [thresholdFee, setThresholdFee] = useState(0);
-
-  // Store the initial state to revert to on cancel
+  const [fabrics, setFabrics] = useState([]);
+  const [colors, setColors] = useState([]);
+  const [sizeChart, setSizeChart] = useState([]);
   const [initialState, setInitialState] = useState({});
 
   useEffect(() => {
@@ -38,9 +40,11 @@ const AdminOptions = () => {
         gstTax: adminOptions.gstTax,
         deliveryFee: adminOptions.deliveryFee,
         thresholdFee: adminOptions.thresholdFee,
+        fabrics: adminOptions.fabric || [],
+        colors: adminOptions.color || [],
+        sizeChart: adminOptions.sizeChart || [],
       };
       setInitialState(initialValues);
-
       setLogoUrl(initialValues.logoUrl);
       setPrimaryColor(initialValues.primaryColor);
       setSecondaryColor(initialValues.secondaryColor);
@@ -48,20 +52,23 @@ const AdminOptions = () => {
       setGstTax(initialValues.gstTax);
       setDeliveryFee(initialValues.deliveryFee);
       setThresholdFee(initialValues.thresholdFee);
+      setFabrics(initialValues.fabrics);
+      setColors(initialValues.colors);
+      setSizeChart(initialValues.sizeChart);
     }
   }, [adminOptions]);
 
   useEffect(() => {
-    if (success) {
+    if (updateSuccess) {
       toast.success("Settings updated successfully!");
       dispatch(resetAdminOptionsState());
     }
     if (error) {
-      console.error("Error:", error); // Log the error for debugging
+      console.error("Error:", error);
       toast.error(`Error updating settings: ${error}`);
       dispatch(resetAdminOptionsState());
     }
-  }, [success, error, dispatch]);
+  }, [updateSuccess, error, dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -72,6 +79,9 @@ const AdminOptions = () => {
       gstTax,
       deliveryFee,
       thresholdFee,
+      fabric: fabrics,
+      color: colors,
+      sizeChart,
     };
     dispatch(updateAdminOptions(updatedOptions));
   };
@@ -84,12 +94,17 @@ const AdminOptions = () => {
     setGstTax(initialState.gstTax);
     setDeliveryFee(initialState.deliveryFee);
     setThresholdFee(initialState.thresholdFee);
+    setFabrics(initialState.fabrics);
+    setColors(initialState.colors);
+    setSizeChart(initialState.sizeChart);
   };
 
   const handleBannerChange = (index, field, value) => {
-    const newBanners = [...banners];
-    newBanners[index][field] = value;
-    setBanners(newBanners);
+    setBanners((prevBanners) =>
+      prevBanners.map((banner, i) =>
+        i === index ? { ...banner, [field]: value } : banner
+      )
+    );
   };
 
   const addBanner = () => {
@@ -113,203 +128,351 @@ const AdminOptions = () => {
   };
 
   const handleTextLineChange = (bannerIndex, textLineIndex, field, value) => {
-    const newBanners = [...banners];
-    newBanners[bannerIndex] = {
-      ...newBanners[bannerIndex],
-      textLines: [...newBanners[bannerIndex].textLines],
-    };
-    newBanners[bannerIndex].textLines[textLineIndex] = {
-      ...newBanners[bannerIndex].textLines[textLineIndex],
-      [field]: value,
-    };
-    setBanners(newBanners);
+    setBanners((prevBanners) =>
+      prevBanners.map((banner, i) =>
+        i === bannerIndex
+          ? {
+              ...banner,
+              textLines: banner.textLines.map((line, j) =>
+                j === textLineIndex ? { ...line, [field]: value } : line
+              ),
+            }
+          : banner
+      )
+    );
+  };
+
+  const addFabric = () => {
+    setFabrics([...fabrics, ""]);
+  };
+
+  const handleFabricChange = (index, value) => {
+    setFabrics((prevFabrics) =>
+      prevFabrics.map((fabric, i) => (i === index ? value : fabric))
+    );
+  };
+
+  const removeFabric = (index) => {
+    const newFabrics = fabrics.filter((_, i) => i !== index);
+    setFabrics(newFabrics);
+  };
+
+  const addColor = () => {
+    setColors([...colors, ""]);
+  };
+
+  const handleColorChange = (index, value) => {
+    setColors((prevColors) =>
+      prevColors.map((color, i) => (i === index ? value : color))
+    );
+  };
+
+  const removeColor = (index) => {
+    const newColors = colors.filter((_, i) => i !== index);
+    setColors(newColors);
+  };
+
+  const addSizeChart = () => {
+    setSizeChart([
+      ...sizeChart,
+      { size: "", chestSize: "", waistSize: "", lengthSize: "" },
+    ]);
+  };
+
+  const handleSizeChartChange = (index, field, value) => {
+    setSizeChart((prevSizeChart) =>
+      prevSizeChart.map((item, i) =>
+        i === index ? { ...item, [field]: value } : item
+      )
+    );
+  };
+
+  const removeSizeChart = (index) => {
+    const newSizeChart = sizeChart.filter((_, i) => i !== index);
+    setSizeChart(newSizeChart);
   };
 
   return (
-    <div className="w-[90%] 800px:w-[50%] bg-white shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
-      <h5 className="text-[30px] font-Poppins text-center">Admin Options</h5>
-      <form onSubmit={handleSubmit}>
-        <br />
-        <div>
-          <label className="pb-2">Logo URL</label>
-          <input
-            type="text"
-            value={logoUrl}
-            onChange={(e) => setLogoUrl(e.target.value)}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            placeholder="Enter logo URL"
-          />
+    <div className="w-full flex flex-col items-center py-8">
+      <div className="w-[90%] 1000px:w-[70%] max-h-[70vh] overflow-y-auto grid grid-cols-1 gap-4">
+        {/* Row 1: Primary Color and Secondary Color */}
+        <div className="grid grid-cols-1 1000px:grid-cols-2 gap-4">
+          <div className="p-4">
+            <label className="block pb-2">Website Primary Color</label>
+            <input
+              type="text"
+              value={primaryColor}
+              onChange={(e) => setPrimaryColor(e.target.value)}
+              className={`${styles.input}`}
+            />
+          </div>
+          <div className="p-4">
+            <label className="block pb-2">Website Secondary Color</label>
+            <input
+              type="text"
+              value={secondaryColor}
+              onChange={(e) => setSecondaryColor(e.target.value)}
+              className={`${styles.input}`}
+            />
+          </div>
         </div>
-        <br />
-        <div>
-          <label className="pb-2">Primary Color</label>
-          <input
-            type="text"
-            value={primaryColor}
-            onChange={(e) => setPrimaryColor(e.target.value)}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            placeholder="Enter primary color"
-          />
+
+        {/* Row 2: GST, Delivery Fee, Threshold Fee */}
+        <div className="grid grid-cols-1 1000px:grid-cols-3 gap-4">
+          <div className="p-4">
+            <label className="block pb-2">GST Tax</label>
+            <input
+              type="number"
+              value={gstTax}
+              onChange={(e) => setGstTax(e.target.value)}
+              className={`${styles.input}`}
+            />
+          </div>
+          <div className="p-4">
+            <label className="block pb-2">Delivery Fee</label>
+            <input
+              type="number"
+              value={deliveryFee}
+              onChange={(e) => setDeliveryFee(e.target.value)}
+              className={`${styles.input}`}
+            />
+          </div>
+          <div className="p-4">
+            <label className="block pb-2">Threshold Fee</label>
+            <input
+              type="number"
+              value={thresholdFee}
+              onChange={(e) => setThresholdFee(e.target.value)}
+              className={`${styles.input}`}
+            />
+          </div>
         </div>
-        <br />
-        <div>
-          <label className="pb-2">Secondary Color</label>
-          <input
-            type="text"
-            value={secondaryColor}
-            onChange={(e) => setSecondaryColor(e.target.value)}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            placeholder="Enter secondary color"
-          />
+
+        {/* Row 3: Logo URL and Banners */}
+        {/* <div className="grid grid-cols-1 1000px:grid-cols-2 gap-4">
+          <div className="p-4">
+            <h5 className="text-xl font-bold mb-4">Logo URL</h5>
+            <input
+              type="text"
+              value={logoUrl}
+              onChange={(e) => setLogoUrl(e.target.value)}
+              className="w-full p-2 border rounded max-w-xs"
+            />
+          </div>
+          <div className="p-4">
+            <h5 className="text-xl font-bold mb-4">Banners</h5>
+            {banners.map((banner, index) => (
+              <div key={index} className="mb-4">
+                <input
+                  type="text"
+                  placeholder="Banner Image URL"
+                  value={banner.imageUrl}
+                  onChange={(e) => handleBannerChange(index, "imageUrl", e.target.value)}
+                  className="w-full p-2 border rounded mb-2 max-w-xs"
+                />
+                <button
+                  type="button"
+                  onClick={() => addTextLine(index)}
+                  className="mb-2 bg-blue-500 text-white py-1 px-2 rounded"
+                >
+                  Add Text Line
+                </button>
+                {banner.textLines.map((line, lineIndex) => (
+                  <div key={lineIndex} className="mb-2">
+                    <input
+                      type="text"
+                      placeholder="Text"
+                      value={line.text}
+                      onChange={(e) =>
+                        handleTextLineChange(index, lineIndex, "text", e.target.value)
+                      }
+                      className="w-full p-2 border rounded mb-1"
+                    />
+                    <input
+                      type="number"
+                      placeholder="Font Size"
+                      value={line.fontSize}
+                      onChange={(e) =>
+                        handleTextLineChange(index, lineIndex, "fontSize", e.target.value)
+                      }
+                      className="w-full p-2 border rounded mb-1"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Font Style"
+                      value={line.fontStyle}
+                      onChange={(e) =>
+                        handleTextLineChange(index, lineIndex, "fontStyle", e.target.value)
+                      }
+                      className="w-full p-2 border rounded mb-1"
+                    />
+                    <input
+                      type="color"
+                      value={line.color}
+                      onChange={(e) =>
+                        handleTextLineChange(index, lineIndex, "color", e.target.value)
+                      }
+                      className="w-full p-2 border rounded"
+                    />
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => removeBanner(index)}
+                  className="bg-red-500 text-white py-1 px-2 rounded"
+                >
+                  Remove Banner
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addBanner}
+              className="bg-green-500 text-white py-2 px-4 rounded"
+            >
+              Add Banner
+            </button>
+          </div>
+        </div> */}
+
+        {/* Row 4: Fabrics and Colors */}
+        <div className="grid grid-cols-1 1000px:grid-cols-2 gap-4">
+          <div className="p-4">
+            <label className="block pb-2">T-Shirt Fabrics</label>
+            {fabrics.map((fabric, index) => (
+              <div key={index} className="mb-2 flex items-center">
+                <input
+                  type="text"
+                  placeholder="Fabric"
+                  value={fabric}
+                  onChange={(e) => handleFabricChange(index, e.target.value)}
+                  className={`${styles.input}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => removeFabric(index)}
+                  className="bg-red-400 text-white py-1 px-2 rounded"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addFabric}
+              className="bg-[#243450] text-white py-1 px-2 rounded"
+            >
+              Add Fabric
+            </button>
+          </div>
+          <div className="p-4">
+            <label className="block pb-2">T-Shirt Colors</label>
+            {colors.map((color, index) => (
+              <div key={index} className="mb-2 flex items-center">
+                <input
+                  type="text"
+                  placeholder="Color"
+                  value={color}
+                  onChange={(e) => handleColorChange(index, e.target.value)}
+                  className={`${styles.input}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => removeColor(index)}
+                  className="bg-red-400 text-white py-1 px-2 rounded"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addColor}
+              className="bg-[#243450] text-white py-1 px-2 rounded"
+            >
+              Add Color
+            </button>
+          </div>
         </div>
-        <br />
-        <div>
-          <label className="pb-2">GST Tax</label>
-          <input
-            type="number"
-            value={gstTax}
-            onChange={(e) => setGstTax(Number(e.target.value))}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            placeholder="Enter GST tax"
-          />
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">Delivery Fee</label>
-          <input
-            type="number"
-            value={deliveryFee}
-            onChange={(e) => setDeliveryFee(Number(e.target.value))}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            placeholder="Enter delivery fee"
-          />
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">Threshold Fee</label>
-          <input
-            type="number"
-            value={thresholdFee}
-            onChange={(e) => setThresholdFee(Number(e.target.value))}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            placeholder="Enter threshold fee"
-          />
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">Banners</label>
-          {banners.map((banner, index) => (
-            <div key={index}>
+
+        {/* Row 5: Size Chart */}
+        <div className="p-4">
+          <label className="block pb-2">T-Shirt Size Chart (inches)</label>
+          {sizeChart.map((size, index) => (
+            <div
+              key={index}
+              className="mb-2 flex flex-col 800px:flex-row 800px:space-x-2"
+            >
               <input
                 type="text"
-                value={banner.imageUrl}
+                placeholder="Size"
+                value={size.size}
                 onChange={(e) =>
-                  handleBannerChange(index, "imageUrl", e.target.value)
+                  handleSizeChartChange(index, "size", e.target.value)
                 }
-                className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Enter banner image URL"
+                className={`${styles.input}`}
               />
-              {banner.textLines.map((textLine, textLineIndex) => (
-                <div key={textLineIndex} className="flex items-center mt-2">
-                  <input
-                    type="text"
-                    value={textLine.text}
-                    onChange={(e) =>
-                      handleTextLineChange(
-                        index,
-                        textLineIndex,
-                        "text",
-                        e.target.value
-                      )
-                    }
-                    className="appearance-none block w-[calc(100%-70px)] px-3 h-[35px] border border-gray-300 rounded-[3px]                     placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mr-2"
-                    placeholder="Text"
-                  />
-                  <input
-                    type="number"
-                    value={textLine.fontSize}
-                    onChange={(e) =>
-                      handleTextLineChange(
-                        index,
-                        textLineIndex,
-                        "fontSize",
-                        e.target.value
-                      )
-                    }
-                    className="appearance-none block w-[70px] px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mr-2"
-                    placeholder="Font Size"
-                  />
-                  <input
-                    type="text"
-                    value={textLine.fontStyle}
-                    onChange={(e) =>
-                      handleTextLineChange(
-                        index,
-                        textLineIndex,
-                        "fontStyle",
-                        e.target.value
-                      )
-                    }
-                    className="appearance-none block w-[70px] px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mr-2"
-                    placeholder="Font Style"
-                  />
-                  <input
-                    type="text"
-                    value={textLine.color}
-                    onChange={(e) =>
-                      handleTextLineChange(
-                        index,
-                        textLineIndex,
-                        "color",
-                        e.target.value
-                      )
-                    }
-                    className="appearance-none block w-[70px] px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                    placeholder="Text Color"
-                  />
-                </div>
-              ))}
+              <input
+                type="text"
+                placeholder="Chest Size (inches)"
+                value={size.chestSize}
+                onChange={(e) =>
+                  handleSizeChartChange(index, "chestSize", e.target.value)
+                }
+                className={`${styles.input}`}
+              />
+              <input
+                type="text"
+                placeholder="Waist Size (inches)"
+                value={size.waistSize}
+                onChange={(e) =>
+                  handleSizeChartChange(index, "waistSize", e.target.value)
+                }
+                className={`${styles.input}`}
+              />
+              <input
+                type="text"
+                placeholder="Length Size (inches)"
+                value={size.lengthSize}
+                onChange={(e) =>
+                  handleSizeChartChange(index, "lengthSize", e.target.value)
+                }
+                className={`${styles.input}`}
+              />
               <button
                 type="button"
-                className="mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
-                onClick={() => addTextLine(index)}
+                onClick={() => removeSizeChart(index)}
+                className="bg-red-400 text-white py-1 px-2 rounded mt-2 800px:mt-0"
               >
-                Add Text Line
-              </button>
-              <button
-                type="button"
-                className="mt-2 ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none"
-                onClick={() => removeBanner(index)}
-              >
-                Remove Banner
+                Remove
               </button>
             </div>
           ))}
           <button
             type="button"
-            className="mt-2 px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none"
-            onClick={addBanner}
+            onClick={addSizeChart}
+            className="bg-[#243450] text-white py-1 px-2 rounded"
           >
-            Add Banner
+            Add Size
           </button>
         </div>
-        <br />
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            className=" mr-2 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
-          >
-            Save Changes
-          </button>
-          <button
-            type="button"
-            className=" px-6 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none"
-            onClick={handleCancel}
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
+      </div>
+      <div className="mt-8">
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className="bg-[#243450] text-white py-2 px-4 rounded mr-2"
+        >
+          Save
+        </button>
+        <button
+          type="button"
+          onClick={handleCancel}
+          className="bg-gray-500 text-white py-2 px-4 rounded"
+        >
+          Cancel
+        </button>
+      </div>
     </div>
   );
 };

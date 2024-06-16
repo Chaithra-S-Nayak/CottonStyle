@@ -6,7 +6,8 @@ import {
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import {  useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { fetchAdminOptions } from "../../redux/actions/adminOptions";
 import { getAllProductsShop } from "../../redux/actions/product";
 import { server } from "../../server";
 import {
@@ -23,12 +24,14 @@ const ProductDetails = ({ data }) => {
   const { cart } = useSelector((state) => state.cart);
   const { user, isAuthenticated } = useSelector((state) => state.user);
   const { products } = useSelector((state) => state.products);
+  const { adminOptions } = useSelector((state) => state.adminOptions);
   const [count, setCount] = useState(1);
   const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
   const [selectedSize, setSelectedSize] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(getAllProductsShop(data && data?.shop._id));
     if (wishlist && wishlist.find((i) => i._id === data?._id)) {
@@ -37,6 +40,10 @@ const ProductDetails = ({ data }) => {
       setClick(false);
     }
   }, [data, wishlist]);
+
+  useEffect(() => {
+    dispatch(fetchAdminOptions());
+  }, [dispatch]);
 
   const incrementCount = () => {
     setCount(count + 1);
@@ -47,8 +54,9 @@ const ProductDetails = ({ data }) => {
       setCount(count - 1);
     }
   };
+
   const handleSizeSelection = (size) => {
-    setSelectedSize(size); // Update selected size state
+    setSelectedSize(size);
   };
 
   const removeFromWishlistHandler = (data) => {
@@ -146,32 +154,31 @@ const ProductDetails = ({ data }) => {
 
           {/* Right side - Product details */}
           <div className="lg:w-1/2 space-y-6">
-            <div className="p-4 bg-white shadow-md rounded-lg">
+            <div>
               <h1 className="text-2xl font-bold text-gray-800">{data.name}</h1>
               <div className="py-4 flex items-center justify-between">
                 <div className="flex items-baseline space-x-2">
-                  <h5 className="text-2xl font-semibold text-teal-600">
+                  <h2 className="text-[32px] font-normal text-gray-600">
                     ₹
                     {data.originalPrice === 0
                       ? data.originalPrice
                       : data.discountPrice}
-                  </h5>
+                  </h2>
                   {data.originalPrice !== 0 && (
-                    <h4 className="text-xl text-gray-500 line-through">
+                    <h2 className="text-xl text-gray-500 line-through">
                       ₹{data.originalPrice}
-                    </h4>
+                    </h2>
                   )}
                 </div>
-                <span className="font-medium text-lg text-green-500">
-                  {data.sold_out} sold
-                </span>
               </div>
-              <div className="mt-4 flex items-center">
-                <span className="text-lg font-bold text-yellow-500">
-                  {data.rating}★
-                </span>
+              <div className="flex items-center ">
+                <div className="bg-green-500  p-1 rounded-lg">
+                  <span className=" font-bold text-white ">
+                    {data.ratings}★
+                  </span>
+                </div>
                 <span className="ml-2 text-sm text-gray-500">
-                  {data.ratings} | {data.reviews.length} Reviews
+                  {data.reviews.length} Reviews | {data.sold_out} sold
                 </span>
               </div>
             </div>
@@ -182,10 +189,10 @@ const ProductDetails = ({ data }) => {
                   {data.availableSizes.map((size, idx) => (
                     <button
                       key={idx}
-                      onClick={() => handleSizeSelection(size)} // Add onClick handler
+                      onClick={() => handleSizeSelection(size)}
                       className={`px-2 py-1 border rounded text-gray-700 ${
                         selectedSize === size ? "bg-gray-300" : ""
-                      }`} // Add conditional class for selected size
+                      }`}
                     >
                       {size}
                     </button>
@@ -196,7 +203,7 @@ const ProductDetails = ({ data }) => {
 
             <div className="flex items-center mt-4">
               <button
-                className="px-4 py-2 bg-teal-500 text-white rounded-l"
+                className="px-4 py-2 bg-[#243450] text-white rounded-l"
                 onClick={decrementCount}
               >
                 -
@@ -205,13 +212,19 @@ const ProductDetails = ({ data }) => {
                 {count}
               </span>
               <button
-                className="px-4 py-2 bg-teal-500 text-white rounded-r"
+                className="px-4 py-2 bg-[#243450] text-white rounded-r"
                 onClick={incrementCount}
               >
                 +
               </button>
               <button
-                className="ml-4"
+                className="mx-4 px-4 py-2 bg-[#243450] text-white rounded w-1/2"
+                onClick={() => addToCartHandler(data._id)}
+              >
+                Add to Cart
+                <AiOutlineShoppingCart className="inline-block ml-2" />
+              </button>
+              <button
                 onClick={() =>
                   click
                     ? removeFromWishlistHandler(data)
@@ -226,47 +239,34 @@ const ProductDetails = ({ data }) => {
               </button>
             </div>
 
-            <button
-              className="mt-4 px-4 py-2 bg-teal-500 text-white rounded w-full"
-              onClick={() => addToCartHandler(data._id)}
-            >
-              Add to Cart
-              <AiOutlineShoppingCart className="inline-block ml-2" />
-            </button>
-
             <div className="space-y-6">
               <div>
                 <h2 className="text-lg font-semibold">Product Details</h2>
                 <p className="text-gray-600 whitespace-pre-line">
                   {data.description}
                 </p>
-                <p className="text-gray-600">
-                  The Crepe Fully Stretchable Palazzo by Beera Fashion Hub will
-                  add total color and beautiful vibe in your life style. A Cloth
-                  must have your wardrobe to make it extremely trendy, stylish
-                  and hit a perfect comfortable styling. Style it with tank top,
-                  span top, long straight top or kurti to complete the beautiful
-                  & elegant look. Our products are with high quality at
-                  competitive pricing for 100% customer satisfaction & lots of
-                  designs, fit & quality.
+                <p className="text-gray-600 whitespace-pre-line mt-2">
+                  Fabric : {data.fabric}
                 </p>
-                <div className="mt-2 text-gray-600">
-                  <p>Size:</p>
-                  <ul>
-                    {[
-                      "26 (Waist Size: 26 in, Length Size: 37 in)",
-                      "28 (Waist Size: 28 in, Length Size: 37 in)",
-                      "30 (Waist Size: 30 in, Length Size: 37 in)",
-                      "32 (Waist Size: 32 in, Length Size: 37 in)",
-                      "34 (Waist Size: 34 in, Length Size: 37 in)",
-                      "36 (Waist Size: 36 in, Length Size: 37 in)",
-                      "38 (Waist Size: 38 in, Length Size: 37 in)",
-                      "Free Size (Waist Size: 50 in, Length Size: 37 in)",
-                    ].map((size, idx) => (
-                      <li key={idx}>{size}</li>
-                    ))}
-                  </ul>
-                </div>
+                <p className="text-gray-600 whitespace-pre-line">
+                  Color : {data.color}
+                </p>
+                {adminOptions.sizeChart &&
+                  adminOptions.sizeChart.length > 0 && (
+                    <div className="mt-2 text-gray-600">
+                      <p>Sizes :</p>
+                      <ul>
+                        {adminOptions.sizeChart.map((size, idx) => (
+                          <li key={idx}>
+                            {size.size} (Chest Size: {size.chestSize} in, Waist
+                            Size:
+                            {size.waistSize} in, Length Size: {size.lengthSize}{" "}
+                            in)
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
               </div>
 
               <div>
@@ -286,11 +286,17 @@ const ProductDetails = ({ data }) => {
                 </div>
                 <p className="mt-2 text-gray-600">{data.shop.description}</p>
                 <button
-                  className="mt-4 px-4 py-2 bg-teal-500 text-white rounded"
+                  className="mt-4 px-4 py-2 bg-[#243450] text-white rounded"
                   onClick={handleMessageSubmit}
                 >
                   Contact Seller
                   <AiOutlineMessage className="inline-block ml-2" />
+                </button>
+                <button
+                  onClick={() => navigate(`/shop/preview/${data?.shop._id}`)}
+                  className="mt-4 px-4 py-2 bg-[#243450] text-white rounded"
+                >
+                  Visit Shop to get Coupons
                 </button>
               </div>
 

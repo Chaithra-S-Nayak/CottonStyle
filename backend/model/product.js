@@ -9,12 +9,13 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please enter your product description!"],
   },
-  category: {
+  fabric: {
     type: String,
-    required: [true, "Please enter your product category!"],
+    required: [true, "Please enter your product fabric!"],
   },
-  tags: {
+  color: {
     type: String,
+    required: [true, "Please enter your product color!"],
   },
   originalPrice: {
     type: Number,
@@ -61,7 +62,7 @@ const productSchema = new mongoose.Schema({
   ],
   ratings: {
     type: Number,
-     default: 0,
+    default: 0,
   },
   shopId: {
     type: String,

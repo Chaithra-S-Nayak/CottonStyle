@@ -156,7 +156,7 @@ const AdminSideBar = ({ active }) => {
               active === 9 ? "text-[crimson]" : "text-[#555]"
             }`}
           >
-            Admin Options
+            Platform Configuration
           </h5>
         </Link>
       </div>
