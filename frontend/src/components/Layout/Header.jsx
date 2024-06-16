@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { useOnClickOutside } from "usehooks-ts";
 import styles from "../../styles/styles";
 import {
   AiOutlineHeart,
@@ -29,6 +30,8 @@ const Header = ({ activeHeading }) => {
   const [openCart, setOpenCart] = useState(false);
   const [openWishlist, setOpenWishlist] = useState(false);
   const [open, setOpen] = useState(false);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const dropdownRef = useRef(null);
 
   const handleSearchChange = (e) => {
     const term = e.target.value;
@@ -40,7 +43,14 @@ const Header = ({ activeHeading }) => {
         product.name.toLowerCase().includes(term.toLowerCase())
       );
     setSearchData(filteredProducts);
+    setDropdownVisible(true); // Show dropdown when typing
   };
+
+  const handleClickOutside = () => {
+    setDropdownVisible(false); // Hide dropdown on outside click
+  };
+
+  useOnClickOutside(dropdownRef, handleClickOutside);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,10 +78,10 @@ const Header = ({ activeHeading }) => {
             </Link>
           </div>
           {/* search box */}
-          <div className="w-[50%] relative">
+          <div className="w-[50%] relative" ref={dropdownRef}>
             <input
               type="text"
-              placeholder="Search Product..."
+              placeholder="Search Product"
               value={searchTerm}
               onChange={handleSearchChange}
               className="h-[40px] w-full px-2 border-[#243450] border-[1.5px] rounded-md"
@@ -80,13 +90,13 @@ const Header = ({ activeHeading }) => {
               size={30}
               className="absolute right-2 top-1.5 cursor-pointer"
             />
-            {searchData && searchData.length !== 0 ? (
+            {dropdownVisible && searchData && searchData.length !== 0 ? (
               <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
                 {searchData &&
                   searchData.map((i, index) => {
                     return (
                       <Link to={`/product/${i._id}`} key={index}>
-                        <div className="w-full flex items-start-py-3">
+                        <div className="w-full flex items-start-py-3 m-2">
                           <img
                             src={`${i.images[0]?.url}`}
                             alt=""
