@@ -258,7 +258,7 @@ router.put(
 
       res.status(200).json({
         success: true,
-        message: "Reviwed succesfully!",
+        message: "Reviewed succesfully!",
       });
     } catch (error) {
       return next(new ErrorHandler(error, 400));

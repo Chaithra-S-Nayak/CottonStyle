@@ -26,7 +26,7 @@ const CashOnDelivery = ({ orderData }) => {
       totalPrice: orderData?.totalPrice,
       gstPercentage: orderData?.gstPercentage,
       paymentInfo: {
-        status: "succeeded",
+        status: "Not Paid",
         type: "Cash On Delivery",
       },
       coupon: orderData?.coupon,

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import styles from "../../styles/styles";
-import { BsFillBagFill } from "react-icons/bs";
-import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllOrdersOfShop } from "../../redux/actions/order";
-import { server } from "../../server";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { getAllOrdersOfShop } from "../../redux/actions/order";
+import { getProductDetails } from "../../redux/actions/product";
+import { server } from "../../server";
 
 const OrderDetails = () => {
   const { orders } = useSelector((state) => state.order);
@@ -14,190 +13,244 @@ const OrderDetails = () => {
   const dispatch = useDispatch();
   const [status, setStatus] = useState("");
   const navigate = useNavigate();
-
   const { id } = useParams();
 
   useEffect(() => {
     dispatch(getAllOrdersOfShop(seller._id));
   }, [dispatch, seller._id]);
 
+  useEffect(() => {
+    dispatch(getProductDetails(id));
+  }, [dispatch, id]);
+
   const data = orders && orders.find((item) => item._id === id);
 
+  const checkStock = async () => {
+    const promises = data.cart.map((item) =>
+      axios.get(`${server}/product/get-product/${item._id}`)
+    );
+    const products = await Promise.all(promises);
+
+    for (const product of products) {
+      if (
+        product.data.product.stock <
+        data.cart.find((item) => item._id === product.data.product._id).qty
+      ) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   const orderUpdateHandler = async () => {
-    await axios
-      .put(
+    try {
+      const isStockAvailable = await checkStock();
+      if (!isStockAvailable && data.status === "Processing") {
+        toast.error("Insufficient product stock!");
+        return;
+      }
+
+      await axios.put(
         `${server}/order/update-order-status/${id}`,
-        {
-          status,
-        },
+        { status },
         { withCredentials: true }
-      )
-      .then(() => {
-        toast.success("Order updated!");
-        navigate("/dashboard-orders");
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-      });
+      );
+
+      if (
+        data?.paymentInfo?.type === "Cash on Delivery" &&
+        status === "Delivered"
+      ) {
+        await axios.put(
+          `${server}/order/update-payment-status/${id}`,
+          { paymentStatus: "succeeded" },
+          { withCredentials: true }
+        );
+      }
+
+      toast.success("Order updated!");
+      navigate("/dashboard-orders");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "An error occurred");
+    }
   };
 
   const refundOrderUpdateHandler = async () => {
-    await axios
-    .put(
-      `${server}/order/order-refund-success/${id}`,
-      {
-        status,
-      },
-      { withCredentials: true }
-    )
-    .then(() => {
+    try {
+      await axios.put(
+        `${server}/order/order-refund-success/${id}`,
+        { status },
+        { withCredentials: true }
+      );
       toast.success("Order updated!");
       dispatch(getAllOrdersOfShop(seller._id));
-    })
-    .catch((error) => {
-      toast.error(error.response.data.message);
-    });
-  }
-
-  console.log(data?.status);
-
+    } catch (error) {
+      toast.error(error.response?.data?.message || "An error occurred");
+    }
+  };
 
   return (
-    <div className={`py-4 min-h-screen ${styles.section}`}>
-      <div className="w-full flex items-center justify-between">
-        <div className="flex items-center">
-          <BsFillBagFill size={30} color="crimson" />
-          <h1 className="pl-2 text-[25px]">Order Details</h1>
-        </div>
-        <Link to="/dashboard-orders">
-          <div
-            className={`${styles.button} !bg-[#fce1e6] !rounded-[4px] text-[#e94560] font-[600] !h-[45px] text-[18px]`}
-          >
-            Order List
+    <div className="container mx-auto p-4">
+      <h1 className="text-xl font-semibold mb-4">Order Details</h1>
+
+      {/* Order Summary */}
+      <div className="shadow rounded-lg p-4 mb-4">
+        <h2 className="text-xl mb-2">Order Summary</h2>
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <h5>
+              Order ID: <span>{data?._id}</span>
+            </h5>
+            <h5>
+              Placed on: <span>{data?.createdAt?.slice(0, 10)}</span>
+            </h5>
           </div>
-        </Link>
+          <div>
+            <h5>
+              Total Price: <span>₹{data?.totalPrice}</span>
+            </h5>
+            <h5>
+              {data?.coupon ? (
+                <>
+                  Coupon: <span>{data?.coupon.name}</span>
+                  <br />
+                  Coupon Discount Percentage:
+                  <span>{data?.coupon.couponDiscountPercentage}%</span>
+                  <br />
+                  Coupon Discount: <span>₹{data?.coupon.couponDiscount}</span>
+                </>
+              ) : (
+                "Did not apply coupon code"
+              )}
+            </h5>
+          </div>
+          <div>
+            <h5>
+              Seller Delivery Fees:
+              <span>
+                {data?.sellerDeliveryFees ? (
+                  <>₹{data.sellerDeliveryFees}</>
+                ) : (
+                  "Free"
+                )}
+              </span>
+            </h5>
+          </div>
+        </div>
       </div>
 
-      <div className="w-full flex items-center justify-between pt-6">
-        <h5 className="text-[#00000084]">
-          Order ID: <span>#{data?._id?.slice(0, 8)}</span>
-        </h5>
-        <h5 className="text-[#00000084]">
-          Placed on: <span>{data?.createdAt?.slice(0, 10)}</span>
-        </h5>
-      </div>
-
-      {/* order items */}
-      <br />
-      <br />
-      {data &&
-        data?.cart.map((item) => (
-          <div className="w-full flex items-start mb-5">
-            <img
-              src={`${item.images[0]?.url}`}
-              alt=""
-              className="w-[80x] h-[80px]"
-            />
-            <div className="w-full">
-              <h5 className="pl-3 text-[20px]">{item.name}</h5>
-              <h5 className="pl-3 text-[20px] text-[#00000091]">
-              ₹{item.discountPrice} x {item.qty}
-              </h5>
+      {/* Order Items */}
+      <div className="shadow rounded-lg p-4 mb-4">
+        <h2 className="text-xl mb-2">Order Items</h2>
+        {data &&
+          data?.cart.map((item) => (
+            <div key={item._id} className="flex items-center mb-4">
+              <img
+                src={`${item.images[0]?.url}`}
+                alt={item.name}
+                className="w-16 h-16 object-cover rounded-lg mr-4"
+              />
+              <div>
+                <h5>{item.name}</h5>
+                <h5>
+                  ₹{item.discountPrice} x {item.qty}
+                </h5>
+              </div>
             </div>
-          </div>
-        ))}
-
-      <div className="border-t w-full text-right">
-        <h5 className="pt-3 text-[18px]">
-          Total Price: <strong>₹{data?.totalPrice}</strong>
-        </h5>
+          ))}
       </div>
-      <br />
-      <br />
-      <div className="w-full 800px:flex items-center">
-        <div className="w-full 800px:w-[60%]">
-          <h4 className="pt-3 text-[20px] font-[600]">Shipping Address:</h4>
-          <h4 className="pt-3 text-[20px]">
-            {data?.shippingAddress.address1 +
-              " " +
-              data?.shippingAddress.address2}
-          </h4>
-          <h4 className=" text-[20px]">{data?.shippingAddress.country}</h4>
-          <h4 className=" text-[20px]">{data?.shippingAddress.city}</h4>
-          <h4 className=" text-[20px]">{data?.user?.phoneNumber}</h4>
+
+      {/* Shipping Details and Payment Information */}
+      <div className="grid grid-cols-2 gap-4">
+        {/* Shipping Details */}
+        <div className="shadow rounded-lg p-4 mb-4">
+          <h2 className="text-xl mb-2">Shipping Details</h2>
+          <h5>
+            Shipping Address:{" "}
+            <span>
+              {data?.shippingAddress.address1} {data?.shippingAddress.address2},{" "}
+              {data?.shippingAddress.city}, {data?.shippingAddress.country}
+            </span>
+          </h5>
+          <h5>Phone Number: {data?.user?.phoneNumber}</h5>
         </div>
-        <div className="w-full 800px:w-[40%]">
-          <h4 className="pt-3 text-[20px]">Payment Info:</h4>
-          <h4>
+
+        {/* Payment Information */}
+        <div className="shadow rounded-lg p-4 mb-4">
+          <h2 className="text-xl mb-2">Payment Information</h2>
+          <h5>
             Status:{" "}
             {data?.paymentInfo?.status ? data?.paymentInfo?.status : "Not Paid"}
-          </h4>
+          </h5>
+          <h5>Paid At: {data?.paidAt?.slice(0, 10)}</h5>
+          <h5>Type: {data?.paymentInfo?.type}</h5>
+          <h5>GST Percentage: {data?.gstPercentage}%</h5>
         </div>
       </div>
-      <br />
-      <br />
-      <h4 className="pt-3 text-[20px] font-[600]">Order Status:</h4>
-      {data?.status !== "Processing refund" && data?.status !== "Refund Success" && (
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className="w-[200px] mt-2 border h-[35px] rounded-[5px]"
-        >
-          {[
-            "Processing",
-            "Transferred to delivery partner",
-            "Shipping",
-            "Received",
-            "On the way",
-            "Delivered",
-          ]
-            .slice(
-              [
+
+      {/* Order Status */}
+      <div className="shadow rounded-lg p-4 mb-4">
+        <h2 className="text-xl mb-2">Order Status</h2>
+        {data?.status === "Delivered" && (
+          <h5>
+            Delivered At: <span>{data?.deliveredAt?.slice(0, 10)}</span>
+          </h5>
+        )}
+        {data?.status !== "Processing refund" &&
+          data?.status !== "Refund Success" && (
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="mt-2 border border-gray-300 rounded-md p-2"
+            >
+              {[
                 "Processing",
                 "Transferred to delivery partner",
                 "Shipping",
                 "Received",
                 "On the way",
                 "Delivered",
-              ].indexOf(data?.status)
-            )
-            .map((option, index) => (
+              ]
+                .slice(
+                  [
+                    "Processing",
+                    "Transferred to delivery partner",
+                    "Shipping",
+                    "Received",
+                    "On the way",
+                    "Delivered",
+                  ].indexOf(data?.status)
+                )
+                .map((option, index) => (
+                  <option value={option} key={index}>
+                    {option}
+                  </option>
+                ))}
+            </select>
+          )}
+        {data?.status === "Processing refund" ||
+        data?.status === "Refund Success" ? (
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="mt-2 border border-gray-300 rounded-md p-2"
+          >
+            {["Processing refund", "Refund Success"].map((option, index) => (
               <option value={option} key={index}>
                 {option}
               </option>
             ))}
-        </select>
-      )}
-      {
-        data?.status === "Processing refund" || data?.status === "Refund Success" ? (
-          <select value={status} 
-       onChange={(e) => setStatus(e.target.value)}
-       className="w-[200px] mt-2 border h-[35px] rounded-[5px]"
-      >
-        {[
-            "Processing refund",
-            "Refund Success",
-          ]
-            .slice(
-              [
-                "Processing refund",
-                "Refund Success",
-              ].indexOf(data?.status)
-            )
-            .map((option, index) => (
-              <option value={option} key={index}>
-                {option}
-              </option>
-            ))}
-      </select>
-        ) : null
-      }
-
-      <div
-        className={`${styles.button} mt-5 !bg-[#FCE1E6] !rounded-[4px] text-[#E94560] font-[600] !h-[45px] text-[18px]`}
-        onClick={data?.status !== "Processing refund" ? orderUpdateHandler : refundOrderUpdateHandler}
-      >
-        Update Status
+          </select>
+        ) : null}
+        <button
+          onClick={
+            data?.status !== "Processing refund"
+              ? orderUpdateHandler
+              : refundOrderUpdateHandler
+          }
+          className="bg-[#243450]  text-white py-2 px-4 mx-4 rounded-md shadow focus:outline-none mt-4"
+        >
+          Update Status
+        </button>
       </div>
     </div>
   );
