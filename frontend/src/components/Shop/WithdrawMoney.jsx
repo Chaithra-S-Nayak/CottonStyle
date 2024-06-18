@@ -103,8 +103,8 @@ const WithdrawMoney = () => {
 
   return (
     <div className="w-full h-[90vh] p-8">
-      <div className="w-full bg-white h-full rounded flex items-center justify-center flex-col">
-        <h5 className="text-[20px] pb-4">
+      <div className="w-full  h-full rounded flex items-center justify-center flex-col">
+        <h5 className="text-[18px] pb-4">
           Available Balance: ₹{availableBalance}
         </h5>
         <div
@@ -117,9 +117,9 @@ const WithdrawMoney = () => {
       {open && (
         <div className="w-full h-screen z-[9999] fixed top-0 left-0 flex items-center justify-center bg-[#0000004e]">
           <div
-            className={`w-[95%] 800px:w-[50%] bg-white shadow rounded ${
+            className={`w-[95%] 800px:w-[30%] bg-white shadow rounded ${
               paymentMethod ? "h-[80vh] overflow-y-scroll" : "h-[unset]"
-            } min-h-[40vh] p-3`}
+            } min-h-[30vh] p-3`}
           >
             <div className="w-full flex justify-end">
               <RxCross1
@@ -130,7 +130,7 @@ const WithdrawMoney = () => {
             </div>
             {paymentMethod ? (
               <div>
-                <h3 className="text-[22px] font-Poppins text-center font-[600]">
+                <h3 className="text-[18px] font-Poppins text-center font-[400]">
                   Add new Withdraw Method:
                 </h3>
                 <form onSubmit={handleSubmit}>
@@ -147,7 +147,7 @@ const WithdrawMoney = () => {
                         setBankInfo({ ...bankInfo, bankName: e.target.value })
                       }
                       id=""
-                      placeholder="Enter your Bank name!"
+                      placeholder="Enter your Bank name"
                       className={`${styles.input} mt-2`}
                     />
                   </div>
@@ -167,7 +167,7 @@ const WithdrawMoney = () => {
                       }
                       id=""
                       required
-                      placeholder="Enter your bank Country!"
+                      placeholder="Enter your bank Country"
                       className={`${styles.input} mt-2`}
                     />
                   </div>
@@ -187,14 +187,14 @@ const WithdrawMoney = () => {
                           bankSwiftCode: e.target.value,
                         })
                       }
-                      placeholder="Enter your Bank Swift Code!"
+                      placeholder="Enter your Bank Swift Code"
                       className={`${styles.input} mt-2`}
                     />
                   </div>
 
                   <div className="pt-2">
                     <label>
-                      Bank Account Number{" "}
+                      Bank Account Number
                       <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -209,7 +209,7 @@ const WithdrawMoney = () => {
                         })
                       }
                       required
-                      placeholder="Enter your bank account number!"
+                      placeholder="Enter your bank account number"
                       className={`${styles.input} mt-2`}
                     />
                   </div>
@@ -229,7 +229,7 @@ const WithdrawMoney = () => {
                         })
                       }
                       id=""
-                      placeholder="Enter your bank Holder name!"
+                      placeholder="Enter your bank Holder name"
                       className={`${styles.input} mt-2`}
                     />
                   </div>
@@ -250,14 +250,14 @@ const WithdrawMoney = () => {
                           bankAddress: e.target.value,
                         })
                       }
-                      placeholder="Enter your bank address!"
+                      placeholder="Enter your bank address"
                       className={`${styles.input} mt-2`}
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className={`${styles.button} mb-3 text-white`}
+                    className={`${styles.button} text-white !h-[42px] !rounded`}
                   >
                     Add
                   </button>
@@ -265,7 +265,7 @@ const WithdrawMoney = () => {
               </div>
             ) : (
               <>
-                <h3 className="text-[22px] font-Poppins">
+                <h3 className="text-[18px] font-Poppins">
                   Available Withdraw Methods:
                 </h3>
 
@@ -274,17 +274,20 @@ const WithdrawMoney = () => {
                     <div className="800px:flex w-full justify-between items-center">
                       <div className="800px:w-[50%]">
                         <h5>
-                          Account Number:{" "}
-                          {"*".repeat(
-                            seller?.withdrawMethod.bankAccountNumber.length - 3
-                          ) +
-                            seller?.withdrawMethod.bankAccountNumber.slice(-3)}
+                          Account Number:
+                          {seller?.withdrawMethod.bankAccountNumber.length > 3
+                            ? "*".repeat(
+                                seller?.withdrawMethod.bankAccountNumber
+                                  .length - 3
+                              ) +
+                              seller?.withdrawMethod.bankAccountNumber.slice(-3)
+                            : seller?.withdrawMethod.bankAccountNumber}
                         </h5>
                         <h5>Bank Name: {seller?.withdrawMethod.bankName}</h5>
                       </div>
                       <div className="800px:w-[50%]">
                         <AiOutlineDelete
-                          size={25}
+                          size={20}
                           className="cursor-pointer"
                           onClick={() => deleteHandler()}
                         />
@@ -296,13 +299,13 @@ const WithdrawMoney = () => {
                     <div className="800px:flex w-full items-center">
                       <input
                         type="number"
-                        placeholder="Amount..."
+                        placeholder="Amount"
                         value={withdrawAmount}
                         onChange={(e) => setWithdrawAmount(e.target.value)}
-                        className="800px:w-[100px] w-[full] border 800px:mr-3 p-1 rounded"
+                        className="800px:w-[150px] w-[full] border 800px:mr-3 p-1 rounded"
                       />
                       <div
-                        className={`${styles.button} !h-[42px] text-white`}
+                        className={`${styles.button} !h-[35px] text-white`}
                         onClick={withdrawHandler}
                       >
                         Withdraw
@@ -311,12 +314,12 @@ const WithdrawMoney = () => {
                   </div>
                 ) : (
                   <div>
-                    <p className="text-[18px] pt-2">
+                    <p className="text-[17px] pt-2">
                       No Withdraw Methods available!
                     </p>
                     <div className="w-full flex items-center">
                       <div
-                        className={`${styles.button} text-[#fff] text-[18px] mt-4`}
+                        className={`${styles.button} text-white !h-[42px] !rounded`}
                         onClick={() => setPaymentMethod(true)}
                       >
                         Add new

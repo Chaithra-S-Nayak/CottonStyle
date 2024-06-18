@@ -27,24 +27,31 @@ const AllWithdraw = () => {
   }, []);
 
   const columns = [
-    { field: "id", headerName: "Withdraw Id", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: "Withdraw Id", minWidth: 150, flex: 0.7,align: "center",
+      headerAlign: "center", },
     {
       field: "name",
       headerName: "Shop Name",
       minWidth: 180,
-      flex: 1.4,
+      flex: 0.7,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "shopId",
       headerName: "Shop Id",
       minWidth: 180,
-      flex: 1.4,
+      flex: 0.7,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "amount",
       headerName: "Amount",
       minWidth: 100,
-      flex: 0.6,
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "status",
@@ -52,20 +59,24 @@ const AllWithdraw = () => {
       type: "text",
       minWidth: 80,
       flex: 0.5,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "createdAt",
-      headerName: "Request given at",
+      headerName: "Created at",
       type: "number",
       minWidth: 130,
-      flex: 0.6,
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: " ",
       headerName: "Update Status",
       type: "number",
       minWidth: 130,
-      flex: 0.6,
+      flex: 0.5,
       renderCell: (params) => {
 
         return (
@@ -76,6 +87,8 @@ const AllWithdraw = () => {
           />
         );
       },
+      align: "center",
+      headerAlign: "center",
     },
   ];
 
@@ -105,8 +118,8 @@ const AllWithdraw = () => {
       });
     });
   return (
-    <div className="w-full flex items-center pt-5 justify-center">
-      <div className="w-[95%] bg-white">
+    <div className="w-full flex items-center pt-5 mt-5 justify-center">
+      <div className="w-[95%] ">
         <DataGrid
           rows={row}
           columns={columns}
@@ -117,7 +130,7 @@ const AllWithdraw = () => {
       </div>
       {open && (
         <div className="w-full fixed h-screen top-0 left-0 bg-[#00000031] z-[9999] flex items-center justify-center">
-          <div className="w-[50%] min-h-[40vh] bg-white rounded shadow p-4">
+          <div className="w-[50%] min-h-[40vh]  rounded shadow p-4">
             <div className="flex justify-end w-full">
               <RxCross1 size={25} onClick={() => setOpen(false)} />
             </div>
