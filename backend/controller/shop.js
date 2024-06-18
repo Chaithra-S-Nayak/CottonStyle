@@ -462,7 +462,8 @@ router.put(
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const { name, description, address, phoneNumber, zipCode } = req.body;
+      const { name, description, address, phoneNumber, email, zipCode } =
+        req.body;
 
       const shop = await Shop.findOne(req.seller._id);
 
@@ -474,6 +475,7 @@ router.put(
       shop.description = description;
       shop.address = address;
       shop.phoneNumber = phoneNumber;
+      shop.email = email;
       shop.zipCode = zipCode;
 
       await shop.save();
