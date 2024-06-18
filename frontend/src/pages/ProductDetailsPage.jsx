@@ -16,25 +16,19 @@ const ProductDetailsPage = () => {
 
   useEffect(() => {
     if (eventData !== null) {
-      const data = allEvents && allEvents.find((i) => i._id === id);
-      setData(data);
+      const event = allEvents && allEvents.find((i) => i._id === id);
+      setData(event);
     } else {
-      const data = allProducts && allProducts.find((i) => i._id === id);
-      setData(data);
+      const product = allProducts && allProducts.find((i) => i._id === id);
+      setData(product);
     }
-  }, [allProducts, allEvents]);
+  }, [id, eventData, allProducts, allEvents]);
 
   return (
     <div>
       <Header />
       <ProductDetails data={data} />
-        {
-          !eventData && (
-            <>
-            {data && <SuggestedProduct data={data} />}
-            </>
-          )
-        }
+      {!eventData && data && <SuggestedProduct data={data} />}
       <Footer />
     </div>
   );

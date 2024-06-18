@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addTocart, removeFromCart } from "../../redux/actions/cart";
 import { fetchAdminOptions } from "../../redux/actions/adminOptions";
 import { Link } from "react-router-dom";
+import { RxCross1 } from "react-icons/rx";
 
 const Cart = () => {
   const { cart } = useSelector((state) => state.cart);
@@ -157,87 +158,100 @@ const Cart = () => {
 
   return (
     <div className="container mx-auto py-8">
-      <div className="flex flex-col lg:flex-row">
-        {/* Product Details */}
-        <div className="w-full lg:w-2/3 bg-white p-5 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-4">Product Details</h2>
-          {/* Iterate through cart items */}
-          {cart.map((item) => (
-            <div
-              key={item.id}
-              className="flex justify-between items-center border-b pb-4 mb-4"
-            >
-              <div className="flex items-center">
-                <button
-                  onClick={() => handleEditClick(item)}
-                  className="text-blue-500 mt-2"
-                >
-                  EDIT
-                </button>
-                <img
-                  src={`${item?.images[0]?.url}`}
-                  alt=""
-                  className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
-                />
-                <div className="ml-4">
-                  <h4 className="text-lg font-semibold">{item.name}</h4>
-                  <p className="text-gray-600">
-                    ₹{item.discountPrice} (₹{item.originalPrice})
-                  </p>
-                  <p className="text-gray-600">Qty: {item.qty}</p>
-                  <p className="text-gray-600">
-                    total: ₹{item.discountPrice * item.qty}
-                  </p>
-                  <button
-                    onClick={() => removeFromCartHandler(item)}
-                    className="text-red-500 mt-2"
-                  >
-                    REMOVE
-                  </button>
-                  <p className="text-gray-600">Sold by: {item.shop.name}</p>
-                </div>
-              </div>
-              <p className="text-gray-600">
-                Delivery Fee: ₹
-                {calculateDeliveryFee(sellerAmounts[item.shopId].total)}
-              </p>
-            </div>
-          ))}
-        </div>
-        {/* Price Details */}
-        <div className="w-full lg:w-1/3 bg-white p-5 rounded-lg shadow-md mt-6 lg:mt-0 lg:ml-6">
-          <h2 className="text-2xl font-bold mb-4">
-            Price Details ({cart.length} Items)
-          </h2>
-          {/* Display price details */}
-          <div className="flex justify-between mb-2">
-            <p>Total Product Price</p>
-            <p>₹{totalProductPrice}</p>
-          </div>
-          <div className="flex justify-between mb-2">
-            <p>Overall Product Discount</p>
-            <p>-₹{OverallProductDiscount}</p>
-          </div>
-          <div className="flex justify-between mb-2">
-            <p>Total Delivery Fee</p>
-            <p>₹{totalDeliveryFee}</p>
-          </div>
-          <div className="flex justify-between mb-2">
-            <p>GST ({gstTax.toFixed(2)}%)</p>{" "}
-            {/* Format GST tax to 2 decimal places */}
-            <p>₹{gstAmount}</p>
-          </div>
-          <div className="flex justify-between font-bold border-t pt-4 mt-4">
-            <p>Overall Product Price</p>
-            <p>₹{OverallProductPrice}</p>
-          </div>
-          <Link to="/checkout">
-            <button className="mt-6 w-full bg-[#243450] text-white py-2 rounded">
-              Continue
+      {cart.length === 0 ? (
+        <div className="flex flex-col items-center justify-center h-full">
+          <h2 className="text-xl font-semibold mb-4">Your cart is empty</h2>
+          <p className="text-gray-600">Add some products to your cart to see them here.</p>
+          <Link to="/">
+            <button className="mt-6 bg-[#243450] text-white py-2 px-4 rounded">
+              Continue Shopping
             </button>
           </Link>
         </div>
-      </div>
+      ) : (
+        <div className="flex flex-col lg:flex-row">
+          {/* Product Details */}
+          <div className="w-full lg:w-2/3 bg-white p-5 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4">Product Details</h2>
+            {/* Iterate through cart items */}
+            {cart.map((item) => (
+              <div
+                key={item.id}
+                className="flex justify-between items-center border-b pb-4 mb-4"
+              >
+                <div className="flex items-center">
+                  <img
+                    src={`${item?.images[0]?.url}`}
+                    alt=""
+                    className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
+                  />
+                  <div className="ml-4">
+                    <h4 className="text-lg font-semibold">{item.name}</h4>
+                    <p className="text-gray-600">
+                      ₹{item.discountPrice} (₹{item.originalPrice})
+                    </p>
+                    <p className="text-gray-600">Qty: {item.qty}</p>
+                    <p className="text-gray-600">
+                      total: ₹{item.discountPrice * item.qty}
+                    </p>
+                    <button
+                      onClick={() => handleEditClick(item)}
+                      className="text-blue-500 mt-2 "
+                    >
+                      EDIT
+                    </button>
+                    <button
+                      onClick={() => removeFromCartHandler(item)}
+                      className="text-red-500 mt-2 ml-2"
+                    >
+                      REMOVE
+                    </button>
+
+                    <p className="text-gray-600">Sold by: {item.shop.name}</p>
+                  </div>
+                </div>
+                <p className="text-gray-600">
+                  Delivery Fee: ₹
+                  {calculateDeliveryFee(sellerAmounts[item.shopId].total)}
+                </p>
+              </div>
+            ))}
+          </div>
+          {/* Price Details */}
+          <div className="w-full lg:w-1/3 bg-white p-5 rounded-lg shadow-md mt-6 lg:mt-0 lg:ml-6">
+            <h2 className="text-xl font-semibold mb-4">
+              Price Details ({cart.length} Items)
+            </h2>
+            {/* Display price details */}
+            <div className="flex justify-between mb-2">
+              <p>Total Product Price</p>
+              <p>₹{totalProductPrice}</p>
+            </div>
+            <div className="flex justify-between mb-2">
+              <p>Overall Product Discount</p>
+              <p>-₹{OverallProductDiscount}</p>
+            </div>
+            <div className="flex justify-between mb-2">
+              <p>Total Delivery Fee</p>
+              <p>₹{totalDeliveryFee}</p>
+            </div>
+            <div className="flex justify-between mb-2">
+              <p>GST ({gstTax.toFixed(2)}%)</p>{" "}
+              {/* Format GST tax to 2 decimal places */}
+              <p>₹{gstAmount}</p>
+            </div>
+            <div className="flex justify-between font-bold border-t pt-4 mt-4">
+              <p>Overall Product Price</p>
+              <p>₹{OverallProductPrice}</p>
+            </div>
+            <Link to="/checkout">
+              <button className="mt-6 w-full bg-[#243450] text-white py-2 rounded">
+                Continue
+              </button>
+            </Link>
+          </div>
+        </div>
+      )}
       {/* Suggestions */}
       {suggestions.length > 0 && (
         <div className="mt-6 bg-yellow-100 p-4 rounded-lg shadow-md">
@@ -260,12 +274,11 @@ const Cart = () => {
         <div className="fixed inset-0 flex items-center justify-end z-50">
           <div className="fixed inset-0 bg-black opacity-50"></div>
           <div className="relative bg-white w-full md:w-1/3 h-full shadow-xl p-6">
-            <button
-              className="absolute top-4 right-4 text-gray-600"
+            <RxCross1
+              size={25}
+              className="cursor-pointer absolute top-4 right-4"
               onClick={() => setIsEditSidebarOpen(false)}
-            >
-              &times;
-            </button>
+            />
             <h2 className="text-2xl font-bold mb-6">Edit Item</h2>
             {selectedItem && (
               <>
