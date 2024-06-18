@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Header from "../components/Layout/Header";
+import Footer from "../components/Layout/Footer";
 import styles from "../styles/styles";
 import Loader from "../components/Layout/Loader";
 import ProfileSideBar from "../components/Profile/ProfileSidebar";
@@ -23,6 +24,7 @@ const ProfilePage = () => {
             </div>
             <ProfileContent active={active} />
           </div>
+          <Footer />
         </>
       )}
     </div>

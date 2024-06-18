@@ -29,7 +29,6 @@ const ProfileContent = ({ active }) => {
   const [name, setName] = useState(user && user.name);
   const [email, setEmail] = useState(user && user.email);
   const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
-  const [password, setPassword] = useState("");
   const [, setAvatar] = useState(null);
   const dispatch = useDispatch();
 
@@ -46,7 +45,7 @@ const ProfileContent = ({ active }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(updateUserInformation(name, email, phoneNumber, password));
+    dispatch(updateUserInformation(name, email, phoneNumber));
   };
 
   const handleImage = async (e) => {
@@ -77,90 +76,71 @@ const ProfileContent = ({ active }) => {
   };
 
   return (
-    <div className="w-full">
-      {/* profile */}
-      {active === 1 && (
-        <>
-          <div className="flex justify-center w-full">
-            <div className="relative">
-              <img
-                src={`${user?.avatar?.url}`}
-                className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
-                alt=""
+    <div className="mx-auto w-full">
+     {active === 1 && (
+      <>
+        <div className="flex justify-center mb-4 w-1/2 mx-auto">
+          <div className="relative">
+            <img
+              src={`${user?.avatar?.url}`}
+              className="w-32 h-32 rounded-full object-cover border-4 border-green-500"
+              alt="User Avatar"
+            />
+            <div className="absolute bottom-2 right-2 bg-gray-300 rounded-full p-1 cursor-pointer">
+              <input
+                type="file"
+                id="image"
+                className="hidden"
+                onChange={handleImage}
               />
-              <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
-                <input
-                  type="file"
-                  id="image"
-                  className="hidden"
-                  onChange={handleImage}
-                />
-                <label htmlFor="image">
-                  <AiOutlineCamera />
-                </label>
-              </div>
+              <label htmlFor="image">
+                <AiOutlineCamera size={20} />
+              </label>
             </div>
           </div>
-          <br />
-          <br />
-          <div className="w-full px-5">
-            <form onSubmit={handleSubmit} aria-required={true}>
-              <div className="w-full 800px:flex block pb-3">
-                <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Full Name</label>
-                  <input
-                    type="text"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-                <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Email Address</label>
-                  <input
-                    type="text"
-                    className={`${styles.input} !w-[95%] mb-1 800px:mb-0`}
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="w-full 800px:flex block pb-3">
-                <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Phone Number</label>
-                  <input
-                    type="number"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-                    required
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                  />
-                </div>
-
-                <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Enter your password</label>
-                  <input
-                    type="password"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-              </div>
-              <input
-                className={`w-[250px] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
-                required
-                value="Update"
-                type="submit"
-              />
-            </form>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4 w-1/2 mx-auto">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Full Name</label>
+            <input
+              type="text"
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
-        </>
-      )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Email Address</label>
+            <input
+              type="email"
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+            <input
+              type="number"
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              required
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+            />
+          </div>
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="w-1/2 bg-[#243450] text-white py-2 rounded-md transition duration-300"
+            >
+              Update Profile
+            </button>
+          </div>
+        </form>
+      </>
+    )}
 
       {/* order */}
       {active === 2 && (
@@ -277,7 +257,7 @@ const AllOrders = () => {
       <DataGrid
         rows={row}
         columns={columns}
-        pageSize={10}
+        pageSize={8}
         disableSelectionOnClick
         autoHeight
       />
@@ -523,7 +503,7 @@ const ChangePassword = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <input
-              className={`w-[95%] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
+              className={`w-[95%] h-[40px] bg-[#243450] text-center text-white rounded-[3px] mt-8 cursor-pointer`}
               required
               value="Update"
               type="submit"
@@ -601,7 +581,7 @@ const Address = () => {
                 onClick={() => setOpen(false)}
               />
             </div>
-            <h1 className="text-center text-[25px] font-Poppins">
+            <h1 className="text-center text-[20px] font-Poppins">
               Add New Address
             </h1>
             <div className="w-full">
@@ -614,10 +594,10 @@ const Address = () => {
                       id=""
                       value={country}
                       onChange={(e) => setCountry(e.target.value)}
-                      className="w-[95%] border h-[40px] rounded-[5px]"
+                      className="w-full border h-[40px] rounded-[5px]"
                     >
                       <option value="" className="block border pb-2">
-                        choose your country
+                      Select your country
                       </option>
                       {Country &&
                         Country.getAllCountries().map((item) => (
@@ -639,10 +619,10 @@ const Address = () => {
                       id=""
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
-                      className="w-[95%] border h-[40px] rounded-[5px]"
+                      className="w-full border h-[40px] rounded-[5px]"
                     >
                       <option value="" className="block border pb-2">
-                        choose your city
+                        Select your city
                       </option>
                       {State &&
                         State.getStatesOfCountry(country).map((item) => (
@@ -696,7 +676,7 @@ const Address = () => {
                       id=""
                       value={addressType}
                       onChange={(e) => setAddressType(e.target.value)}
-                      className="w-[95%] border h-[40px] rounded-[5px]"
+                      className="w-full border h-[40px] rounded-[5px]"
                     >
                       <option value="" className="block border pb-2">
                         Choose your Address Type
@@ -717,7 +697,7 @@ const Address = () => {
                   <div className=" w-full pb-2">
                     <input
                       type="submit"
-                      className={`${styles.input} mt-5 cursor-pointer`}
+                      className={`${styles.input} mt-5 bg-[#243450] text-white cursor-pointer`}
                       required
                       readOnly
                     />
@@ -729,8 +709,8 @@ const Address = () => {
         </div>
       )}
       <div className="flex w-full items-center justify-between">
-        <h1 className="text-[25px] font-[600] text-[#000000ba] pb-2">
-          My Addresses
+        <h1 className="text-[20px] font-[600] text-[#000000ba] pb-2">
+          My Address
         </h1>
         <div
           className={`${styles.button} !rounded-md`}
@@ -743,7 +723,7 @@ const Address = () => {
       {user &&
         user.addresses.map((item, index) => (
           <div
-            className="w-full bg-white h-min 800px:h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10 mb-5"
+            className="w-full border h-min 800px:h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10 mb-5"
             key={index}
           >
             <div className="flex items-center">

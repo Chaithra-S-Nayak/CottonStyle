@@ -55,7 +55,6 @@ export const updateUserInformation =
         `${server}/user/update-user-info`,
         {
           email,
-          password,
           phoneNumber,
           name,
         },
