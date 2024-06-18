@@ -4,15 +4,18 @@ import { useNotifications } from "../context/NotificationContext";
 const NotificationDropdown = () => {
   const { notifications, markAsRead } = useNotifications();
 
-  // console.log("Notifications in Dropdown: ", notifications);
+  // Sort notifications so that unread ones appear first
+  const sortedNotifications = [...notifications].sort(
+    (a, b) => a.isRead - b.isRead
+  );
 
   return (
     <div className="absolute right-0 mt-2 w-80 bg-white border rounded shadow-lg z-50">
       <div className="p-4">
         <h3 className="text-lg font-semibold">Notifications</h3>
         <ul className="max-h-64 overflow-y-auto">
-          {notifications.length === 0 && <li>No notifications!</li>}
-          {notifications.map((notification) => (
+          {sortedNotifications.length === 0 && <li>No notifications!</li>}
+          {sortedNotifications.map((notification) => (
             <li
               key={notification._id}
               className={`p-2 ${
