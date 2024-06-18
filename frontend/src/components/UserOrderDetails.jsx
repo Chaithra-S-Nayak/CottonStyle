@@ -77,6 +77,10 @@ const UserOrderDetails = () => {
     setShowRefundModal(false);
   };
 
+  const totalPrice =
+    data?.totalPrice +
+    ((data?.gstPercentage || 0) / 100) * (data?.totalPrice || 0);
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-xl font-semibold mb-4">Order Details</h1>
@@ -95,8 +99,9 @@ const UserOrderDetails = () => {
           </div>
           <div>
             <h5>
-              Total Price: <span>₹{data?.totalPrice}</span>
+              Total Price: Total Price: <span>₹{totalPrice}</span>
             </h5>
+
             <h5>
               {data?.coupon ? (
                 <>
