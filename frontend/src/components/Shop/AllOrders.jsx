@@ -18,18 +18,22 @@ const AllOrders = () => {
   }, [dispatch]);
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    {
+      field: "id",
+      headerName: "Order ID",
+      minWidth: 150,
+      flex: 0.7,
+      align: "center",
+      headerAlign: "center",
+    },
 
     {
       field: "status",
       headerName: "Status",
       minWidth: 130,
       flex: 0.7,
-      cellClassName: (params) => {
-        return params.getValue(params.id, "status") === "Delivered"
-          ? "greenColor"
-          : "redColor";
-      },
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "itemsQty",
@@ -37,6 +41,8 @@ const AllOrders = () => {
       type: "number",
       minWidth: 130,
       flex: 0.7,
+      align: "center",
+      headerAlign: "center",
     },
 
     {
@@ -45,13 +51,15 @@ const AllOrders = () => {
       type: "number",
       minWidth: 130,
       flex: 0.8,
+      align: "center",
+      headerAlign: "center",
     },
 
     {
-      field: " ",
+      field: "orderDetails",
       flex: 1,
       minWidth: 150,
-      headerName: "",
+      headerName: "Order Details",
       type: "number",
       sortable: false,
       renderCell: (params) => {
@@ -65,6 +73,8 @@ const AllOrders = () => {
           </>
         );
       },
+      align: "center",
+      headerAlign: "center",
     },
   ];
 
@@ -85,7 +95,7 @@ const AllOrders = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="w-full mx-8 pt-1 mt-10 bg-white">
+        <div className="w-full rounded pt-1 mt-10">
           <DataGrid
             rows={row}
             columns={columns}

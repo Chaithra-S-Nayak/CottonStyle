@@ -12,7 +12,6 @@ import { BiMenuAltLeft } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import Navbar from "./Navbar";
 import { useSelector } from "react-redux";
-import Cart from "../cart/Cart";
 import Wishlist from "../Wishlist/Wishlist";
 import { RxCross1 } from "react-icons/rx";
 import logo from "../../Assets/CottonStyle.png";
@@ -27,7 +26,6 @@ const Header = ({ activeHeading }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
   const [active, setActive] = useState(false);
-  const [openCart, setOpenCart] = useState(false);
   const [openWishlist, setOpenWishlist] = useState(false);
   const [open, setOpen] = useState(false);
   const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -189,9 +187,6 @@ const Header = ({ activeHeading }) => {
               </div>
             </div>
 
-            {/* cart popup */}
-            {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
-
             {/* wishlist popup */}
             {openWishlist ? (
               <Wishlist setOpenWishlist={setOpenWishlist} />
@@ -217,18 +212,15 @@ const Header = ({ activeHeading }) => {
             />
           </div>
           <div>
-            <div
-              className="relative mr-[20px]"
-              onClick={() => setOpenCart(true)}
-            >
-              <AiOutlineShoppingCart size={30} />
-              <span class="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
-                {cart && cart.length}
-              </span>
-            </div>
+            <Link to="/cart">
+              <div className="relative mr-[20px]">
+                <AiOutlineShoppingCart size={30} />
+                <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
+                  {cart && cart.length}
+                </span>
+              </div>
+            </Link>
           </div>
-          {/* cart popup */}
-          {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
 
           {/* wishlist popup */}
           {openWishlist ? <Wishlist setOpenWishlist={setOpenWishlist} /> : null}
@@ -247,7 +239,7 @@ const Header = ({ activeHeading }) => {
                     onClick={() => setOpenWishlist(true) || setOpen(false)}
                   >
                     <AiOutlineHeart size={30} className="mt-5 ml-3" />
-                    <span class="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
+                    <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
                       {wishlist && wishlist.length}
                     </span>
                   </div>
@@ -262,7 +254,7 @@ const Header = ({ activeHeading }) => {
               <div className="my-8 w-[92%] m-auto h-[40px relative]">
                 <input
                   type="search"
-                  placeholder="Search Product..."
+                  placeholder="Search Product"
                   className="h-[40px] w-full px-2 border-[#243450] border-[2px] rounded-md"
                   value={searchTerm}
                   onChange={handleSearchChange}

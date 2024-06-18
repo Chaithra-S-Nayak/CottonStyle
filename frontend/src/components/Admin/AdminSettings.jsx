@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { server } from "../../server";
-import styles from "../../styles/styles";
 import { loadAdmin, updateAdminProfile } from "../../redux/actions/admin";
 import axios from "axios";
 import { AiOutlineCamera } from "react-icons/ai";
@@ -61,15 +60,15 @@ const AdminSettings = () => {
   };
 
   return (
-    <div className="w-full">
-      <div className="flex justify-center w-full">
+    <div className=" p-6 rounded-md border">
+      <div className="flex justify-center mb-4">
         <div className="relative">
           <img
-            src={`${admin?.avatar?.url}`}
-            className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
-            alt=""
+            src={avatar || admin?.avatar?.url}
+            className="w-32 h-32 rounded-full object-cover border-4 border-green-500"
+            alt="Admin Avatar"
           />
-          <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
+          <div className="absolute bottom-2 right-2 bg-gray-300 rounded-full p-1 cursor-pointer">
             <input
               type="file"
               id="image"
@@ -77,57 +76,55 @@ const AdminSettings = () => {
               onChange={handleImage}
             />
             <label htmlFor="image">
-              <AiOutlineCamera />
+              <AiOutlineCamera size={20} />
             </label>
           </div>
         </div>
       </div>
-      <br />
-      <br />
-      <div className="w-full px-5">
-        <form onSubmit={handleSubmit} aria-required={true}>
-          <div className="w-full 800px:flex block pb-3">
-            <div className="w-[100%] 800px:w-[50%]">
-              <label className="block pb-2">Full Name</label>
-              <input
-                type="text"
-                className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div className="w-[100%] 800px:w-[50%]">
-              <label className="block pb-2">Email Address</label>
-              <input
-                type="email"
-                className={`${styles.input} !w-[95%] mb-1 800px:mb-0`}
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="w-full 800px:flex block pb-3">
-            <div className="w-[100%] 800px:w-[50%]">
-              <label className="block pb-2">Phone Number</label>
-              <input
-                type="number"
-                className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-                required
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-              />
-            </div>
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Full Name
+          </label>
           <input
-            className={`w-[250px] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
-            value="Update Profile"
-            type="submit"
+            type="text"
+            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
-        </form>
-      </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Email Address
+          </label>
+          <input
+            type="email"
+            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Phone Number
+          </label>
+          <input
+            type="number"
+            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            required
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-[#243450] text-white py-2 rounded-md transition duration-300"
+        >
+          Update Profile
+        </button>
+      </form>
     </div>
   );
 };

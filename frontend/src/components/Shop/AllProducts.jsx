@@ -17,7 +17,7 @@ const AllProducts = () => {
 
   useEffect(() => {
     dispatch(getAllProductsShop(seller._id));
-  }, [dispatch,seller._id]);
+  }, [dispatch, seller._id]);
 
   const handleDelete = async (id) => {
     try {
@@ -29,22 +29,31 @@ const AllProducts = () => {
       toast.error("Failed to delete product!");
     }
   };
-  
-  
 
   const columns = [
-    { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },
+    {
+      field: "id",
+      headerName: "Product Id",
+      minWidth: 150,
+      flex: 0.9,
+      align: "center",
+      headerAlign: "center",
+    },
     {
       field: "name",
       headerName: "Name",
       minWidth: 180,
-      flex: 1.4,
+      flex: 0.8,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "price",
       headerName: "Price",
       minWidth: 100,
-      flex: 0.6,
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "Stock",
@@ -52,6 +61,8 @@ const AllProducts = () => {
       type: "number",
       minWidth: 80,
       flex: 0.5,
+      align: "center",
+      headerAlign: "center",
     },
 
     {
@@ -59,11 +70,13 @@ const AllProducts = () => {
       headerName: "Sold out",
       type: "number",
       minWidth: 130,
-      flex: 0.6,
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "Preview",
-      flex: 0.8,
+      flex: 0.5,
       minWidth: 100,
       headerName: "",
       type: "number",
@@ -79,10 +92,12 @@ const AllProducts = () => {
           </>
         );
       },
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "Edit",
-      flex: 0.8,
+      flex: 0.5,
       minWidth: 100,
       headerName: "",
       type: "number",
@@ -96,10 +111,12 @@ const AllProducts = () => {
           </Link>
         );
       },
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "Delete",
-      flex: 0.8,
+      flex: 0.5,
       minWidth: 120,
       headerName: "",
       type: "number",
@@ -113,6 +130,8 @@ const AllProducts = () => {
           </>
         );
       },
+      align: "center",
+      headerAlign: "center",
     },
   ];
 
@@ -134,7 +153,7 @@ const AllProducts = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="w-full mx-8 pt-1 mt-10 bg-white">
+        <div className="w-full mx-8 pt-1 mt-10">
           <DataGrid
             rows={row}
             columns={columns}

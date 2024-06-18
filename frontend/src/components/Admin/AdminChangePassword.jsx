@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { server } from "../../server";
-import styles from "../../styles/styles";
 
 const AdminChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
@@ -35,53 +34,54 @@ const AdminChangePassword = () => {
   };
 
   return (
-    <div className="w-full px-5">
-      <h1 className="block text-[25px] text-center font-[600] text-[#000000ba] pb-2">
+    <div className=" p-6 rounded-md border ">
+      <h1 className="text-xl font-semibold text-gray-700 mb-4 text-center">
         Change Password
       </h1>
-      <div className="w-full">
-        <form
-          aria-required
-          onSubmit={passwordChangeHandler}
-          className="flex flex-col items-center"
+      <form onSubmit={passwordChangeHandler} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Enter your old password
+          </label>
+          <input
+            type="password"
+            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            required
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Enter your new password
+          </label>
+          <input
+            type="password"
+            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            required
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Confirm your new password
+          </label>
+          <input
+            type="password"
+            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            required
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-[#243450] text-white py-2 rounded-md transition duration-300"
         >
-          <div className="w-[100%] 800px:w-[50%] mt-5">
-            <label className="block pb-2">Enter your old password</label>
-            <input
-              type="password"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-            />
-          </div>
-          <div className="w-[100%] 800px:w-[50%] mt-2">
-            <label className="block pb-2">Enter your new password</label>
-            <input
-              type="password"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </div>
-          <div className="w-[100%] 800px:w-[50%] mt-2">
-            <label className="block pb-2">Enter your confirm password</label>
-            <input
-              type="password"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <input
-              className={`w-[95%] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
-              value="Update"
-              type="submit"
-            />
-          </div>
-        </form>
-      </div>
+          Update Password
+        </button>
+      </form>
     </div>
   );
 };

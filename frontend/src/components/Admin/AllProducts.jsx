@@ -6,29 +6,42 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { server } from "../../server";
 import { useState } from "react";
-
+import styles from "../../styles/styles";
 const AllProducts = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get(`${server}/product/admin-all-products`, {withCredentials: true}).then((res) => {
+    axios
+      .get(`${server}/product/admin-all-products`, { withCredentials: true })
+      .then((res) => {
         setData(res.data.products);
-    })
+      });
   }, []);
 
   const columns = [
-    { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },
+    {
+      field: "id",
+      headerName: "Product Id",
+      minWidth: 150,
+      flex: 0.8,
+      align: "center",
+      headerAlign: "center",
+    },
     {
       field: "name",
       headerName: "Name",
       minWidth: 180,
-      flex: 1.4,
+      flex: 0.6,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "price",
       headerName: "Price",
       minWidth: 100,
-      flex: 0.6,
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "Stock",
@@ -36,6 +49,8 @@ const AllProducts = () => {
       type: "number",
       minWidth: 80,
       flex: 0.5,
+      align: "center",
+      headerAlign: "center",
     },
 
     {
@@ -43,11 +58,13 @@ const AllProducts = () => {
       headerName: "Sold out",
       type: "number",
       minWidth: 130,
-      flex: 0.6,
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "Preview",
-      flex: 0.8,
+      flex: 0.3,
       minWidth: 100,
       headerName: "",
       type: "number",
@@ -63,13 +80,15 @@ const AllProducts = () => {
           </>
         );
       },
+      align: "center",
+      headerAlign: "center",
     },
   ];
 
   const row = [];
 
   data &&
-  data.forEach((item) => {
+    data.forEach((item) => {
       row.push({
         id: item._id,
         name: item.name,
@@ -80,17 +99,17 @@ const AllProducts = () => {
     });
 
   return (
-    <>
-        <div className="w-full mx-8 pt-1 mt-10 bg-white">
-          <DataGrid
-            rows={row}
-            columns={columns}
-            pageSize={10}
-            disableSelectionOnClick
-            autoHeight
-          />
-        </div>
-    </>
+    <div className={`${styles.section}`}>
+      <div className="w-full mx-8 pt-1 mt-10 ">
+        <DataGrid
+          rows={row}
+          columns={columns}
+          pageSize={10}
+          disableSelectionOnClick
+          autoHeight
+        />
+      </div>
+    </div>
   );
 };
 

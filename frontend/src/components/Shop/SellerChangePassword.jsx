@@ -35,53 +35,60 @@ const SellerChangePassword = () => {
   };
 
   return (
-    <div className="w-full px-5">
-      <h1 className="block text-[25px] text-center font-[600] text-[#000000ba] pb-2">
+    <div className="w-full max-w-md mx-auto my-10 px-5 py-8 border rounded-md">
+      <h1 className="text-xl  text-gray-700 mb-4 text-center">
         Change Password
       </h1>
-      <div className="w-full">
-        <form
-          aria-required
-          onSubmit={passwordChangeHandler}
-          className="flex flex-col items-center"
-        >
-          <div className="w-[100%] 800px:w-[50%] mt-5">
-            <label className="block pb-2">Enter your old password</label>
-            <input
-              type="password"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-            />
-          </div>
-          <div className="w-[100%] 800px:w-[50%] mt-2">
-            <label className="block pb-2">Enter your new password</label>
-            <input
-              type="password"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </div>
-          <div className="w-[100%] 800px:w-[50%] mt-2">
-            <label className="block pb-2">Enter your confirm password</label>
-            <input
-              type="password"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <input
-              className={`w-[95%] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer`}
-              value="Update"
-              type="submit"
-            />
-          </div>
-        </form>
-      </div>
+      <form
+        aria-required={true}
+        onSubmit={passwordChangeHandler}
+        className="flex flex-col items-center"
+      >
+        <div className="w-full mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Enter your old password
+          </label>
+          <input
+            type="password"
+            className={`${styles.input} w-full`}
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+            required
+          />
+        </div>
+        <div className="w-full mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Enter your new password
+          </label>
+          <input
+            type="password"
+            className={`${styles.input} w-full`}
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            required
+          />
+        </div>
+        <div className="w-full mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Confirm your new password
+          </label>
+          <input
+            type="password"
+            className={`${styles.input} w-full`}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+        </div>
+        <div className="w-full mb-4">
+          <button
+            type="submit"
+            className="w-full bg-[#243450] text-white py-2 rounded-md transition duration-300"
+          >
+            Update Password
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
