@@ -1,9 +1,9 @@
 const express = require("express");
-const path = require("path");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const Shop = require("../model/shop");
+const Product = require("../model/product");
 const { isSeller, isAdmin } = require("../middleware/auth");
 const cloudinary = require("cloudinary");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
@@ -544,7 +544,7 @@ router.get(
   })
 );
 
-// delete seller ---admin
+// Delete seller ---admin
 router.delete(
   "/delete-seller/:id",
   isAdmin,
@@ -558,11 +558,56 @@ router.delete(
         );
       }
 
+      // Delete all products associated with the seller
+      await Product.deleteMany({ shopId: req.params.id });
+
       await Shop.findByIdAndDelete(req.params.id);
+
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              color: #333;
+            }
+          </style>
+        </head>
+        <body style="margin: 0; padding: 0;">
+          <div style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+            <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc;">
+              <div style="font-size: 20px; font-weight: 300; margin: 0;">CottonStyle</div>
+            </div>
+            <p>Hello ${seller.name},</p>
+            <p>We regret to inform you that your seller account has been deleted from CottonStyle. If you have any questions or concerns, please contact our support team at ${process.env.ADMIN_EMAIL}.</p>
+            <p>Thank you for your understanding.</p>
+            <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-top: 1px solid #ccc; font-size: 12px; color: #999;">
+              <p>&copy; 2024 CottonStyle. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      try {
+        await sendMail({
+          email: seller.email,
+          subject: "Your Seller Account Has Been Deleted",
+          message: `Hello ${seller.name}, we regret to inform you that your seller account has been deleted from CottonStyle. If you have any questions or concerns, please contact our support team at ${process.env.ADMIN_EMAIL}.`,
+          html: htmlContent,
+        });
+        console.log(`Account deletion email sent to ${seller.email}`);
+      } catch (error) {
+        console.error("Error sending account deletion email:", error);
+        return next(
+          new ErrorHandler("Failed to send account deletion email", 500)
+        );
+      }
 
       res.status(201).json({
         success: true,
-        message: "Seller deleted successfully!",
+        message: "Seller and associated products deleted successfully!",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));

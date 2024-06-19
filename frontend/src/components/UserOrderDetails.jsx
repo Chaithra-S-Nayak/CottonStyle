@@ -144,7 +144,15 @@ const UserOrderDetails = () => {
                 className="w-16 h-16 object-cover rounded-lg mr-4"
               />
               <div>
-                <h5>{item.name}</h5>
+                <h5>
+                  <Link
+                    to={`/product/${item._id}`}
+                    className="text-blue-500 hover:underline"
+                  >
+                    {item.name}
+                  </Link>
+                </h5>
+
                 <h5>
                   ₹{item.discountPrice} x {item.qty}
                 </h5>
@@ -210,7 +218,7 @@ const UserOrderDetails = () => {
             </div>
             <div>
               <label className="block mb-1">
-                Write a comment{" "}
+                Write a comment
                 <span className="text-gray-400">(optional)</span>
               </label>
               <textarea

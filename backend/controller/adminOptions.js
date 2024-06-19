@@ -7,7 +7,6 @@ const AdminOptions = require("../model/adminOptions");
 // Get Admin Options
 router.get(
   "/admin-options",
-  isAdmin,
   catchAsyncErrors(async (req, res) => {
     try {
       const options = await AdminOptions.findOne();

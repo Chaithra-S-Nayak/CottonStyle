@@ -553,18 +553,50 @@ router.delete(
       const user = await User.findById(req.params.id);
 
       if (!user) {
-        return next(
-          new ErrorHandler("User is not available with this id", 400)
-        );
+        return next(new ErrorHandler("User not found", 404));
       }
 
-      const imageId = user.avatar.public_id;
-
-      await cloudinary.v2.uploader.destroy(imageId);
-
+      // Delete the user from the database
       await User.findByIdAndDelete(req.params.id);
 
-      res.status(201).json({
+      // Construct HTML content for the email
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              color: #333;
+            }
+          </style>
+        </head>
+        <body style="margin: 0; padding: 0;">
+          <div style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+            <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc;">
+              <div style="font-size: 20px; font-weight: 300; margin: 0;">CottonStyle</div>
+            </div>
+            <p>Hello ${user.name},</p>
+            <p>We regret to inform you that your user account has been deleted from CottonStyle. If you have any questions or concerns, please contact our support team at ${
+              process.env.ADMIN_EMAIL
+            }.</p>
+            <p>Thank you for your understanding.</p>
+            <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-top: 1px solid #ccc; font-size: 12px; color: #999;">
+              <p>&copy; ${new Date().getFullYear()} Your Website Name. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      // Send email notification to user
+      await sendMail({
+        email: user.email,
+        subject: "Your Account Has Been Deleted",
+        html: htmlContent,
+      });
+
+      res.status(200).json({
         success: true,
         message: "User deleted successfully!",
       });

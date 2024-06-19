@@ -4,9 +4,7 @@ import { server } from "../../server";
 // Fetch Admin Options
 export const fetchAdminOptions = () => async (dispatch) => {
   try {
-    const { data } = await axios.get(`${server}/adminOptions/admin-options`, {
-      withCredentials: true,
-    });
+    const { data } = await axios.get(`${server}/adminOptions/admin-options`);
     dispatch({
       type: "FETCH_ADMIN_OPTIONS_SUCCESS",
       payload: data.options,
