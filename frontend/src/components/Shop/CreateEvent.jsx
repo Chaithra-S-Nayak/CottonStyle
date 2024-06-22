@@ -2,21 +2,27 @@ import React, { useEffect, useState } from "react";
 import { AiOutlinePlusCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { categoriesData } from "../../static/data";
 import { toast } from "react-toastify";
 import { createevent } from "../../redux/actions/event";
+import { fetchAdminOptions } from "../../redux/actions/adminOptions";
 
 const CreateEvent = () => {
   const { seller } = useSelector((state) => state.seller);
   const { success, error } = useSelector((state) => state.events);
+  const { adminOptions } = useSelector((state) => state.adminOptions);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchAdminOptions());
+  }, [dispatch]);
 
   const [images, setImages] = useState([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
-  const [tags, setTags] = useState("");
+  const [fabric, setFabric] = useState("");
+  const [color, setColor] = useState("");
+  const [availableSizes, setAvailableSizes] = useState([]);
   const [originalPrice, setOriginalPrice] = useState();
   const [discountPrice, setDiscountPrice] = useState();
   const [stock, setStock] = useState();
@@ -74,6 +80,13 @@ const CreateEvent = () => {
   const handleRemoveImage = (index) => {
     setImages((old) => old.filter((_, i) => i !== index));
   };
+  const handleSizeChange = (size) => {
+    setAvailableSizes((prevSizes) =>
+      prevSizes.includes(size)
+        ? prevSizes.filter((s) => s !== size)
+        : [...prevSizes, size]
+    );
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -85,8 +98,9 @@ const CreateEvent = () => {
     const data = {
       name,
       description,
-      category,
-      tags,
+      fabric,
+      color,
+      availableSizes,
       originalPrice,
       discountPrice,
       stock,
@@ -137,34 +151,70 @@ const CreateEvent = () => {
         <br />
         <div>
           <label className="pb-2">
-            Category <span className="text-red-500">*</span>
+            Fabric <span className="text-red-500">*</span>
           </label>
           <select
-            className="w-full mt-2 border h-[35px] rounded-[5px]"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            value={fabric}
+            onChange={(e) => setFabric(e.target.value)}
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            required
           >
-            <option value="Choose a category">Choose a category</option>
-            {categoriesData &&
-              categoriesData.map((i) => (
-                <option value={i.title} key={i.title}>
-                  {i.title}
+            <option value="">Choose the Fabric</option>
+            {adminOptions.fabric &&
+              adminOptions.fabric.map((fabric) => (
+                <option key={fabric} value={fabric}>
+                  {fabric}
                 </option>
               ))}
           </select>
         </div>
         <br />
         <div>
-          <label className="pb-2">Tags</label>
-          <input
-            type="text"
-            name="tags"
-            value={tags}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={(e) => setTags(e.target.value)}
-            placeholder="Enter your event product tags"
-          />
+          <label className="pb-2">
+            Color <span className="text-red-500">*</span>
+          </label>
+          <select
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            required
+          >
+            <option value="">Choose a Color</option>
+            {adminOptions.color &&
+              adminOptions.color.map((color) => (
+                <option key={color} value={color}>
+                  {color}
+                </option>
+              ))}
+          </select>
         </div>
+        <br />
+        <div>
+          <label className="pb-2">
+            Available Sizes <span className="text-red-500">*</span>
+          </label>
+          <div className="flex flex-wrap gap-2 mt-1">
+            {adminOptions.sizeChart?.map((sizeObj) => (
+              <div key={sizeObj.size} className="flex items-center">
+                <input
+                  type="checkbox"
+                  id={`size-${sizeObj.size}`}
+                  value={sizeObj.size}
+                  checked={availableSizes.includes(sizeObj.size)}
+                  onChange={() => handleSizeChange(sizeObj.size)}
+                  className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                />
+                <label
+                  htmlFor={`size-${sizeObj.size}`}
+                  className="ml-2 text-sm text-gray-700"
+                >
+                  {sizeObj.size}
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <br />
         <div>
           <label className="pb-2">Original Price</label>

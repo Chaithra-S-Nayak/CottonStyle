@@ -17,6 +17,10 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please enter your product color!"],
   },
+  availableSizes: {
+    type: [String],
+    required: [true, "Please enter available sizes for the product!"],
+  },
   originalPrice: {
     type: Number,
   },
@@ -79,10 +83,6 @@ const productSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now(),
-  },
-  availableSizes: {
-    type: [String],
-    required: [true, "Please enter available sizes for the product!"],
   },
 });
 
