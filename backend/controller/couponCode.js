@@ -1,6 +1,5 @@
 const express = require("express");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-const Shop = require("../model/shop");
 const ErrorHandler = require("../utils/ErrorHandler");
 const { isSeller } = require("../middleware/auth");
 const CouponCode = require("../model/couponCode");
@@ -20,7 +19,7 @@ router.post(
         return next(new ErrorHandler("Coupon code already exists!", 400));
       }
 
-      const couponCode = await CouponCode.create(req.body); 
+      const couponCode = await CouponCode.create(req.body);
       res.status(201).json({
         success: true,
         couponCode,
@@ -34,10 +33,9 @@ router.post(
 // get all coupons of a shop
 router.get(
   "/get-coupon/:id",
-  isSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const couponCodes = await CouponCode.find({ shopId: req.seller.id });
+      const couponCodes = await CouponCode.find({ shopId: req.params.id });
       res.status(201).json({
         success: true,
         couponCodes,
