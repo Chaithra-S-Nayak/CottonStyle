@@ -19,7 +19,7 @@ router.post(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const { email } = req.body;
-      console.log("Creating new shop with email:", email);
+      // console.log("Creating new shop with email:", email);
 
       const sellerEmail = await Shop.findOne({ email });
       if (sellerEmail) {
@@ -90,7 +90,7 @@ router.post(
           message: `Hello ${seller.name}, please click on the link to activate your shop: ${activationUrl}`,
           html: htmlContent,
         });
-        console.log(`Activation email sent to ${seller.email}`);
+        // console.log(`Activation email sent to ${seller.email}`);
 
         res.status(201).json({
           success: true,
@@ -191,9 +191,9 @@ router.post(
           message: `New seller activated with email: ${seller.email}`,
           html: adminHtmlContent,
         });
-        console.log(
-          `Admin notification email sent to ${process.env.ADMIN_EMAIL}`
-        );
+        // console.log(
+        //   `Admin notification email sent to ${process.env.ADMIN_EMAIL}`
+        // );
       } catch (error) {
         console.error("Error sending admin notification:", error);
         return next(new ErrorHandler(error.message, 500));
@@ -260,7 +260,7 @@ router.post(
     seller.otpExpiry = Date.now() + 300000; // OTP expires in 5 minutes
     await seller.save();
 
-    console.log("Generated OTP:", otp, "for email:", email);
+    // console.log("Generated OTP:", otp, "for email:", email);
 
     const htmlContent = `
     <!DOCTYPE html>
@@ -597,7 +597,7 @@ router.delete(
           message: `Hello ${seller.name}, we regret to inform you that your seller account has been deleted from CottonStyle. If you have any questions or concerns, please contact our support team at ${process.env.ADMIN_EMAIL}.`,
           html: htmlContent,
         });
-        console.log(`Account deletion email sent to ${seller.email}`);
+        // console.log(`Account deletion email sent to ${seller.email}`);
       } catch (error) {
         console.error("Error sending account deletion email:", error);
         return next(

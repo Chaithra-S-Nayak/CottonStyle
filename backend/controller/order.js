@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-const { isAuthenticated, isSeller, isAdmin } = require("../middleware/auth");
+const { isSeller, isAdmin } = require("../middleware/auth");
 const Order = require("../model/order");
 const Shop = require("../model/shop");
 const Product = require("../model/product");
@@ -24,7 +24,7 @@ router.post(
         gstPercentage,
       } = req.body;
 
-      console.log("Creating new order with the following details:", req.body);
+      // console.log("Creating new order with the following details:", req.body);
 
       // Group cart items by shopId
       const shopItemsMap = new Map();
@@ -67,9 +67,9 @@ router.post(
           sellerDeliveryFees: deliveryFee > 0 ? deliveryFee : null, // Only include delivery fee if greater than 0
         });
 
-        console.log(
-          `Order created with ID: ${order._id} for shop ID: ${shopId}`
-        );
+        // console.log(
+        //   `Order created with ID: ${order._id} for shop ID: ${shopId}`
+        // );
 
         orders.push(order);
 
@@ -108,7 +108,7 @@ router.post(
             shop._id
           );
 
-          console.log(`Preparing to send email to ${shop.email}`);
+          // console.log(`Preparing to send email to ${shop.email}`);
 
           try {
             await sendMail({
@@ -117,7 +117,7 @@ router.post(
               message: `Hello ${shop.name}, you have received a new order with ID: ${order._id}. Please review the order details and prepare for shipping.`,
               html: newOrderHtmlContent,
             });
-            console.log(`Email sent to ${shop.email}`);
+            // console.log(`Email sent to ${shop.email}`);
           } catch (mailError) {
             console.error("Error sending email:", mailError);
           }
@@ -213,37 +213,36 @@ router.put(
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      console.log("Fetching order with ID:", req.params.id);
+      // console.log("Fetching order with ID:", req.params.id);
       const order = await Order.findById(req.params.id);
 
       if (!order) {
-        console.error("Order not found with ID:", req.params.id);
+        // console.error("Order not found with ID:", req.params.id);
         return next(new ErrorHandler("Order not found with this id", 400));
       }
 
-      console.log("Order found:", order);
+      // console.log("Order found:", order);
 
       // Check if stock is available before processing
       for (const item of order.cart) {
-        console.log("Checking stock for product ID:", item._id);
+        // console.log("Checking stock for product ID:", item._id);
         const product = await Product.findById(item._id);
         if (!product) {
-          console.error("Product not found with ID:", item._id);
+          // console.error("Product not found with ID:", item._id);
           return next(
             new ErrorHandler(`Product not found with ID: ${item._id}`, 404)
           );
         }
 
         if (product.stock <= 0) {
-          console.log(
-            `Product ${product.name} (ID: ${product._id}) is out of stock`
-          );
+          // console.log(
+          //   `Product ${product.name} (ID: ${product._id}) is out of stock`
+          // );
           await notifyOutOfStock(product);
         }
       }
 
-      // If status is not "Processing", update stock quantities
-      if (req.body.status !== "Processing") {
+      if (req.body.status === "Delivered") {
         for (const o of order.cart) {
           await updateOrder(o._id, o.qty);
         }
@@ -298,9 +297,9 @@ router.put(
           return;
         }
 
-        console.log(
-          `Notifying shop ${shop.name} (ID: ${shop._id}) about out of stock product`
-        );
+        // console.log(
+        //   `Notifying shop ${shop.name} (ID: ${shop._id}) about out of stock product`
+        // );
         const outOfStockHtmlContent = `
           <!DOCTYPE html>
           <html>
@@ -335,7 +334,7 @@ router.put(
           shop._id
         );
 
-        console.log(`Preparing to send email to ${shop.email}`);
+        // console.log(`Preparing to send email to ${shop.email}`);
 
         try {
           await sendMail({
@@ -344,7 +343,7 @@ router.put(
             message: `Hello ${shop.name}, the product ${product.name} (ID: ${product._id}) is out of stock. Please restock it to avoid missing out on future sales.`,
             html: outOfStockHtmlContent,
           });
-          console.log(`Email sent to ${shop.email}`);
+          // console.log(`Email sent to ${shop.email}`);
         } catch (mailError) {
           console.error("Error sending email:", mailError);
         }
@@ -404,9 +403,17 @@ router.put(
       });
 
       if (req.body.status === "Refund Success") {
-        order.cart.forEach(async (o) => {
+        // Update the product stock and sold_out count
+        for (const o of order.cart) {
           await updateOrder(o._id, o.qty);
-        });
+        }
+
+        // Update seller's available balance
+        const seller = await Shop.findById(order.seller);
+        if (seller) {
+          seller.availableBalance -= seller.availableBalance * 0.1;
+          await seller.save();
+        }
       }
 
       async function updateOrder(id, qty) {

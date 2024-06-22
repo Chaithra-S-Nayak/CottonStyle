@@ -12,7 +12,7 @@ const crypto = require("crypto");
 
 // create user
 router.post("/create-user", async (req, res, next) => {
-  console.log("Create user endpoint hit");
+  // console.log("Create user endpoint hit");
   try {
     const { name, email, password, avatar } = req.body;
     const userEmail = await User.findOne({ email });
@@ -133,7 +133,7 @@ router.post(
         password,
       });
 
-      console.log("User created in the database:", user);
+      // console.log("User created in the database:", user);
       sendToken(user, 201, res);
     } catch (error) {
       console.error("Error activating user:", error);
@@ -196,7 +196,7 @@ router.post(
     user.otpExpiry = Date.now() + 300000; // OTP expires in 5 minutes
     await user.save();
 
-    console.log("Generated OTP:", otp, "for email:", email); // Log the generated OTP
+    // console.log("Generated OTP:", otp, "for email:", email); // Log the generated OTP
 
     const htmlContent = `
     <!DOCTYPE html>
@@ -260,7 +260,7 @@ router.post(
     }
 
     if (user.otp === otp && user.otpExpiry > Date.now()) {
-      console.log("OTP is valid");
+      // console.log("OTP is valid");
       res.status(200).json({
         success: true,
         message: "OTP is valid. You can now reset your password.",
