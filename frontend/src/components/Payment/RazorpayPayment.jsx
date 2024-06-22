@@ -4,7 +4,6 @@ import { server } from "../../server";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import styles from "../../styles/styles";
 
 const RazorpayPayment = ({ orderData, onSuccess }) => {
   const { user } = useSelector((state) => state.user);
@@ -12,12 +11,6 @@ const RazorpayPayment = ({ orderData, onSuccess }) => {
 
   const handlePayment = async () => {
     try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-
       const { data } = await axios.post(`${server}/payment/create/orderId`, {
         amount: Math.round(orderData?.totalPrice * 100),
       });
@@ -96,7 +89,7 @@ const RazorpayPayment = ({ orderData, onSuccess }) => {
     <div>
       <div className="w-full flex">
         <button
-          className={`${styles.button} !bg-[#243450] text-white h-[45px] rounded-[5px] cursor-pointer text-[18px] ml-7 font-[600]`}
+          className="bg-[#243450] text-white py-2 px-4 ml-7 rounded"
           onClick={handlePayment}
         >
           Pay Now

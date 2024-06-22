@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import StripePayment from "./StripePayment";
 import RazorpayPayment from "./RazorpayPayment";
 import CashOnDelivery from "./CashOnDelivery";
 import CartData from "./CartData";
 
 const Payment = () => {
   const [orderData, setOrderData] = useState([]);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(1); // Default to Card payment
-  const { user } = useSelector((state) => state.user);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(1);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,45 +27,22 @@ const Payment = () => {
     <div className="w-full flex flex-col items-center py-8">
       <div className="w-[90%] 1000px:w-[70%] block 800px:flex">
         <div className="w-full 800px:w-[65%]">
-          <div className="w-full 800px:w-[95%] bg-[#fff] rounded-md p-5 pb-8">
-            <div>
-              <div className="flex w-full pb-5  mb-2">
-                <div
-                  className="w-[25px] h-[25px] rounded-full bg-transparent border-[3px] border-[#1d1a1ab4] relative flex items-center justify-center"
-                  onClick={() => setSelectedPaymentMethod(1)}
-                >
-                  {selectedPaymentMethod === 1 ? (
-                    <div className="w-[13px] h-[13px] bg-[#1d1a1acb] rounded-full" />
-                  ) : null}
-                </div>
-                <h4 className="text-[18px] pl-2 font-[600] text-[#000000b1]">
-                  Pay with Debit/credit card
-                </h4>
-              </div>
-              {selectedPaymentMethod === 1 && (
-                <StripePayment
-                  user={user}
-                  orderData={orderData}
-                  onSuccess={onSuccess}
-                />
-              )}
-            </div>
-            <br />
+          <div className="w-full 800px:w-[95%] bg-[#fff] rounded-md p-10 pb-8 ">
             <div>
               <div className="flex w-full pb-5  mb-2">
                 <div
                   className="w-[25px] h-[25px] rounded-full bg-transparent border-[3px] border-[#1d1a1ab4] relative flex items-center justify-center"
                   onClick={() => setSelectedPaymentMethod(3)}
                 >
-                  {selectedPaymentMethod === 3 ? (
+                  {selectedPaymentMethod === 1 ? (
                     <div className="w-[13px] h-[13px] bg-[#1d1a1acb] rounded-full" />
                   ) : null}
                 </div>
-                <h4 className="text-[18px] pl-2 font-[600] text-[#000000b1]">
+                <h4 className="text-[18px] pl-2 font-[500] text-[#000000b1]">
                   Pay with Razorpay
                 </h4>
               </div>
-              {selectedPaymentMethod === 3 && (
+              {selectedPaymentMethod === 1 && (
                 <RazorpayPayment orderData={orderData} onSuccess={onSuccess} />
               )}
             </div>
@@ -80,15 +54,15 @@ const Payment = () => {
                   className="w-[25px] h-[25px] rounded-full bg-transparent border-[3px] border-[#1d1a1ab4] relative flex items-center justify-center"
                   onClick={() => setSelectedPaymentMethod(4)}
                 >
-                  {selectedPaymentMethod === 4 ? (
+                  {selectedPaymentMethod === 2 ? (
                     <div className="w-[13px] h-[13px] bg-[#1d1a1acb] rounded-full" />
                   ) : null}
                 </div>
-                <h4 className="text-[18px] pl-2 font-[600] text-[#000000b1]">
+                <h4 className="text-[18px] pl-2 font-[500] text-[#000000b1]">
                   Cash on Delivery
                 </h4>
               </div>
-              {selectedPaymentMethod === 4 && (
+              {selectedPaymentMethod === 2 && (
                 <CashOnDelivery orderData={orderData} onSuccess={onSuccess} />
               )}
             </div>

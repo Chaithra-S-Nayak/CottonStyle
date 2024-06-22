@@ -29,7 +29,7 @@ const ProfileContent = ({ active }) => {
   const [name, setName] = useState(user && user.name);
   const [email, setEmail] = useState(user && user.email);
   const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
-  const [, setAvatar] = useState(null);
+  const [avatar, setAvatar] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const ProfileContent = ({ active }) => {
       toast.success(successMessage);
       dispatch({ type: "clearMessages" });
     }
-  }, [error, successMessage]);
+  }, [dispatch,error, successMessage]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -123,10 +123,11 @@ const ProfileContent = ({ active }) => {
           <div>
             <label className="block text-sm font-medium text-gray-700">Phone Number</label>
             <input
-              type="number"
+              type="tel"
               className="mt-1 block w-full border border-gray-300 rounded-md p-2"
               required
               value={phoneNumber}
+              maxLength={10}
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
           </div>
@@ -157,21 +158,21 @@ const ProfileContent = ({ active }) => {
       )}
 
       {/* Track order */}
-      {active === 5 && (
+      {active === 4 && (
         <div>
           <TrackOrder />
         </div>
       )}
 
       {/* Change Password */}
-      {active === 6 && (
+      {active === 5 && (
         <div>
           <ChangePassword />
         </div>
       )}
 
       {/*  user Address */}
-      {active === 7 && (
+      {active === 6 && (
         <div>
           <Address />
         </div>
@@ -187,7 +188,8 @@ const AllOrders = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
-  }, []);
+  }, [dispatch, user._id]);
+  
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -272,7 +274,8 @@ const AllRefundOrders = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
-  }, []);
+  }, [dispatch, user._id]);
+  
 
   const eligibleOrders =
     orders && orders.filter((item) => item.status === "Processing refund");
@@ -360,7 +363,8 @@ const TrackOrder = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
-  }, []);
+  }, [dispatch, user._id]);
+  
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -469,7 +473,6 @@ const ChangePassword = () => {
       </h1>
       <div className="w-full">
         <form
-          aria-required
           onSubmit={passwordChangeHandler}
           className="flex flex-col items-center"
         >
@@ -585,7 +588,7 @@ const Address = () => {
               Add New Address
             </h1>
             <div className="w-full">
-              <form aria-required onSubmit={handleSubmit} className="w-full">
+              <form onSubmit={handleSubmit} className="w-full">
                 <div className="w-full block p-4">
                   <div className="w-full pb-2">
                     <label className="block pb-2">Country</label>
