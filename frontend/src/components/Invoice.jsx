@@ -92,7 +92,7 @@ const Invoice = () => {
             <strong>Invoice Number:</strong> {order.invoiceId}
           </p>
           <p className="whitespace-nowrap">
-            <strong>Order Date:</strong>{" "}
+            <strong>Order Date:</strong>
             {String(order.createdAt).substring(0, 10)}
           </p>
           <p className="whitespace-nowrap">

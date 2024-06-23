@@ -41,7 +41,7 @@ const ProfileContent = ({ active }) => {
       toast.success(successMessage);
       dispatch({ type: "clearMessages" });
     }
-  }, [dispatch,error, successMessage]);
+  }, [dispatch, error, successMessage]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -77,71 +77,77 @@ const ProfileContent = ({ active }) => {
 
   return (
     <div className="mx-auto w-full">
-     {active === 1 && (
-      <>
-        <div className="flex justify-center mb-4 w-1/2 mx-auto">
-          <div className="relative">
-            <img
-              src={`${user?.avatar?.url}`}
-              className="w-32 h-32 rounded-full object-cover border-4 border-green-500"
-              alt="User Avatar"
-            />
-            <div className="absolute bottom-2 right-2 bg-gray-300 rounded-full p-1 cursor-pointer">
-              <input
-                type="file"
-                id="image"
-                className="hidden"
-                onChange={handleImage}
+      {active === 1 && (
+        <>
+          <div className="flex justify-center mb-4 w-1/2 mx-auto">
+            <div className="relative">
+              <img
+                src={`${user?.avatar?.url}`}
+                className="w-32 h-32 rounded-full object-cover border-4 border-green-500"
+                alt="User Avatar"
               />
-              <label htmlFor="image">
-                <AiOutlineCamera size={20} />
-              </label>
+              <div className="absolute bottom-2 right-2 bg-gray-300 rounded-full p-1 cursor-pointer">
+                <input
+                  type="file"
+                  id="image"
+                  className="hidden"
+                  onChange={handleImage}
+                />
+                <label htmlFor="image">
+                  <AiOutlineCamera size={20} />
+                </label>
+              </div>
             </div>
           </div>
-        </div>
-        <form onSubmit={handleSubmit} className="space-y-4 w-1/2 mx-auto">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Full Name</label>
-            <input
-              type="text"
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email Address</label>
-            <input
-              type="email"
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-            <input
-              type="tel"
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-              required
-              value={phoneNumber}
-              maxLength={10}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-            />
-          </div>
-          <div className="flex justify-center">
-            <button
-              type="submit"
-              className="w-1/2 bg-[#243450] text-white py-2 rounded-md transition duration-300"
-            >
-              Update Profile
-            </button>
-          </div>
-        </form>
-      </>
-    )}
+          <form onSubmit={handleSubmit} className="space-y-4 w-1/2 mx-auto">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Full Name
+              </label>
+              <input
+                type="text"
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Email Address
+              </label>
+              <input
+                type="email"
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                required
+                value={phoneNumber}
+                maxLength={10}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+              />
+            </div>
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                className="w-1/2 bg-[#243450] text-white py-2 rounded-md transition duration-300"
+              >
+                Update Profile
+              </button>
+            </div>
+          </form>
+        </>
+      )}
 
       {/* order */}
       {active === 2 && (
@@ -189,7 +195,6 @@ const AllOrders = () => {
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
   }, [dispatch, user._id]);
-  
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -275,7 +280,6 @@ const AllRefundOrders = () => {
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
   }, [dispatch, user._id]);
-  
 
   const eligibleOrders =
     orders && orders.filter((item) => item.status === "Processing refund");
@@ -364,7 +368,6 @@ const TrackOrder = () => {
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
   }, [dispatch, user._id]);
-  
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -600,7 +603,7 @@ const Address = () => {
                       className="w-full border h-[40px] rounded-[5px]"
                     >
                       <option value="" className="block border pb-2">
-                      Select your country
+                        Select your country
                       </option>
                       {Country &&
                         Country.getAllCountries().map((item) => (

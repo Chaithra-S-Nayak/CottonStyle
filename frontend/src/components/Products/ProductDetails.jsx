@@ -2,14 +2,12 @@ import React, { useEffect, useState } from "react";
 import {
   AiFillHeart,
   AiOutlineHeart,
-  AiOutlineMessage,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { fetchAdminOptions } from "../../redux/actions/adminOptions";
 import { getAllProductsShop } from "../../redux/actions/product";
-import { server } from "../../server";
 import {
   addToWishlist,
   removeFromWishlist,
@@ -17,12 +15,10 @@ import {
 import { addTocart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
 import Ratings from "./Ratings";
-import axios from "axios";
 
 const ProductDetails = ({ data }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
-  const { user, isAuthenticated } = useSelector((state) => state.user);
   const { products } = useSelector((state) => state.products);
   const { adminOptions } = useSelector((state) => state.adminOptions);
   const [count, setCount] = useState(1);
@@ -39,7 +35,7 @@ const ProductDetails = ({ data }) => {
     } else {
       setClick(false);
     }
-  }, [data, wishlist]);
+  }, [data, wishlist, dispatch]);
 
   useEffect(() => {
     dispatch(fetchAdminOptions());
@@ -104,28 +100,6 @@ const ProductDetails = ({ data }) => {
 
   const averageRating = avg.toFixed(2);
 
-  const handleMessageSubmit = async () => {
-    if (isAuthenticated) {
-      const groupTitle = data._id + user._id;
-      const userId = user._id;
-      const sellerId = data.shop._id;
-      await axios
-        .post(`${server}/conversation/create-new-conversation`, {
-          groupTitle,
-          userId,
-          sellerId,
-        })
-        .then((res) => {
-          navigate(`/inbox?${res.data.conversation._id}`);
-        })
-        .catch((error) => {
-          toast.error(error.response.data.message);
-        });
-    } else {
-      toast.error("Please login to create a conversation");
-    }
-  };
-
   return (
     <div className="bg-white p-4">
       {data ? (
@@ -181,6 +155,9 @@ const ProductDetails = ({ data }) => {
                   {data.reviews.length} Reviews | {data.sold_out} sold
                 </span>
               </div>
+              {data.stock < 1 && (
+                <div className="text-red-500 mt-2">Out of Stock</div>
+              )}
             </div>
             <div className="mt-4">
               <div className="space-y-2">
@@ -205,6 +182,7 @@ const ProductDetails = ({ data }) => {
               <button
                 className="px-4 py-2 bg-[#243450] text-white rounded-l"
                 onClick={decrementCount}
+                disabled={data.stock < 1}
               >
                 -
               </button>
@@ -214,12 +192,14 @@ const ProductDetails = ({ data }) => {
               <button
                 className="px-4 py-2 bg-[#243450] text-white rounded-r"
                 onClick={incrementCount}
+                disabled={data.stock < 1}
               >
                 +
               </button>
               <button
                 className="mx-4 px-4 py-2 bg-[#243450] text-white rounded w-1/2"
                 onClick={() => addToCartHandler(data._id)}
+                disabled={data.stock < 1}
               >
                 Add to Cart
                 <AiOutlineShoppingCart className="inline-block ml-2" />
@@ -260,7 +240,7 @@ const ProductDetails = ({ data }) => {
                           <li key={idx}>
                             {size.size} (Chest Size: {size.chestSize} in, Waist
                             Size:
-                            {size.waistSize} in, Length Size: {size.lengthSize}{" "}
+                            {size.waistSize} in, Length Size: {size.lengthSize}
                             in)
                           </li>
                         ))}
@@ -285,13 +265,6 @@ const ProductDetails = ({ data }) => {
                   </div>
                 </div>
                 <p className="mt-2 text-gray-600">{data.shop.description}</p>
-                <button
-                  className="mt-4 px-4 py-2 bg-[#243450] text-white rounded"
-                  onClick={handleMessageSubmit}
-                >
-                  Contact Seller
-                  <AiOutlineMessage className="inline-block ml-2" />
-                </button>
                 <button
                   onClick={() => navigate(`/shop/preview/${data?.shop._id}`)}
                   className="mt-4 px-4 py-2 bg-[#243450] text-white rounded"
@@ -322,7 +295,7 @@ const ProductDetails = ({ data }) => {
                               {item.user.name}
                             </h3>
                             <span className="ml-2">
-                              <Ratings rating={item.rating} />{" "}
+                              <Ratings rating={item.rating} />
                             </span>
                           </div>
                           <p className="text-gray-700">{item.comment}</p>

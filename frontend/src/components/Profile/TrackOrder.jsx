@@ -12,13 +12,12 @@ const TrackOrder = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
-  }, [dispatch]);
+  }, [dispatch, user._id]); 
 
   const data = orders && orders.find((item) => item._id === id);
 
   return (
     <div className="w-full h-[80vh] flex justify-center items-center">
-      {" "}
       <>
         {data && data?.status === "Processing" ? (
           <h1 className="text-[20px]">Your Order is processing in shop.</h1>

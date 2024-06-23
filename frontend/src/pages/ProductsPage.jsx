@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
 import Footer from "../components/Layout/Footer";
 import Header from "../components/Layout/Header";
 import Loader from "../components/Layout/Loader";
@@ -9,7 +8,6 @@ import Filters from "../components/Layout/Filters";
 import styles from "../styles/styles";
 
 const ProductsPage = () => {
-  const [searchParams] = useSearchParams();
   const { allProducts, isLoading } = useSelector((state) => state.products);
 
   const [filters, setFilters] = useState({
@@ -29,8 +27,8 @@ const ProductsPage = () => {
 
     let filteredProducts = [...allProducts];
 
-    console.log("All Products:", allProducts);
-    console.log("Current Filters:", filters);
+    // console.log("All Products:", allProducts);
+    // console.log("Current Filters:", filters);
 
     if (filters.price.min !== "") {
       const minPrice = parseFloat(filters.price.min);
@@ -90,12 +88,12 @@ const ProductsPage = () => {
       );
     }
 
-    console.log("Filtered Products:", filteredProducts);
+    // console.log("Filtered Products:", filteredProducts);
     setData(filteredProducts);
   }, [allProducts, filters]);
 
   const handleFilterChange = (newFilters) => {
-    console.log("New Filters Received:", newFilters);
+    // console.log("New Filters Received:", newFilters);
     setFilters(newFilters);
   };
 

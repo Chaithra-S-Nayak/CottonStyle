@@ -97,7 +97,6 @@ const ShopSettings = () => {
         </div>
 
         <form
-          aria-required={true}
           className="grid grid-cols-1 gap-6 md:grid-cols-2 mt-8"
           onSubmit={updateHandler}
         >
@@ -150,9 +149,10 @@ const ShopSettings = () => {
               Shop Phone Number
             </label>
             <input
-              type="number"
+              type="tel"
               placeholder={seller?.phoneNumber}
               value={phoneNumber}
+              maxLength={10}
               onChange={(e) => setPhoneNumber(e.target.value)}
               className="mt-1 block w-full border border-gray-300 rounded-md p-2"
               required

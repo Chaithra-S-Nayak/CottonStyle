@@ -111,9 +111,10 @@ const AdminSettings = () => {
             Phone Number
           </label>
           <input
-            type="number"
+            type="tel"
             className="mt-1 block w-full border border-gray-300 rounded-md p-2"
             required
+            maxLength={10}
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
           />

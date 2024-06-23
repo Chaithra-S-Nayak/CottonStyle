@@ -161,7 +161,9 @@ const Cart = () => {
       {cart.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <h2 className="text-xl font-semibold mb-4">Your cart is empty</h2>
-          <p className="text-gray-600">Add some products to your cart to see them here.</p>
+          <p className="text-gray-600">
+            Add some products to your cart to see them here.
+          </p>
           <Link to="/">
             <button className="mt-6 bg-[#243450] text-white py-2 px-4 rounded">
               Continue Shopping
@@ -186,10 +188,10 @@ const Cart = () => {
                     className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
                   />
                   <div className="ml-4">
-                    <h4 className="text-lg font-semibold">{item.name}</h4>
-                    <p className="text-gray-600">
-                      ₹{item.discountPrice} (₹{item.originalPrice})
-                    </p>
+                    <h4 className="text-lg font-semibold">
+                      <Link to={`/product/${item._id}`}>{item.name}</Link>
+                    </h4>
+                    <p className="text-gray-600">₹{item.discountPrice}</p>
                     <p className="text-gray-600">Qty: {item.qty}</p>
                     <p className="text-gray-600">
                       total: ₹{item.discountPrice * item.qty}
@@ -236,7 +238,7 @@ const Cart = () => {
               <p>₹{totalDeliveryFee}</p>
             </div>
             <div className="flex justify-between mb-2">
-              <p>GST ({gstTax.toFixed(2)}%)</p>{" "}
+              <p>GST ({gstTax.toFixed(2)}%)</p>
               {/* Format GST tax to 2 decimal places */}
               <p>₹{gstAmount}</p>
             </div>
@@ -255,13 +257,13 @@ const Cart = () => {
       {/* Suggestions */}
       {suggestions.length > 0 && (
         <div className="mt-6 bg-yellow-100 p-4 rounded-lg shadow-md">
-          <h3 className="text-xl font-bold mb-4">
-            Suggestions to Avoid Delivery Fee
+          <h3 className="text-xl font-semibold mb-4">
+            Suggestions to avoid Delivery Fee
           </h3>
           {suggestions.map((suggestion) => (
             <div key={suggestion.shopId} className="mb-4">
               <p className="text-gray-800">
-                Add products worth ₹{suggestion.remainingAmount} more from{" "}
+                Add products worth ₹{suggestion.remainingAmount} more from 
                 {suggestion.shopName} to avoid the delivery fee.
               </p>
             </div>

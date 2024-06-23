@@ -19,7 +19,7 @@ const Hero = () => {
           Best Collection for <br /> Comfortable T-shirts
         </p>
         <p className="pt-5 text-[18px] font-[Poppins] font-[400] text-white">
-          Discover our premium, stylish, and comfortable t-shirts. <br />{" "}
+          Discover our premium, stylish, and comfortable t-shirts. <br />
           Perfect fit, all-day comfort.
         </p>
         <Link to="/products" className="inline-block">

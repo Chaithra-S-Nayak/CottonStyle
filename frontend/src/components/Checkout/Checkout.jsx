@@ -16,6 +16,7 @@ const Checkout = () => {
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
   const [zipCode, setZipCode] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState(null);
   const [couponCode, setCouponCode] = useState("");
   const [couponCodeData, setCouponCodeData] = useState(null);
   const [couponDiscount, setCouponDiscount] = useState(0);
@@ -31,6 +32,7 @@ const Checkout = () => {
       address1 === "" ||
       address2 === "" ||
       zipCode === null ||
+      phoneNumber === null ||
       country === "" ||
       city === ""
     ) {
@@ -40,6 +42,7 @@ const Checkout = () => {
         address1,
         address2,
         zipCode,
+        phoneNumber,
         country,
         city,
       };
@@ -132,6 +135,8 @@ const Checkout = () => {
             setAddress2={setAddress2}
             zipCode={zipCode}
             setZipCode={setZipCode}
+            phoneNumber={phoneNumber}
+            setPhoneNumber={setPhoneNumber}
           />
         </div>
         <div className="w-full 800px:w-[35%] 800px:mt-0 mt-8">
@@ -170,7 +175,18 @@ const ShippingInfo = ({
   setAddress2,
   zipCode,
   setZipCode,
+  phoneNumber,
+  setPhoneNumber,
 }) => {
+  const clearForm = () => {
+    setAddress1("");
+    setAddress2("");
+    setZipCode("");
+    setPhoneNumber("");
+    setCountry("");
+    setCity("");
+  };
+
   return (
     <div className="w-full 800px:w-[95%] bg-white rounded-md p-5 pb-8">
       <h5 className="text-[18px] font-[500]">Shipping Address</h5>
@@ -198,12 +214,14 @@ const ShippingInfo = ({
         </div>
 
         <div className="w-full flex pb-3">
-          <div className="w-[50%]">
+        <div className="w-[50%]">
             <label className="block pb-2">Phone Number</label>
             <input
-              type="number"
+              type="tel"
+              value={phoneNumber}
+              maxLength={10}
+              onChange={(e) => setPhoneNumber(e.target.value)}
               required
-              value={user && user.phoneNumber}
               className={`${styles.input} !w-[95%]`}
             />
           </div>
@@ -239,14 +257,14 @@ const ShippingInfo = ({
             </select>
           </div>
           <div className="w-[50%]">
-            <label className="block pb-2">City</label>
+            <label className="block pb-2">State</label>
             <select
               className="w-[95%] border h-[40px] rounded-[5px]"
               value={city}
               onChange={(e) => setCity(e.target.value)}
             >
               <option className="block pb-2" value="">
-                Choose your City
+                Choose your State
               </option>
               {State &&
                 State.getStatesOfCountry(country).map((item) => (
@@ -257,11 +275,10 @@ const ShippingInfo = ({
             </select>
           </div>
         </div>
-
         <div className="w-full flex pb-3">
           <div className="w-[50%]">
             <label className="block pb-2">Address1</label>
-            <input
+            <textarea
               type="address"
               required
               value={address1}
@@ -271,7 +288,7 @@ const ShippingInfo = ({
           </div>
           <div className="w-[50%]">
             <label className="block pb-2">Address2</label>
-            <input
+            <textarea
               type="address"
               value={address2}
               onChange={(e) => setAddress2(e.target.value)}
@@ -280,37 +297,48 @@ const ShippingInfo = ({
             />
           </div>
         </div>
-
-        <div></div>
-      </form>
-      <h5
-        className="text-[18px] cursor-pointer inline-block"
-        onClick={() => setUserInfo(!userInfo)}
-      >
-        Choose From saved address
-      </h5>
-      {userInfo && (
-        <div>
-          {user &&
-            user.addresses.map((item, index) => (
-              <div className="w-full flex mt-1" key={index}>
-                <input
-                  type="checkbox"
-                  className="mr-3"
-                  value={item.addressType}
-                  onClick={() =>
-                    setAddress1(item.address1) ||
-                    setAddress2(item.address2) ||
-                    setZipCode(item.zipCode) ||
-                    setCountry(item.country) ||
-                    setCity(item.city)
-                  }
-                />
-                <h2>{item.addressType}</h2>
-              </div>
-            ))}
+        <div className="w-full flex justify-between items-center mt-4">
+          <h5
+            className="text-[17px] cursor-pointer"
+            onClick={() => setUserInfo(!userInfo)}
+          >
+            Choose from saved address
+          </h5>
+          <button
+            type="button"
+            onClick={clearForm}
+            className="bg-red-500 text-white py-2 px-4 rounded"
+          >
+            Clear Form
+          </button>
         </div>
-      )}
+
+        {userInfo && (
+          <div className="mt-4">
+            {user &&
+              user.addresses.map((item, index) => (
+                <div className="w-full flex items-center mt-1" key={index}>
+                  <input
+                    type="radio"
+                    name="savedAddress"
+                    className="mr-3"
+                    value={item.addressType}
+                    onChange={() => {
+                      setAddress1(item.address1);
+                      setAddress2(item.address2);
+                      setZipCode(item.zipCode);
+                      setCountry(item.country);
+                      setCity(item.city);
+                    }}
+                  />
+                  <label>{item.addressType}</label>
+                </div>
+              ))}
+          </div>
+        )}
+      </form>
+      
+      
     </div>
   );
 };

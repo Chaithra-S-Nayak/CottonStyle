@@ -16,14 +16,6 @@ const Filters = ({ onFilterChange }) => {
   const [visibleColorCount, setVisibleColorCount] = useState(4);
   const [visibleFabricCount, setVisibleFabricCount] = useState(4);
 
-  useEffect(() => {
-    dispatch(fetchAdminOptions());
-  }, [dispatch]);
-
-  useEffect(() => {
-    handleFiltersChange();
-  }, [price, ratings, sizes, colors, fabrics, mostSold, inStock]);
-
   const handleFiltersChange = () => {
     onFilterChange({
       price: price || { min: "", max: "" },
@@ -35,6 +27,14 @@ const Filters = ({ onFilterChange }) => {
       inStock,
     });
   };
+
+  useEffect(() => {
+    dispatch(fetchAdminOptions());
+  }, [dispatch]);
+
+  useEffect(() => {
+    handleFiltersChange();
+  }, [price, ratings, sizes, colors, fabrics, mostSold, inStock]);
 
   const handleCheckboxChange = (setter, value) => {
     setter((prev) =>

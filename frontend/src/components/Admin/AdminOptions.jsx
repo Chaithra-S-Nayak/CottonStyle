@@ -6,6 +6,7 @@ import {
   resetAdminOptionsState,
 } from "../../redux/actions/adminOptions";
 import { toast } from "react-toastify";
+import { RxCross1 } from "react-icons/rx";
 import styles from "../../styles/styles";
 
 const AdminOptions = () => {
@@ -13,7 +14,6 @@ const AdminOptions = () => {
   const { adminOptions, updateSuccess, error } = useSelector(
     (state) => state.adminOptions
   );
-
   const [logoUrl, setLogoUrl] = useState("");
   const [primaryColor, setPrimaryColor] = useState("");
   const [secondaryColor, setSecondaryColor] = useState("");
@@ -220,7 +220,7 @@ const AdminOptions = () => {
         {/* Row 2: GST, Delivery Fee, Threshold Fee */}
         <div className="grid grid-cols-1 1000px:grid-cols-3 gap-4">
           <div className="p-4">
-            <label className="block pb-2">GST Tax</label>
+            <label className="block pb-2">GST Tax (%)</label>
             <input
               type="number"
               value={gstTax}
@@ -336,7 +336,7 @@ const AdminOptions = () => {
         </div> */}
 
         {/* Row 4: Fabrics and Colors */}
-        <div className="grid grid-cols-1 1000px:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="p-4">
             <label className="block pb-2">T-Shirt Fabrics</label>
             {fabrics.map((fabric, index) => (
@@ -351,9 +351,9 @@ const AdminOptions = () => {
                 <button
                   type="button"
                   onClick={() => removeFabric(index)}
-                  className="bg-red-400 text-white py-1 px-2 rounded"
+                  className="py-1 px-2 rounded"
                 >
-                  Remove
+                  <RxCross1 />
                 </button>
               </div>
             ))}
@@ -379,9 +379,9 @@ const AdminOptions = () => {
                 <button
                   type="button"
                   onClick={() => removeColor(index)}
-                  className="bg-red-400 text-white py-1 px-2 rounded"
+                  className=" py-1 px-2 rounded"
                 >
-                  Remove
+                  <RxCross1 />
                 </button>
               </div>
             ))}
@@ -442,9 +442,9 @@ const AdminOptions = () => {
               <button
                 type="button"
                 onClick={() => removeSizeChart(index)}
-                className="bg-red-400 text-white py-1 px-2 rounded mt-2 800px:mt-0"
+                className="py-1 px-2 rounded"
               >
-                Remove
+                <RxCross1 />
               </button>
             </div>
           ))}

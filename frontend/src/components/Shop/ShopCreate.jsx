@@ -1,7 +1,7 @@
 import { React, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../../styles/styles";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
@@ -99,10 +99,11 @@ const ShopCreate = () => {
                 </label>
                 <div className="mt-1">
                   <input
-                    type="number"
+                    type="tel"
                     name="phone-number"
                     required
                     value={phoneNumber}
+                    maxLength={10}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />

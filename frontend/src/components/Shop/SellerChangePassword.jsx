@@ -40,7 +40,6 @@ const SellerChangePassword = () => {
         Change Password
       </h1>
       <form
-        aria-required={true}
         onSubmit={passwordChangeHandler}
         className="flex flex-col items-center"
       >

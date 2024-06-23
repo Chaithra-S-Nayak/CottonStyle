@@ -82,8 +82,7 @@ const Footer = () => {
             <p>
               <Link to="/terms" className="hover:text-teal-400">
                 Terms
-              </Link>{" "}
-              ·{" "}
+              </Link>
               <Link to="/privacy" className="hover:text-teal-400">
                 Privacy Policy
               </Link>

@@ -165,9 +165,9 @@ const OrderDetails = () => {
         <div className="shadow rounded-lg p-4 mb-4">
           <h2 className="text-xl mb-2">Shipping Details</h2>
           <h5>
-            Shipping Address:{" "}
+            Shipping Address:
             <span>
-              {data?.shippingAddress.address1} {data?.shippingAddress.address2},{" "}
+              {data?.shippingAddress.address1} {data?.shippingAddress.address2},
               {data?.shippingAddress.city}, {data?.shippingAddress.country}
             </span>
           </h5>
@@ -178,7 +178,7 @@ const OrderDetails = () => {
         <div className="shadow rounded-lg p-4 mb-4">
           <h2 className="text-xl mb-2">Payment Information</h2>
           <h5>
-            Status:{" "}
+            Status:
             {data?.paymentInfo?.status ? data?.paymentInfo?.status : "Not Paid"}
           </h5>
           <h5>Paid At: {data?.paidAt?.slice(0, 10)}</h5>

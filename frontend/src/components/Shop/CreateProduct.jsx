@@ -274,7 +274,7 @@ const CreateProduct = () => {
           <input
             type="submit"
             value="Create Product"
-            className="px-4 py-2 bg-[#243450] text-white rounded"
+            className="px-4 py-2 bg-[#243450] text-white rounded cursor-pointer"
           />
         </div>
       </form>

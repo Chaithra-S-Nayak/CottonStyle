@@ -15,7 +15,7 @@ const AllOrders = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfShop(seller._id));
-  }, [dispatch]);
+  }, [dispatch, seller._id]);
 
   const columns = [
     {

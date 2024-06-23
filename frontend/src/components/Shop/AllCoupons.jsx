@@ -4,7 +4,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { RxCross1 } from "react-icons/rx";
-import { useDispatch, useSelector } from "react-redux";
+import {useSelector } from "react-redux";
 import styles from "../../styles/styles";
 import Loader from "../Layout/Loader";
 import { server } from "../../server";
@@ -20,8 +20,6 @@ const AllCoupons = () => {
   const [value, setValue] = useState(null);
   const { seller } = useSelector((state) => state.seller);
 
-  const dispatch = useDispatch();
-
   useEffect(() => {
     setIsLoading(true);
     axios
@@ -35,7 +33,7 @@ const AllCoupons = () => {
       .catch((error) => {
         setIsLoading(false);
       });
-  }, [dispatch]);
+    }, [seller._id]);
 
   const handleDelete = async (id) => {
     axios
@@ -164,7 +162,7 @@ const AllCoupons = () => {
                   Create Coupon code
                 </h5>
                 {/* create Coupon code */}
-                <form onSubmit={handleSubmit} aria-required={true}>
+                <form onSubmit={handleSubmit}>
                   <br />
                   <div>
                     <label className="pb-2">

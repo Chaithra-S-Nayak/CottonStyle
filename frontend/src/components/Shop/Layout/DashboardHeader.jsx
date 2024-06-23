@@ -23,7 +23,7 @@ const DashboardHeader = () => {
           <div className="flex items-center mr-4">
             <Link to="/dashboard" className="800px:block hidden">
               <span
-                className={`text-lg mx-5 cursor-pointer ${
+                className={`text-md mx-3 cursor-pointer ${
                   isActive("/dashboard") ? "text-[green]" : "text-[#555]"
                 }`}
               >
@@ -32,7 +32,7 @@ const DashboardHeader = () => {
             </Link>
             <Link to="/dashboard-coupons" className="800px:block hidden">
               <span
-                className={`text-lg mx-5 cursor-pointer ${
+                className={`text-md mx-3 cursor-pointer ${
                   isActive("/dashboard-coupons")
                     ? "text-[green]"
                     : "text-[#555]"
@@ -41,18 +41,18 @@ const DashboardHeader = () => {
                 Coupon Codes
               </span>
             </Link>
-            {/* <Link to="/dashboard-events" className="800px:block hidden">
+            <Link to="/dashboard-events" className="800px:block hidden">
               <span
-                className={`text-lg mx-5 cursor-pointer ${
+                className={`text-md mx-3 cursor-pointer ${
                   isActive("/dashboard-events") ? "text-[green]" : "text-[#555]"
                 }`}
               >
                 All Events
               </span>
-            </Link> */}
+            </Link>
             <Link to="/dashboard-products" className="800px:block hidden">
               <span
-                className={`text-lg mx-5 cursor-pointer ${
+                className={`text-md mx-3 cursor-pointer ${
                   isActive("/dashboard-products")
                     ? "text-[green]"
                     : "text-[#555]"
@@ -63,7 +63,7 @@ const DashboardHeader = () => {
             </Link>
             <Link to="/dashboard-create-product" className="800px:block hidden">
               <span
-                className={`text-lg mx-5 cursor-pointer ${
+                className={`text-md mx-3 cursor-pointer ${
                   isActive("/dashboard-create-product")
                     ? "text-[green]"
                     : "text-[#555]"
@@ -72,9 +72,20 @@ const DashboardHeader = () => {
                 Create Product
               </span>
             </Link>
+            <Link to="/dashboard-create-event" className="800px:block hidden">
+              <span
+                className={`text-md mx-3 cursor-pointer ${
+                  isActive("/dashboard-create-event")
+                    ? "text-[green]"
+                    : "text-[#555]"
+                }`}
+              >
+                Create Event
+              </span>
+            </Link>
             <Link to="/dashboard-orders" className="800px:block hidden">
               <span
-                className={`text-lg mx-5 cursor-pointer ${
+                className={`text-md mx-3 cursor-pointer ${
                   isActive("/dashboard-orders") ? "text-[green]" : "text-[#555]"
                 }`}
               >
@@ -83,8 +94,10 @@ const DashboardHeader = () => {
             </Link>
             <Link to="/dashboard-refunds" className="800px:block hidden">
               <span
-                className={`text-lg mx-5 cursor-pointer ${
-                  isActive("/dashboard-refunds") ? "text-[green]" : "text-[#555]"
+                className={`text-md mx-3 cursor-pointer ${
+                  isActive("/dashboard-refunds")
+                    ? "text-[green]"
+                    : "text-[#555]"
                 }`}
               >
                 Refunds
@@ -92,7 +105,7 @@ const DashboardHeader = () => {
             </Link>
             <Link to="/update-shop" className="800px:block hidden">
               <span
-                className={`text-lg mx-5 cursor-pointer ${
+                className={`text-md mx-3 cursor-pointer ${
                   isActive("/update-shop") ? "text-[green]" : "text-[#555]"
                 }`}
               >
@@ -101,24 +114,15 @@ const DashboardHeader = () => {
             </Link>
             <Link to="/seller-change-password" className="800px:block hidden">
               <span
-                className={`text-lg mx-5 cursor-pointer ${
-                  isActive("/seller-change-password") ? "text-[green]" : "text-[#555]"
+                className={`text-md mx-3 cursor-pointer ${
+                  isActive("/seller-change-password")
+                    ? "text-[green]"
+                    : "text-[#555]"
                 }`}
               >
                 Change Password
               </span>
             </Link>
-            {/* <Link to="/dashboard-messages" className="800px:block hidden">
-              <span
-                className={`text-lg mx-5 cursor-pointer ${
-                  isActive("/dashboard-messages")
-                    ? "text-[green]"
-                    : "text-[#555]"
-                }`}
-              >
-                Shop Inbox
-              </span>
-            </Link> */}
             <NotificationIcon />
             <Link to={`/shop/${seller._id}`}>
               <img
