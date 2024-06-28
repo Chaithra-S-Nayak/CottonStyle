@@ -32,7 +32,7 @@ const Payment = () => {
               <div className="flex w-full pb-5  mb-2">
                 <div
                   className="w-[25px] h-[25px] rounded-full bg-transparent border-[3px] border-[#1d1a1ab4] relative flex items-center justify-center"
-                  onClick={() => setSelectedPaymentMethod(3)}
+                  onClick={() => setSelectedPaymentMethod(1)}
                 >
                   {selectedPaymentMethod === 1 ? (
                     <div className="w-[13px] h-[13px] bg-[#1d1a1acb] rounded-full" />
@@ -52,7 +52,7 @@ const Payment = () => {
               <div className="flex w-full pb-5  mb-2">
                 <div
                   className="w-[25px] h-[25px] rounded-full bg-transparent border-[3px] border-[#1d1a1ab4] relative flex items-center justify-center"
-                  onClick={() => setSelectedPaymentMethod(4)}
+                  onClick={() => setSelectedPaymentMethod(2)}
                 >
                   {selectedPaymentMethod === 2 ? (
                     <div className="w-[13px] h-[13px] bg-[#1d1a1acb] rounded-full" />
