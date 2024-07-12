@@ -14,6 +14,7 @@ function calculateTimeLeft(finishDate) {
       seconds: Math.floor((difference / 1000) % 60),
     };
   }
+
   return timeLeft;
 }
 
