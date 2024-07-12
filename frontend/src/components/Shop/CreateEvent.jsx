@@ -34,9 +34,10 @@ const CreateEvent = () => {
     const minEndDate = new Date(startDate.getTime() + 1 * 24 * 60 * 60 * 1000);
     setStartDate(startDate);
     setEndDate(null);
-    document.getElementById("end-date").min = minEndDate
-      .toISOString()
-      .slice(0, 10);
+    const endDateElement = document.getElementById("end-date");
+    if (endDateElement) {
+      endDateElement.min = minEndDate.toISOString().slice(0, 10);
+    }
   };
 
   const handleEndDateChange = (e) => {
@@ -113,204 +114,193 @@ const CreateEvent = () => {
   };
 
   return (
-    <div className="w-[90%] 800px:w-[50%] bg-white shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
-      <h5 className="text-[30px] font-Poppins text-center">Create Event</h5>
-      {/* create event form */}
-      <form onSubmit={handleSubmit}>
-        <br />
-        <div>
-          <label className="pb-2">
-            Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="name"
-            value={name}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter your event product name"
-          />
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">
-            Description <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            cols="30"
-            required
-            rows="8"
-            type="text"
-            name="description"
-            value={description}
-            className="mt-2 appearance-none block w-full pt-2 px-3 border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter your event product description"
-          ></textarea>
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">
-            Fabric <span className="text-red-500">*</span>
-          </label>
-          <select
-            value={fabric}
-            onChange={(e) => setFabric(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            required
-          >
-            <option value="">Choose the Fabric</option>
-            {adminOptions.fabric &&
-              adminOptions.fabric.map((fabric) => (
-                <option key={fabric} value={fabric}>
-                  {fabric}
-                </option>
-              ))}
-          </select>
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">
-            Color <span className="text-red-500">*</span>
-          </label>
-          <select
-            value={color}
-            onChange={(e) => setColor(e.target.value)}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            required
-          >
-            <option value="">Choose a Color</option>
-            {adminOptions.color &&
-              adminOptions.color.map((color) => (
-                <option key={color} value={color}>
-                  {color}
-                </option>
-              ))}
-          </select>
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">
-            Available Sizes <span className="text-red-500">*</span>
-          </label>
-          <div className="flex flex-wrap gap-2 mt-1">
-            {adminOptions.sizeChart?.map((sizeObj) => (
-              <div key={sizeObj.size} className="flex items-center">
-                <input
-                  type="checkbox"
-                  id={`size-${sizeObj.size}`}
-                  value={sizeObj.size}
-                  checked={availableSizes.includes(sizeObj.size)}
-                  onChange={() => handleSizeChange(sizeObj.size)}
-                  className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                />
-                <label
-                  htmlFor={`size-${sizeObj.size}`}
-                  className="ml-2 text-sm text-gray-700"
-                >
-                  {sizeObj.size}
-                </label>
-              </div>
-            ))}
+    <div className="max-w-6xl mx-auto p-6">
+      <h5 className="text-xl mb-6">Create Event</h5>
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter your event product name"
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Description <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter your event product description"
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              required
+              rows="4"
+            ></textarea>
           </div>
         </div>
-
-        <br />
-        <div>
-          <label className="pb-2">Original Price</label>
-          <input
-            type="number"
-            name="price"
-            value={originalPrice}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={(e) => setOriginalPrice(e.target.value)}
-            placeholder="Enter your event product price..."
-          />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Fabric <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={fabric}
+              onChange={(e) => setFabric(e.target.value)}
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              required
+            >
+              <option value="">Choose the Fabric</option>
+              {adminOptions.fabric &&
+                adminOptions.fabric.map((i) => (
+                  <option value={i} key={i}>
+                    {i}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Color <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              required
+            >
+              <option value="">Choose a Color</option>
+              {adminOptions.color &&
+                adminOptions.color.map((i) => (
+                  <option value={i} key={i}>
+                    {i}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Available Sizes <span className="text-red-500">*</span>
+            </label>
+            <div className="flex flex-wrap gap-2 mt-1">
+              {adminOptions.sizeChart?.map((sizeObj) => (
+                <div key={sizeObj.size} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={`size-${sizeObj.size}`}
+                    value={sizeObj.size}
+                    checked={availableSizes.includes(sizeObj.size)}
+                    onChange={() => handleSizeChange(sizeObj.size)}
+                    className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor={`size-${sizeObj.size}`}
+                    className="ml-2 text-sm text-gray-700"
+                  >
+                    {sizeObj.size}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-        <br />
-        <div>
-          <label className="pb-2">
-            Price (With Discount) <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="number"
-            name="price"
-            value={discountPrice}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={(e) => setDiscountPrice(e.target.value)}
-            placeholder="Enter your event product price with discount"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Original Price <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              value={originalPrice}
+              onChange={(e) => setOriginalPrice(e.target.value)}
+              placeholder="Enter your event product price"
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Discount Price <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              value={discountPrice}
+              onChange={(e) => setDiscountPrice(e.target.value)}
+              placeholder="Enter your event product price with discount"
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Product Stock <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              value={stock}
+              onChange={(e) => setStock(e.target.value)}
+              placeholder="Enter your event product stock"
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              required
+            />
+          </div>
         </div>
-        <br />
-        <div>
-          <label className="pb-2">
-            Product Stock <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="number"
-            name="price"
-            value={stock}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={(e) => setStock(e.target.value)}
-            placeholder="Enter your event product stock"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Event Start Date <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              value={startDate ? startDate.toISOString().slice(0, 10) : ""}
+              onChange={handleStartDateChange}
+              min={today}
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Event End Date <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="date"
+              value={endDate ? endDate.toISOString().slice(0, 10) : ""}
+              onChange={handleEndDateChange}
+              min={minEndDate}
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              required
+            />
+          </div>
         </div>
-        <br />
         <div>
-          <label className="pb-2">
-            Event Start Date <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="date"
-            name="price"
-            id="start-date"
-            value={startDate ? startDate.toISOString().slice(0, 10) : ""}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={handleStartDateChange}
-            min={today}
-            placeholder="Enter your event Start Date"
-          />
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">
-            Event End Date <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="date"
-            name="price"
-            id="end-date"
-            value={endDate ? endDate.toISOString().slice(0, 10) : ""}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={handleEndDateChange}
-            min={minEndDate}
-            placeholder="Enter your event End Date"
-          />
-        </div>
-        <br />
-        <div>
-          <label className="pb-2">
+          <label className="block text-sm font-medium text-gray-700">
             Upload Images <span className="text-red-500">*</span>
           </label>
           <input
             type="file"
-            name=""
             id="upload"
             className="hidden"
             multiple
             onChange={handleImageChange}
           />
-          <div className="w-full flex items-center flex-wrap">
-            <label htmlFor="upload">
-              <AiOutlinePlusCircle size={30} className="mt-3" color="#555" />
+          <div className="flex items-center flex-wrap mt-2">
+            <label htmlFor="upload" className="cursor-pointer">
+              <AiOutlinePlusCircle size={30} color="#555" />
             </label>
             {images &&
               images.map((i, index) => (
-                <div key={index} className="relative">
+                <div key={index} className="relative m-2">
                   <img
                     src={i}
                     alt=""
-                    className="h-[120px] w-[120px] object-cover m-2"
+                    className="h-[120px] w-[120px] object-cover"
                   />
                   <AiOutlineCloseCircle
                     size={20}
@@ -321,14 +311,13 @@ const CreateEvent = () => {
                 </div>
               ))}
           </div>
-          <br />
-          <div>
-            <input
-              type="submit"
-              value="Create"
-              className="mt-2 cursor-pointer appearance-none text-center block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            />
-          </div>
+        </div>
+        <div className="mt-4">
+          <input
+            type="submit"
+            value="Create Event"
+            className="px-4 py-2 bg-[#243450] text-white rounded cursor-pointer"
+          />
         </div>
       </form>
     </div>

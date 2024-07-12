@@ -9,10 +9,6 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please enter your event product description!"],
   },
-  category: {
-    type: String,
-    required: [true, "Please enter your event product category!"],
-  },
   start_Date: {
     type: Date,
     required: true,
@@ -60,6 +56,30 @@ const eventSchema = new mongoose.Schema({
       },
     },
   ],
+  reviews: [
+    {
+      user: {
+        type: Object,
+      },
+      rating: {
+        type: Number,
+      },
+      comment: {
+        type: String,
+      },
+      productId: {
+        type: String,
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now(),
+      },
+    },
+  ],
+  ratings: {
+    type: Number,
+    default: 0,
+  },
   shopId: {
     type: String,
     required: true,
