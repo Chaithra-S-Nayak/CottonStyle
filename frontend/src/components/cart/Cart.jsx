@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addTocart, removeFromCart } from "../../redux/actions/cart";
 import { fetchAdminOptions } from "../../redux/actions/adminOptions";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RxCross1 } from "react-icons/rx";
+import { toast } from "react-toastify";
 
 const Cart = () => {
   const { cart } = useSelector((state) => state.cart);
   const { adminOptions } = useSelector((state) => state.adminOptions);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -156,6 +158,19 @@ const Cart = () => {
     sellerDeliveryFees,
   ]);
 
+  const handleContinue = () => {
+    try {
+      const tshirtWithoutSize = cart.some((item) => !item.size);
+      if (tshirtWithoutSize) {
+        toast.error("Please select the size of t-shirts in your cart.");
+        return;
+      }
+      navigate("/checkout");
+    } catch (error) {
+      toast.error("An error occurred. Please try again.");
+    }
+  };
+
   return (
     <div className="container mx-auto py-8">
       {cart.length === 0 ? (
@@ -175,7 +190,6 @@ const Cart = () => {
           {/* Product Details */}
           <div className="w-full lg:w-2/3 bg-white p-5 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4">Product Details</h2>
-            {/* Iterate through cart items */}
             {cart.map((item) => (
               <div
                 key={item.id}
@@ -224,7 +238,6 @@ const Cart = () => {
             <h2 className="text-xl font-semibold mb-4">
               Price Details ({cart.length} Items)
             </h2>
-            {/* Display price details */}
             <div className="flex justify-between mb-2">
               <p>Total Product Price</p>
               <p>₹{totalProductPrice}</p>
@@ -239,18 +252,18 @@ const Cart = () => {
             </div>
             <div className="flex justify-between mb-2">
               <p>GST ({gstTax.toFixed(2)}%)</p>
-              {/* Format GST tax to 2 decimal places */}
               <p>₹{gstAmount}</p>
             </div>
             <div className="flex justify-between font-bold border-t pt-4 mt-4">
               <p>Overall Product Price</p>
               <p>₹{OverallProductPrice}</p>
             </div>
-            <Link to="/checkout">
-              <button className="mt-6 w-full bg-[#243450] text-white py-2 rounded">
-                Continue
-              </button>
-            </Link>
+            <button
+              onClick={handleContinue}
+              className="mt-6 w-full bg-[#243450] text-white py-2 rounded"
+            >
+              Continue
+            </button>
           </div>
         </div>
       )}
@@ -263,7 +276,7 @@ const Cart = () => {
           {suggestions.map((suggestion) => (
             <div key={suggestion.shopId} className="mb-4">
               <p className="text-gray-800">
-                Add products worth ₹{suggestion.remainingAmount} more from 
+                Add products worth ₹{suggestion.remainingAmount} more from
                 {suggestion.shopName} to avoid the delivery fee.
               </p>
             </div>
