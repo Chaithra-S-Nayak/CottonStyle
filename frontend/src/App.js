@@ -8,7 +8,6 @@ import {
   HomePage,
   ProductsPage,
   BestSellingPage,
-  EventsPage,
   FAQPage,
   CheckoutPage,
   CartPage,
@@ -29,8 +28,6 @@ import {
   ShopCreateProduct,
   ShopUpdateProduct,
   ShopAllProducts,
-  ShopCreateEvents,
-  ShopAllEvents,
   ShopAllCoupons,
   ShopPreviewPage,
   ShopAllOrders,
@@ -47,7 +44,6 @@ import {
   AdminDashboardSellers,
   AdminDashboardOrders,
   AdminDashboardProducts,
-  AdminDashboardEvents,
   AdminDashboardWithdraw,
   AdminDashboardOptions,
   AdminLoginPage,
@@ -64,7 +60,6 @@ import ProtectedAdminRoute from "./routes/ProtectedAdminRoute";
 import { ShopHomePage } from "./ShopRoutes.js";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute";
 import { getAllProducts } from "./redux/actions/product";
-import { getAllEvents } from "./redux/actions/event";
 
 const App = () => {
   useEffect(() => {
@@ -72,7 +67,6 @@ const App = () => {
     Store.dispatch(loadSeller());
     Store.dispatch(loadAdmin());
     Store.dispatch(getAllProducts());
-    Store.dispatch(getAllEvents());
   }, []);
 
   return (
@@ -104,7 +98,6 @@ const App = () => {
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/product/:id" element={<ProductDetailsPage />} />
         <Route path="/best-selling" element={<BestSellingPage />} />
-        <Route path="/events" element={<EventsPage />} />
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route
@@ -226,22 +219,6 @@ const App = () => {
           }
         />
         <Route
-          path="/dashboard-create-event"
-          element={
-            <SellerProtectedRoute>
-              <ShopCreateEvents />
-            </SellerProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard-events"
-          element={
-            <SellerProtectedRoute>
-              <ShopAllEvents />
-            </SellerProtectedRoute>
-          }
-        />
-        <Route
           path="/dashboard-Coupons"
           element={
             <SellerProtectedRoute>
@@ -307,14 +284,6 @@ const App = () => {
           element={
             <ProtectedAdminRoute>
               <AdminDashboardProducts />
-            </ProtectedAdminRoute>
-          }
-        />
-        <Route
-          path="/admin-events"
-          element={
-            <ProtectedAdminRoute>
-              <AdminDashboardEvents />
             </ProtectedAdminRoute>
           }
         />

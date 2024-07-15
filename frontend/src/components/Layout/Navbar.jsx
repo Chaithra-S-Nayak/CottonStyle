@@ -16,10 +16,6 @@ const navItems = [
     url: "/products",
   },
   {
-    title: "Events",
-    url: "/events",
-  },
-  {
     title: "FAQ",
     url: "/faq",
   },

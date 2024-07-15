@@ -41,15 +41,6 @@ const DashboardHeader = () => {
                 Coupon Codes
               </span>
             </Link>
-            <Link to="/dashboard-events" className="800px:block hidden">
-              <span
-                className={`text-md mx-3 cursor-pointer ${
-                  isActive("/dashboard-events") ? "text-[green]" : "text-[#555]"
-                }`}
-              >
-                All Events
-              </span>
-            </Link>
             <Link to="/dashboard-products" className="800px:block hidden">
               <span
                 className={`text-md mx-3 cursor-pointer ${
@@ -70,17 +61,6 @@ const DashboardHeader = () => {
                 }`}
               >
                 Create Product
-              </span>
-            </Link>
-            <Link to="/dashboard-create-event" className="800px:block hidden">
-              <span
-                className={`text-md mx-3 cursor-pointer ${
-                  isActive("/dashboard-create-event")
-                    ? "text-[green]"
-                    : "text-[#555]"
-                }`}
-              >
-                Create Event
               </span>
             </Link>
             <Link to="/dashboard-orders" className="800px:block hidden">

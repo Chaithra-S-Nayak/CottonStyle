@@ -67,7 +67,7 @@ const ProfileSidebar = ({ setActive, active }) => {
       </div>
       <div
         className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(5)}
+        onClick={() => setActive(4)}
       >
         <MdOutlineTrackChanges size={20} color={active === 4 ? "green" : ""} />
         <span
@@ -81,7 +81,7 @@ const ProfileSidebar = ({ setActive, active }) => {
 
       <div
         className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(6)}
+        onClick={() => setActive(5)}
       >
         <RiLockPasswordLine size={20} color={active === 5 ? "green" : ""} />
         <span
@@ -95,7 +95,7 @@ const ProfileSidebar = ({ setActive, active }) => {
 
       <div
         className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(7)}
+        onClick={() => setActive(6)}
       >
         <TbAddressBook size={20} color={active === 6 ? "green" : ""} />
         <span

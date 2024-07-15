@@ -3,14 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { getAllProductsShop } from "../../redux/actions/product";
-import { getAllEventsShop } from "../../redux/actions/event";
 import styles from "../../styles/styles";
 import ProductCard from "../Route/ProductCard/ProductCard";
 import { server } from "../../server";
 
 const ShopProfileData = ({ isOwner }) => {
   const { products } = useSelector((state) => state.products);
-  const { events } = useSelector((state) => state.events);
   const { id } = useParams();
   const dispatch = useDispatch();
   const [active, setActive] = useState(1);
@@ -27,7 +25,6 @@ const ShopProfileData = ({ isOwner }) => {
     };
 
     dispatch(getAllProductsShop(id));
-    dispatch(getAllEventsShop(id));
     fetchCoupons();
   }, [dispatch, id]);
 
@@ -48,15 +45,6 @@ const ShopProfileData = ({ isOwner }) => {
             <h5
               className={`font-[500] text-[18px] ${
                 active === 2 ? "text-green-500" : "text-[#333]"
-              } cursor-pointer pr-[20px]`}
-            >
-              Running Events
-            </h5>
-          </div>
-          <div className="flex items-center" onClick={() => setActive(3)}>
-            <h5
-              className={`font-[500] text-[18px] ${
-                active === 3 ? "text-green-500" : "text-[#333]"
               } cursor-pointer pr-[20px]`}
             >
               Coupon Codes
@@ -87,27 +75,6 @@ const ShopProfileData = ({ isOwner }) => {
       )}
 
       {active === 2 && (
-        <div className="w-full">
-          <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-3 lg:gap-[25px] xl:grid-cols-4 xl:gap-[20px] mb-12 border-0">
-            {events &&
-              events.map((i, index) => (
-                <ProductCard
-                  data={i}
-                  key={index}
-                  isShop={true}
-                  isEvent={true}
-                />
-              ))}
-          </div>
-          {events && events.length === 0 && (
-            <h5 className="w-full text-center py-5 text-[18px]">
-              No events available at the moment!
-            </h5>
-          )}
-        </div>
-      )}
-
-      {active === 3 && (
         <div>
           {coupons.length > 0 ? (
             <>

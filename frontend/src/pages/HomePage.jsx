@@ -3,7 +3,6 @@ import Header from "../components/Layout/Header";
 import Hero from "../components/Route/Hero/Hero";
 import BestSelling from "../components/Route/BestSelling/BestSelling";
 import FeaturedProduct from "../components/Route/FeaturedProduct/FeaturedProduct";
-import Events from "../components/Events/Events";
 import Footer from "../components/Layout/Footer";
 
 const HomePage = () => {
@@ -12,7 +11,6 @@ const HomePage = () => {
       <Header activeHeading={1} />
       <Hero />
       <BestSelling />
-      <Events />
       <FeaturedProduct />
       <Footer />
     </div>
