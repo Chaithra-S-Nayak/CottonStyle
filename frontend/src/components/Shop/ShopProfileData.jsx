@@ -83,9 +83,18 @@ const ShopProfileData = ({ isOwner }) => {
                 code to get a discount.
               </p>
               {coupons.map((coupon) => (
-                <div key={coupon._id} className="border p-4 mb-4 rounded">
+                <div
+                  key={coupon._id}
+                  className="bg-white border p-4 mb-4 rounded"
+                >
                   <h1 className="font-semibold">{coupon.name}</h1>
                   <p className="text-gray-700">{coupon.value}% off</p>
+                  <p className="text-gray-700">
+                    Minimum Amount: ₹{coupon.minAmount}
+                  </p>
+                  <p className="text-gray-700">
+                    Maximum Amount: ₹{coupon.maxAmount}
+                  </p>
                 </div>
               ))}
             </>
