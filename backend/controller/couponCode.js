@@ -1,86 +1,98 @@
 const express = require("express");
+const router = express.Router();
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../utils/ErrorHandler");
 const { isSeller } = require("../middleware/auth");
 const CouponCode = require("../model/couponCode");
-const router = express.Router();
 
-// create Coupon code
+// Create Coupon Code
 router.post(
   "/create-coupon-code",
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      const isCouponCodeExists = await CouponCode.find({
-        name: req.body.name,
-      });
-
-      if (isCouponCodeExists.length !== 0) {
-        return next(new ErrorHandler("Coupon code already exists!", 400));
-      }
-
-      const couponCode = await CouponCode.create(req.body);
-      res.status(201).json({
-        success: true,
-        couponCode,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 400));
+    const isCouponCodeExists = await CouponCode.find({ name: req.body.name });
+    if (isCouponCodeExists.length !== 0) {
+      return next(new ErrorHandler("Coupon code already exists!", 400));
     }
+    const couponCode = await CouponCode.create(req.body);
+    res.status(201).json({
+      success: true,
+      couponCode,
+    });
   })
 );
 
-// get all coupons of a shop
+// Get all coupons of a shop
 router.get(
   "/get-coupon/:id",
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      const couponCodes = await CouponCode.find({ shopId: req.params.id });
-      res.status(201).json({
-        success: true,
-        couponCodes,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 400));
-    }
+    const couponCodes = await CouponCode.find({ shopId: req.params.id });
+    res.status(200).json({
+      success: true,
+      couponCodes,
+    });
   })
 );
 
-// delete Coupon code of a shop
+// Delete Coupon Code of a shop
 router.delete(
   "/delete-coupon/:id",
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      const couponCode = await CouponCode.findByIdAndDelete(req.params.id);
-
-      if (!couponCode) {
-        return next(new ErrorHandler("Coupon code doesn't exist!", 400));
-      }
-      res.status(201).json({
-        success: true,
-        message: "Coupon code deleted successfully!",
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 400));
-    }
+    await CouponCode.findByIdAndDelete(req.params.id);
+    res.status(200).json({
+      success: true,
+      message: "Coupon code deleted successfully!",
+    });
   })
 );
 
-// get coupon code value by its name
-router.get(
-  "/get-coupon-value/:name",
+// Get Coupon Code value by its name
+router.post(
+  "/get-coupon-value",
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      const couponCode = await CouponCode.findOne({ name: req.params.name });
-
-      res.status(200).json({
-        success: true,
-        couponCode,
+    const { name, cart } = req.body;
+    const couponCode = await CouponCode.findOne({ name });
+    if (!couponCode) {
+      return res.status(404).json({
+        success: false,
+        message: "Coupon code doesn't exist!",
       });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 400));
     }
+    const shopId = couponCode.shopId;
+    const couponCodeValue = couponCode.value;
+    const minAmount = couponCode.minAmount;
+    const maxAmount = couponCode.maxAmount;
+    // Filter items that belong to the specified shop
+    const isCouponValid = cart.filter((item) => item.shopId === shopId);
+    if (isCouponValid.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Coupon code is not valid for this shop",
+      });
+    }
+    // Calculate the total price of items from the specified shop
+    const totalPrice = isCouponValid.reduce(
+      (acc, item) => acc + item.qty * item.discountPrice,
+      0
+    );
+    if (totalPrice < minAmount || totalPrice > maxAmount) {
+      return res.status(400).json({
+        success: false,
+        message: `Coupon code is not valid for this amount. Total price should be between ${minAmount} and ${maxAmount}`,
+      });
+    }
+    // Calculate the discount based on the eligible price
+    const couponDiscount = (totalPrice * couponCodeValue) / 100;
+    res.status(200).json({
+      success: true,
+      couponCode: {
+        name: couponCode.name,
+        value: couponCodeValue,
+        shopId: couponCode.shopId,
+        discount: couponDiscount.toFixed(2),
+      },
+    });
   })
 );
 

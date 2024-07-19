@@ -18,7 +18,6 @@ const Checkout = () => {
   const [zipCode, setZipCode] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState(null);
   const [couponCode, setCouponCode] = useState("");
-  const [couponCodeData, setCouponCodeData] = useState(null);
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [coupon, setCoupon] = useState(null);
   const navigate = useNavigate();
@@ -67,38 +66,22 @@ const Checkout = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const name = couponCode;
-
-    await axios.get(`${server}/coupon/get-coupon-value/${name}`).then((res) => {
-      const shopId = res.data.couponCode?.shopId;
-      const couponCodeValue = res.data.couponCode?.value;
-      if (res.data.couponCode !== null) {
-        const isCouponValid =
-          cart && cart.filter((item) => item.shopId === shopId);
-
-        if (isCouponValid.length === 0) {
-          toast.error("Coupon code is not valid for this shop");
-          setCouponCode("");
-        } else {
-          const eligiblePrice = isCouponValid.reduce(
-            (acc, item) => acc + item.qty * item.discountPrice,
-            0
-          );
-          const couponDiscount = (eligiblePrice * couponCodeValue) / 100;
-          setCouponDiscount(couponDiscount.toFixed(2));
-          setCouponCodeData(res.data.couponCode);
-          setCouponCode("");
-          toast.success("Coupon code applied successfully!");
-          setCoupon({
-            name: res.data.couponCode.name,
-            couponDiscountPercentage: couponCodeValue,
-            couponDiscount: couponDiscount.toFixed(2),
-            shopId: res.data.couponCode.shopId,
-          });
-        }
-      } else {
-        toast.error("Coupon code doesn't exist!");
-        setCouponCode("");
-      }
+    await axios.post(`${server}/coupon/get-coupon-value`, { name, cart })
+    .then((res) => {
+      const { shopId, value: couponCodeValue, discount: couponDiscount } = res.data.couponCode;
+      toast.success("Coupon code applied successfully!");
+      setCouponDiscount(couponDiscount);
+      setCoupon({
+        name: res.data.couponCode.name,
+        couponDiscountPercentage: couponCodeValue,
+        couponDiscount,
+        shopId,
+      });
+      setCouponCode("");
+    })
+    .catch((err) => {
+      toast.error(err.response.data.message);
+      setCouponCode("");
     });
   };
 
