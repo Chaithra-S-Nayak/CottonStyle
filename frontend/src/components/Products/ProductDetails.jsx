@@ -71,15 +71,15 @@ const ProductDetails = ({ data }) => {
       toast.error("Item already in cart!");
     } else {
       if (data.stock < 1) {
-        toast.error("Product stock limited!");
+        toast.warning("Product stock limited!");
+      } else if (!selectedSize) {
+        toast.info("Please select a size!");
+      } else if (count > data.stock) {
+        toast.warning("Selected quantity exceeds available stock!");
       } else {
-        if (!selectedSize) {
-          toast.error("Please select a size!");
-        } else {
-          const cartData = { ...data, qty: count, size: selectedSize };
-          dispatch(addTocart(cartData));
-          toast.success("Item added to cart successfully!");
-        }
+        const cartData = { ...data, qty: count, size: selectedSize };
+        dispatch(addTocart(cartData));
+        toast.success("Item added to cart successfully!");
       }
     }
   };
@@ -152,7 +152,8 @@ const ProductDetails = ({ data }) => {
                   </span>
                 </div>
                 <span className="ml-2 text-sm text-gray-500">
-                  {data.reviews.length} Reviews | {data.sold_out} sold
+                  {data.reviews.length} Reviews | {data.sold_out} sold |{" "}
+                  {data.stock} stock
                 </span>
               </div>
               {data.stock < 1 && (

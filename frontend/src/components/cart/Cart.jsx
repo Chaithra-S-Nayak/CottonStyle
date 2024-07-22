@@ -145,7 +145,6 @@ const Cart = () => {
       gstPercentage: gstTax,
       sellerDeliveryFees,
     };
-
     localStorage.setItem("latestOrder", JSON.stringify(orderData));
   }, [
     cart,
@@ -160,9 +159,18 @@ const Cart = () => {
 
   const handleContinue = () => {
     try {
-      const tshirtWithoutSize = cart.some((item) => !item.size);
+      const tshirtWithoutSize = cart.find((item) => !item.size);
       if (tshirtWithoutSize) {
-        toast.error("Please select the size of t-shirts in your cart.");
+        toast.error(
+          `Please select the size of ${tshirtWithoutSize.name} in your cart.`
+        );
+        return;
+      }
+      const outOfStockItem = cart.find((item) => item.qty > item.stock);
+      if (outOfStockItem) {
+        toast.warning(
+          `The quantity for ${outOfStockItem.name} exceeds the available stock.`
+        );
         return;
       }
       navigate("/checkout");
