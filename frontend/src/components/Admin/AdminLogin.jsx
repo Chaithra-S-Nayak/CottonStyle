@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import axios from "axios";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { loginAdmin } from "../../redux/actions/admin";
+import { server } from "../../server";
 import { toast } from "react-toastify";
 
 const AdminLogin = ({ setOtpSent, setEmail }) => {
-  const dispatch = useDispatch();
   const [email, setEmailLocal] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
@@ -13,17 +12,21 @@ const AdminLogin = ({ setOtpSent, setEmail }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(loginAdmin(email, password));
-      toast.success("OTP sent to your email for admin verification.");
-      setEmail(email); // Pass the email to parent component
-      setOtpSent(true);
-    } catch (err) {
-      // Check if the error response has a message
-      if (err.response && err.response.data && err.response.data.message) {
-        toast.error(err.response.data.message);
+      const { data } = await axios.post(`${server}/admin/login-admin`, {
+        email,
+        password,
+      });
+      if (data.success) {
+        toast.success("OTP sent to your email for admin verification.");
+        setEmail(email);
+        setOtpSent(true);
       } else {
-        toast.error("Something went wrong. Please try again.");
+        toast.error(data.message || "Login failed");
       }
+    } catch (err) {
+      toast.error(
+        err.response?.data?.message || "Something went wrong. Please try again."
+      );
     }
   };
 

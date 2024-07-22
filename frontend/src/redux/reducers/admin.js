@@ -24,22 +24,6 @@ export const adminReducer = createReducer(initialState, (builder) => {
       state.error = action.payload;
       state.isAdmin = false;
     })
-    .addCase("ADMIN_LOGIN_REQUEST", (state) => {
-      state.isLoading = true;
-      state.error = null;
-    })
-    .addCase("ADMIN_LOGIN_SUCCESS", (state, action) => {
-      state.isLoading = false;
-      state.isAdmin = true;
-      state.admin = action.payload.admin;
-      state.success = true;
-      state.message = action.payload.message;
-    })
-    .addCase("ADMIN_LOGIN_FAIL", (state, action) => {
-      state.isLoading = false;
-      state.isAdmin = false;
-      state.error = action.payload;
-    })
     .addCase("ADMIN_VERIFY_OTP_REQUEST", (state) => {
       state.isLoading = true;
       state.error = null;
@@ -73,5 +57,11 @@ export const adminReducer = createReducer(initialState, (builder) => {
     .addCase("ADMIN_UPDATE_PROFILE_FAIL", (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
+    })
+    .addCase("CLEAR_ERRORS", (state) => {
+      state.error = null;
+    })
+    .addCase("CLEAR_MESSAGES", (state) => {
+      state.message = null;
     });
 });

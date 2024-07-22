@@ -3,13 +3,11 @@ import { toast } from "react-toastify";
 import { server } from "../../server";
 
 export const loadAdmin = () => async (dispatch) => {
+  dispatch({ type: "LOAD_ADMIN_REQUEST" });
   try {
-    dispatch({ type: "LOAD_ADMIN_REQUEST" });
-
     const { data } = await axios.get(`${server}/admin/load`, {
       withCredentials: true,
     });
-
     dispatch({
       type: "LOAD_ADMIN_SUCCESS",
       payload: data.admin,
@@ -24,15 +22,13 @@ export const loadAdmin = () => async (dispatch) => {
 
 export const updateAdminProfile =
   (email, name, phoneNumber, password) => async (dispatch) => {
+    dispatch({ type: "ADMIN_UPDATE_PROFILE_REQUEST" });
     try {
-      dispatch({ type: "ADMIN_UPDATE_PROFILE_REQUEST" });
-
       const { data } = await axios.put(
         `${server}/admin/update-admin-info`,
         { email, name, phoneNumber, password },
         { withCredentials: true }
       );
-
       dispatch({ type: "ADMIN_UPDATE_PROFILE_SUCCESS", payload: data.admin });
       toast.success("Profile updated successfully!");
     } catch (error) {
@@ -44,34 +40,22 @@ export const updateAdminProfile =
     }
   };
 
-export const loginAdmin = (email, password) => async (dispatch) => {
-  try {
-    const response = await axios.post(`${server}/admin/login-admin`, {
-      email,
-      password,
-    });
-    if (response.data.success) {
-      return Promise.resolve();
-    }
-  } catch (error) {
-    return Promise.reject(error);
-  }
-};
-
 export const verifyAdminOtp = (email, otp) => async (dispatch) => {
   dispatch({ type: "ADMIN_VERIFY_OTP_REQUEST" });
-
   try {
-    const response = await axios.post(
+    const { data } = await axios.post(
       `${server}/admin/verify-admin-otp`,
       { email, otp },
       { withCredentials: true }
     );
-    if (response.data.success) {
-      dispatch({ type: "ADMIN_VERIFY_OTP_SUCCESS", payload: response.data });
+    if (data.success) {
+      dispatch({
+        type: "ADMIN_VERIFY_OTP_SUCCESS",
+        payload: { admin: data.admin, message: data.message },
+      });
       return Promise.resolve();
     } else {
-      throw new Error(response.data.message || "OTP verification failed");
+      throw new Error(data.message || "OTP verification failed");
     }
   } catch (error) {
     dispatch({
@@ -85,6 +69,8 @@ export const verifyAdminOtp = (email, otp) => async (dispatch) => {
 // Admin logout
 export const logoutAdmin = () => async (dispatch) => {
   await axios.get(`${server}/admin/logout`, { withCredentials: true });
-
   dispatch({ type: "ADMIN_LOGOUT_SUCCESS" });
 };
+
+export const clearErrors = () => ({ type: "CLEAR_ERRORS" });
+export const clearMessages = () => ({ type: "CLEAR_MESSAGES" });

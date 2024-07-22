@@ -16,12 +16,9 @@ const OtpVerification = ({ email }) => {
       toast.success("OTP Verified! Redirecting to dashboard.");
       navigate("/admin/dashboard");
     } catch (err) {
-      // Check if the error response has a message
-      if (err.response && err.response.data && err.response.data.message) {
-        toast.error(err.response.data.message);
-      } else {
-        toast.error("Something went wrong. Please try again.");
-      }
+      toast.error(
+        err.response.data.message || "Something went wrong. Please try again."
+      );
     }
   };
 

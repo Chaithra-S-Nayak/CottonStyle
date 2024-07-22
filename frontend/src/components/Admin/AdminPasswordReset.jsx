@@ -11,20 +11,17 @@ const AdminPasswordReset = ({ email }) => {
 
   const resetPassword = async () => {
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match.");
+      toast.error("New password and confirm password do not match");
       return;
     }
     try {
-      const response = await axios.post(
-        `${server}/admin/admin-reset-password`,
-        {
-          email,
-          newPassword: password,
-        }
-      );
+      const response = await axios.put(`${server}/admin/admin-reset-password`, {
+        email,
+        newPassword: password,
+      });
       if (response.data.success) {
         toast.success("Password has been reset successfully.");
-        navigate("/admin-login");
+        navigate("/admin/dashboard");
       } else {
         toast.error("Failed to reset password.");
       }

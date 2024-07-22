@@ -17,7 +17,7 @@ const AdminHeader = () => {
 
   const handleLogout = async () => {
     try {
-      await dispatch(logoutAdmin());
+      dispatch(logoutAdmin());
       navigate("/admin-login");
     } catch (error) {
       console.error("Logout failed:", error);

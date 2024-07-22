@@ -10,27 +10,23 @@ const AdminChangePassword = () => {
 
   const passwordChangeHandler = async (e) => {
     e.preventDefault();
-
     if (newPassword !== confirmPassword) {
       toast.error("New password and confirm password do not match");
       return;
     }
-
-    await axios
-      .put(
+    try {
+      await axios.put(
         `${server}/admin/change-admin-password`,
-        { oldPassword, newPassword, confirmPassword },
+        { oldPassword, newPassword },
         { withCredentials: true }
-      )
-      .then((res) => {
-        toast.success("Password updated successfully");
-        setOldPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-      });
+      );
+      toast.success("Password updated successfully");
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
 
   return (

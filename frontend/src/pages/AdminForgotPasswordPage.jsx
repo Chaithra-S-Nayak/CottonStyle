@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import AdminOTPInput from "../components/Admin/AdminOTPInput";
+import OtpVerification from "../components/Admin/OtpVerification";
 import AdminPasswordReset from "../components/Admin/AdminPasswordReset";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -83,7 +83,7 @@ const AdminForgotPasswordPage = () => {
               </div>
             )}
             {showOtpInput && !showPasswordReset && (
-              <AdminOTPInput
+              <OtpVerification // By making the OTP component common for both admin login and admin forgot password, there is more padding at the top and bottom from parent(will try to fix it later).
                 email={email}
                 onSuccess={() => setShowPasswordReset(true)}
               />

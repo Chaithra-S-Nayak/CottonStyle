@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { server } from "../../server";
-import { loadAdmin, updateAdminProfile } from "../../redux/actions/admin";
+import {
+  loadAdmin,
+  updateAdminProfile,
+  clearErrors,
+  clearMessages,
+} from "../../redux/actions/admin";
 import axios from "axios";
 import { AiOutlineCamera } from "react-icons/ai";
 
@@ -17,11 +22,11 @@ const AdminSettings = () => {
   useEffect(() => {
     if (error) {
       toast.error(error);
-      dispatch({ type: "clearErrors" });
+      dispatch(clearErrors());
     }
     if (successMessage) {
       toast.success(successMessage);
-      dispatch({ type: "clearMessages" });
+      dispatch(clearMessages());
     }
   }, [error, successMessage, dispatch]);
 
@@ -32,7 +37,6 @@ const AdminSettings = () => {
 
   const handleImage = async (e) => {
     const reader = new FileReader();
-
     reader.onload = () => {
       if (reader.readyState === 2) {
         setAvatar(reader.result);
@@ -55,7 +59,6 @@ const AdminSettings = () => {
           });
       }
     };
-
     reader.readAsDataURL(e.target.files[0]);
   };
 
