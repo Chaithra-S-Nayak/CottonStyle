@@ -14,7 +14,7 @@ const WithdrawMoney = () => {
   const dispatch = useDispatch();
   const { seller } = useSelector((state) => state.seller);
   const [paymentMethod, setPaymentMethod] = useState(false);
-  const [withdrawAmount, setWithdrawAmount] = useState(50);
+  const [withdrawAmount, setWithdrawAmount] = useState(500);
   const [bankInfo, setBankInfo] = useState({
     bankName: "",
     bankCountry: "",
@@ -30,7 +30,6 @@ const WithdrawMoney = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const withdrawMethod = {
       bankName: bankInfo.bankName,
       bankCountry: bankInfo.bankCountry,
@@ -39,12 +38,10 @@ const WithdrawMoney = () => {
       bankHolderName: bankInfo.bankHolderName,
       bankAddress: bankInfo.bankAddress,
     };
-
     setPaymentMethod(false);
-
     await axios
-      .put(
-        `${server}/shop/update-payment-methods`,
+      .post(
+        `${server}/shop/add-payment-methods`,
         {
           withdrawMethod,
         },
@@ -83,10 +80,11 @@ const WithdrawMoney = () => {
   };
 
   const withdrawHandler = async () => {
-    if (withdrawAmount < 50 || withdrawAmount > availableBalance) {
+    const availableBalanceNum = parseFloat(availableBalance);
+    const amount = parseFloat(withdrawAmount);
+    if (amount < 500 || amount > availableBalanceNum) {
       toast.error("You can't withdraw this amount!");
     } else {
-      const amount = withdrawAmount;
       await axios
         .post(
           `${server}/withdraw/create-withdraw-request`,
@@ -94,6 +92,7 @@ const WithdrawMoney = () => {
           { withCredentials: true }
         )
         .then((res) => {
+          window.location.reload();
           toast.success("Withdraw money request is successful!");
         });
     }

@@ -53,7 +53,7 @@ const shopSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  transections: [
+  transactions: [
     {
       amount: {
         type: Number,
