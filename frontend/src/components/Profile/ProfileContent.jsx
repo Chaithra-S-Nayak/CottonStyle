@@ -15,7 +15,7 @@ import { RxCross1 } from "react-icons/rx";
 import {
   deleteUserAddress,
   loadUser,
-  updatUserAddress,
+  updateUserAddress,
   updateUserInformation,
 } from "../../redux/actions/user";
 import { Country, State } from "country-state-city";
@@ -29,7 +29,6 @@ const ProfileContent = ({ active }) => {
   const [name, setName] = useState(user && user.name);
   const [email, setEmail] = useState(user && user.email);
   const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
-  const [avatar, setAvatar] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -45,15 +44,21 @@ const ProfileContent = ({ active }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(updateUserInformation(name, email, phoneNumber));
+    dispatch(updateUserInformation(name, email, phoneNumber))
+      .then(() => {
+        toast.success("User information updated successfully!");
+      })
+      .catch((error) => {
+        toast.error(
+          error.response?.data?.message || "Failed to update user information."
+        );
+      });
   };
 
   const handleImage = async (e) => {
     const reader = new FileReader();
-
     reader.onload = () => {
       if (reader.readyState === 2) {
-        setAvatar(reader.result);
         axios
           .put(
             `${server}/user/update-avatar`,
@@ -71,7 +76,6 @@ const ProfileContent = ({ active }) => {
           });
       }
     };
-
     reader.readAsDataURL(e.target.files[0]);
   };
 
@@ -204,11 +208,6 @@ const AllOrders = () => {
       headerName: "Status",
       minWidth: 130,
       flex: 0.7,
-      cellClassName: (params) => {
-        return params.getValue(params.id, "status") === "Delivered"
-          ? "greenColor"
-          : "redColor";
-      },
     },
     {
       field: "itemsQty",
@@ -292,11 +291,6 @@ const AllRefundOrders = () => {
       headerName: "Status",
       minWidth: 130,
       flex: 0.7,
-      cellClassName: (params) => {
-        return params.getValue(params.id, "status") === "Delivered"
-          ? "greenColor"
-          : "redColor";
-      },
     },
     {
       field: "itemsQty",
@@ -377,11 +371,6 @@ const TrackOrder = () => {
       headerName: "Status",
       minWidth: 130,
       flex: 0.7,
-      cellClassName: (params) => {
-        return params.getValue(params.id, "status") === "Delivered"
-          ? "greenColor"
-          : "redColor";
-      },
     },
     {
       field: "itemsQty",
@@ -452,23 +441,25 @@ const ChangePassword = () => {
 
   const passwordChangeHandler = async (e) => {
     e.preventDefault();
-
-    await axios
-      .put(
+    if (newPassword !== confirmPassword) {
+      toast.error("New password and confirm password do not match");
+      return;
+    }
+    try {
+      await axios.put(
         `${server}/user/change-user-password`,
-        { oldPassword, newPassword, confirmPassword },
+        { oldPassword, newPassword },
         { withCredentials: true }
-      )
-      .then((res) => {
-        toast.success("Password updated successfully");
-        setOldPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-      });
+      );
+      toast.success("Password updated successfully");
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
+
   return (
     <div className="w-full px-5">
       <h1 className="block text-[25px] text-center font-[600] text-[#000000ba] pb-2">
@@ -546,12 +537,11 @@ const Address = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (addressType === "" || country === "" || city === "") {
       toast.error("Please fill all the fields!");
     } else {
       dispatch(
-        updatUserAddress(
+        updateUserAddress(
           country,
           city,
           address1,

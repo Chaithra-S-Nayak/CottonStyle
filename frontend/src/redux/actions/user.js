@@ -43,14 +43,13 @@ export const loadSeller = () => async (dispatch) => {
   }
 };
 
-// user update information
+// update user information
 export const updateUserInformation =
   (name, email, phoneNumber, password) => async (dispatch) => {
     try {
       dispatch({
         type: "updateUserInfoRequest",
       });
-
       const { data } = await axios.put(
         `${server}/user/update-user-info`,
         {
@@ -60,12 +59,8 @@ export const updateUserInformation =
         },
         {
           withCredentials: true,
-          headers: {
-            "Access-Control-Allow-Credentials": true,
-          },
         }
       );
-
       dispatch({
         type: "updateUserInfoSuccess",
         payload: data.user,
@@ -79,14 +74,13 @@ export const updateUserInformation =
   };
 
 // update user address
-export const updatUserAddress =
+export const updateUserAddress =
   (country, city, address1, address2, zipCode, addressType) =>
   async (dispatch) => {
     try {
       dispatch({
         type: "updateUserAddressRequest",
       });
-
       const { data } = await axios.put(
         `${server}/user/update-user-addresses`,
         {
@@ -99,7 +93,6 @@ export const updatUserAddress =
         },
         { withCredentials: true }
       );
-
       dispatch({
         type: "updateUserAddressSuccess",
         payload: {
@@ -121,12 +114,10 @@ export const deleteUserAddress = (id) => async (dispatch) => {
     dispatch({
       type: "deleteUserAddressRequest",
     });
-
     const { data } = await axios.delete(
       `${server}/user/delete-user-address/${id}`,
       { withCredentials: true }
     );
-
     dispatch({
       type: "deleteUserAddressSuccess",
       payload: {
@@ -142,17 +133,15 @@ export const deleteUserAddress = (id) => async (dispatch) => {
   }
 };
 
-// get all users --- admin
+// get all users (Admin)
 export const getAllUsers = () => async (dispatch) => {
   try {
     dispatch({
       type: "getAllUsersRequest",
     });
-
     const { data } = await axios.get(`${server}/user/admin-all-users`, {
       withCredentials: true,
     });
-
     dispatch({
       type: "getAllUsersSuccess",
       payload: data.users,

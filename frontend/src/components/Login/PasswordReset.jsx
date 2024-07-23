@@ -11,17 +11,22 @@ const PasswordReset = ({ email }) => {
 
   const resetPassword = async () => {
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match.");
+      toast.error("New password and confirm password do not match");
       return;
     }
     try {
-      const response = await axios.post(`${server}/user/user-reset-password`, {
-        email,
-        newPassword: password,
-      });
+      const response = await axios.post(
+        `${server}/user/user-reset-password`,
+        {
+          email,
+          newPassword: password,
+        },
+        { withCredentials: true }
+      );
       if (response.data.success) {
         toast.success("Password has been reset successfully.");
-        navigate("/login"); // Navigate to the login page upon success
+        navigate("/");
+        window.location.reload(true);
       } else {
         toast.error("Failed to reset password.");
       }

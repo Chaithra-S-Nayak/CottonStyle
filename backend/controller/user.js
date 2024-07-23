@@ -9,93 +9,66 @@ const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
 const { isAuthenticated, isAdmin } = require("../middleware/auth");
 const crypto = require("crypto");
+require("dotenv").config();
+const {
+  generateEmailTemplate,
+  getActivationEmailTemplate,
+  getOtpEmailTemplate,
+  getAccountDeletionEmailTemplate,
+} = require("../utils/emailTemplates");
 
-// create user
-router.post("/create-user", async (req, res, next) => {
-  // console.log("Create user endpoint hit");
-  try {
+// Create user
+router.post(
+  "/create-user",
+  catchAsyncErrors(async (req, res, next) => {
     const { name, email, password, avatar } = req.body;
     const userEmail = await User.findOne({ email });
-
     if (userEmail) {
       return next(new ErrorHandler("User already exists", 400));
     }
-
-    let userAvatar = {
-      public_id: "default_avatar_id",
-      url: "https://res.cloudinary.com/dqyauy2y8/image/upload/v1714366014/avatars/crwcaulv68csvcqlbidq.png",
-    };
-
     if (avatar) {
       const myCloud = await cloudinary.v2.uploader.upload(avatar, {
         folder: "avatars",
       });
-
       userAvatar = {
         public_id: myCloud.public_id,
         url: myCloud.secure_url,
       };
+    } else {
+      userAvatar = {
+        public_id: "default_avatar_id",
+        url: "https://res.cloudinary.com/dqyauy2y8/image/upload/v1721471562/avatars/default_eyjfy4.jpg",
+      };
     }
-
     const user = {
       name: name,
       email: email,
       password: password,
       avatar: userAvatar,
     };
-
     const activationToken = createActivationToken(user);
-
     const activationUrl = `http://localhost:3000/activation/${activationToken}`;
-
-    const htmlContent = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          color: #333;
-        }
-      </style>
-    </head>
-    <body style="margin: 0; padding: 0;">
-      <div style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
-        <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc;">
-          <div style="font-size: 20px; font-weight: 300; margin: 0;">CottonStyle</div>
-        </div>
-        <p>Hello ${name},</p>
-        <p>Thank you for registering with CottonStyle! Please click the button below to activate your account:</p>
-        <a href="${activationUrl}" style="display: inline-block; padding: 10px 20px; margin: 20px 0; font-size: 16px; color: white; background-color: #4CAF50; text-decoration: none; border-radius: 5px;">Activate Account</a>
-        <p>If you did not sign up for this account, you can ignore this email.</p>
-        <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-top: 1px solid #ccc; font-size: 12px; color: #999;">
-          <p>&copy; 2024 CottonStyle. All rights reserved.</p>
-        </div>
-      </div>
-    </body>
-    </html>
-  `;
-
+    const bodyContent = getActivationEmailTemplate(activationUrl);
+    const htmlContent = generateEmailTemplate({
+      recipientName: name,
+      bodyContent,
+    });
     try {
       await sendMail({
         email: user.email,
         subject: "Activate your account",
-        message: `Hello ${name}, please click on the link to activate your account: ${activationUrl}`,
         html: htmlContent,
       });
       res.status(201).json({
         success: true,
-        message: `please check your email: ${user.email} to activate your account!`,
+        message: `Please check your email: ${user.email} to activate your account!`,
       });
     } catch (error) {
       console.error("Error sending email:", error);
       return next(new ErrorHandler(error.message, 500));
     }
-  } catch (error) {
-    console.error("Error creating user:", error);
-    return next(new ErrorHandler(error.message, 400));
-  }
-});
+  })
+);
 
 // create activation token
 const createActivationToken = (user) => {
@@ -104,163 +77,90 @@ const createActivationToken = (user) => {
   });
 };
 
-// activate user
+// Activate user
 router.post(
   "/activation",
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      const { activation_token } = req.body;
-
-      const newUser = jwt.verify(
-        activation_token,
-        process.env.ACTIVATION_SECRET
-      );
-
-      if (!newUser) {
-        return next(new ErrorHandler("Invalid token", 400));
-      }
-      const { name, email, password, avatar } = newUser;
-
-      let user = await User.findOne({ email });
-
-      if (user) {
-        return next(new ErrorHandler("User already exists", 400));
-      }
-      user = await User.create({
-        name,
-        email,
-        avatar,
-        password,
-      });
-
-      // console.log("User created in the database:", user);
-      sendToken(user, 201, res);
-    } catch (error) {
-      console.error("Error activating user:", error);
-      return next(new ErrorHandler(error.message, 500));
+    const { activation_token } = req.body;
+    const newUser = jwt.verify(activation_token, process.env.ACTIVATION_SECRET);
+    if (!newUser) {
+      return next(new ErrorHandler("Invalid token", 400));
     }
+    const { name, email, password, avatar } = newUser;
+    let user = await User.findOne({ email });
+
+    if (user) {
+      return next(new ErrorHandler("User already exists", 400));
+    }
+    user = await User.create({
+      name,
+      email,
+      avatar,
+      password,
+    });
+    sendToken(user, 201, res);
   })
 );
 
-// login user
+// Login user
 router.post(
   "/login-user",
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      const { email, password } = req.body;
-
-      if (!email || !password) {
-        return next(new ErrorHandler("Please provide the all fields!", 400));
-      }
-
-      const user = await User.findOne({ email }).select("+password");
-
-      if (!user) {
-        return next(new ErrorHandler("User doesn't exists!", 400));
-      }
-
-      const isPasswordValid = await user.comparePassword(password);
-
-      if (!isPasswordValid) {
-        return next(
-          new ErrorHandler("Please provide the correct information", 400)
-        );
-      }
-
-      sendToken(user, 201, res);
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
+    const { email, password } = req.body;
+    const user = await User.findOne({ email }).select("+password");
+    if (!user) {
+      return next(new ErrorHandler("User doesn't exist!", 400));
     }
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
+      return next(new ErrorHandler("Invalid credentials!", 400));
+    }
+    sendToken(user, 201, res);
   })
 );
 
 // Generate OTP
 const generateOtp = () => {
-  const otp = crypto.randomInt(100000, 999999); // Generate a 6-digit random number
-  return otp.toString();
+  return crypto.randomInt(100000, 999999).toString(); // Generate a 6-digit random number
 };
 
-// Send OTP Endpoint
+// User Forgot password
 router.post(
   "/user-forgot-password",
   catchAsyncErrors(async (req, res, next) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
-
     if (!user) {
       return next(new ErrorHandler("User not found", 404));
     }
-
     const otp = generateOtp();
     user.otp = otp;
     user.otpExpiry = Date.now() + 300000; // OTP expires in 5 minutes
     await user.save();
-
-    // console.log("Generated OTP:", otp, "for email:", email); // Log the generated OTP
-
-    const htmlContent = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          color: #333;
-        }
-      </style>
-    </head>
-    <body style="margin: 0; padding: 0;">
-      <div style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
-        <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc;">
-          <div style="font-size: 20px; font-weight: 300; margin: 0;">CottonStyle</div>
-        </div>
-        <p>Hello ${user.name},</p>
-        <p>We received a request to reset your password. Please use the OTP below to reset your password:</p>
-        <p style="font-size: 20px; font-weight: 300; margin: 20px 0;">${otp}</p>
-        <p>The OTP will expire in 5 minutes.</p>
-        <p>If you did not request a password reset, please ignore this email.</p>
-        <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-top: 1px solid #ccc; font-size: 12px; color: #999;">
-          <p>&copy; 2024 CottonStyle. All rights reserved.</p>
-        </div>
-      </div>
-    </body>
-    </html>
-    `;
-
-    try {
-      await sendMail({
-        email: user.email,
-        subject: "Password Reset OTP",
-        message: `Your OTP for password reset is: ${otp}. It will expire in 5 minutes.`,
-        html: htmlContent,
-      });
-      res.status(200).json({
-        success: true,
-        message: "OTP sent to email",
-      });
-    } catch (error) {
-      user.otp = undefined;
-      user.otpExpiry = undefined;
-      await user.save();
-      return next(new ErrorHandler("Error sending OTP email", 500));
-    }
+    const bodyContent = getOtpEmailTemplate(otp);
+    const htmlContent = generateEmailTemplate({
+      recipientName: user.name,
+      bodyContent,
+    });
+    await sendMail({
+      email: user.email,
+      subject: "Password Reset OTP",
+      html: htmlContent,
+    });
+    res.status(200).json({
+      success: true,
+      message: "OTP sent to email",
+    });
   })
 );
 
-//verify-otp
+// Verify OTP
 router.post(
   "/user-verify-otp",
   catchAsyncErrors(async (req, res, next) => {
     const { email, otp } = req.body;
-
     const user = await User.findOne({ email }).select("+otp +otpExpiry");
-
-    if (!user) {
-      return next(new ErrorHandler("User not found", 404));
-    }
-
     if (user.otp === otp && user.otpExpiry > Date.now()) {
-      // console.log("OTP is valid");
       res.status(200).json({
         success: true,
         message: "OTP is valid. You can now reset your password.",
@@ -275,334 +175,196 @@ router.post(
 router.post(
   "/user-reset-password",
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      const { email, newPassword } = req.body;
-      const user = await User.findOne({ email }).select("+otp +otpExpiry");
-
-      if (!user) {
-        return next(new ErrorHandler("User not found", 404));
-      }
-
-      // Hash the new password before saving
-      user.password = newPassword;
-      user.otp = undefined;
-      user.otpExpiry = undefined;
-      await user.save();
-
-      res.status(200).json({
-        success: true,
-        message: "Password has been reset successfully",
-      });
-    } catch (error) {
-      console.error("Error resetting password:", error);
-      return next(new ErrorHandler("Internal Server Error", 500));
-    }
+    const { email, newPassword } = req.body;
+    const user = await User.findOne({ email }).select("+otp +otpExpiry");
+    user.password = newPassword;
+    user.otp = undefined;
+    user.otpExpiry = undefined;
+    await user.save();
+    sendToken(user, 201, res);
   })
 );
 
-// load user
+// Load user
 router.get(
   "/getuser",
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      const user = await User.findById(req.user.id);
-
-      if (!user) {
-        return next(new ErrorHandler("User doesn't exists", 400));
-      }
-
-      res.status(200).json({
-        success: true,
-        user,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
+    const user = await User.findById(req.user.id);
+    res.status(200).json({
+      success: true,
+      user,
+    });
   })
 );
 
-// log out user
+// Logout user
 router.get(
   "/logout",
+  isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      res.cookie("token", null, {
-        expires: new Date(Date.now()),
-        httpOnly: true,
-        sameSite: "none",
-        secure: true,
-      });
-      res.status(201).json({
-        success: true,
-        message: "Log out successful!",
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
+    res.cookie("token", null, {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+    });
+    res.status(201).json({
+      success: true,
+      message: "Log out successful!",
+    });
   })
 );
 
-// update user info
+// Update user info
 router.put(
   "/update-user-info",
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      const { email, phoneNumber, name } = req.body;
-
-      const user = await User.findOne({ email }).select("+password");
-
-      if (!user) {
-        return next(new ErrorHandler("User not found", 400));
-      }
-
-      user.name = name;
-      user.email = email;
-      user.phoneNumber = phoneNumber;
-
-      await user.save();
-
-      res.status(201).json({
-        success: true,
-        user,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
+    const { email, phoneNumber, name } = req.body;
+    const user = await User.findOne({ email });
+    user.name = name;
+    user.email = email;
+    user.phoneNumber = phoneNumber;
+    await user.save();
+    res.status(201).json({
+      success: true,
+      user,
+    });
   })
 );
 
-// update user avatar
+// Update user avatar
 router.put(
   "/update-avatar",
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      let existsUser = await User.findById(req.user.id);
-      if (req.body.avatar !== "") {
-        const imageId = existsUser.avatar.public_id;
-
-        await cloudinary.v2.uploader.destroy(imageId);
-
-        const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-          folder: "avatars",
-          width: 150,
-        });
-
-        existsUser.avatar = {
-          public_id: myCloud.public_id,
-          url: myCloud.secure_url,
-        };
-      }
-
-      await existsUser.save();
-
-      res.status(200).json({
-        success: true,
-        user: existsUser,
+    let existsUser = await User.findById(req.user.id);
+    if (req.body.avatar !== "") {
+      const imageId = existsUser.avatar.public_id;
+      await cloudinary.v2.uploader.destroy(imageId);
+      const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: "avatars",
+        width: 150,
       });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
+      existsUser.avatar = {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      };
     }
+    await existsUser.save();
+    res.status(200).json({
+      success: true,
+      user: existsUser,
+    });
   })
 );
 
-// update user addresses
+// Update user addresses
 router.put(
   "/update-user-addresses",
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      const user = await User.findById(req.user.id);
-
-      const sameTypeAddress = user.addresses.find(
-        (address) => address.addressType === req.body.addressType
+    const user = await User.findById(req.user.id);
+    const sameTypeAddress = user.addresses.find(
+      (address) => address.addressType === req.body.addressType
+    );
+    if (sameTypeAddress) {
+      return next(
+        new ErrorHandler(`${req.body.addressType} address already exists`)
       );
-      if (sameTypeAddress) {
-        return next(
-          new ErrorHandler(`${req.body.addressType} address already exists`)
-        );
-      }
-
-      const existsAddress = user.addresses.find(
-        (address) => address._id === req.body._id
-      );
-
-      if (existsAddress) {
-        Object.assign(existsAddress, req.body);
-      } else {
-        // add the new address to the array
-        user.addresses.push(req.body);
-      }
-
-      await user.save();
-
-      res.status(200).json({
-        success: true,
-        user,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
     }
+    user.addresses.push(req.body);
+    await user.save();
+    res.status(200).json({
+      success: true,
+      user,
+    });
   })
 );
 
-// delete user address
+// Delete user address
 router.delete(
   "/delete-user-address/:id",
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      const userId = req.user._id;
-      const addressId = req.params.id;
-
-      await User.updateOne(
-        {
-          _id: userId,
-        },
-        { $pull: { addresses: { _id: addressId } } }
-      );
-
-      const user = await User.findById(userId);
-
-      res.status(200).json({ success: true, user });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
+    const userId = req.user._id;
+    const addressId = req.params.id;
+    await User.updateOne(
+      { _id: userId },
+      { $pull: { addresses: { _id: addressId } } }
+    );
+    const user = await User.findById(userId);
+    res.status(200).json({ success: true, user });
   })
 );
 
-// update user password
+// Change user password
 router.put(
   "/change-user-password",
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      const user = await User.findById(req.user.id).select("+password");
+    const user = await User.findById(req.user.id).select("+password");
 
-      const isPasswordMatched = await user.comparePassword(
-        req.body.oldPassword
-      );
+    const isPasswordMatched = await user.comparePassword(req.body.oldPassword);
 
-      if (!isPasswordMatched) {
-        return next(new ErrorHandler("Old password is incorrect!", 400));
-      }
-
-      if (req.body.newPassword !== req.body.confirmPassword) {
-        return next(
-          new ErrorHandler("Password doesn't matched with each other!", 400)
-        );
-      }
-      user.password = req.body.newPassword;
-
-      await user.save();
-
-      res.status(200).json({
-        success: true,
-        message: "Password updated successfully!",
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
+    if (!isPasswordMatched) {
+      return next(new ErrorHandler("Old password is incorrect!", 400));
     }
+    user.password = req.body.newPassword;
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Password updated successfully!",
+    });
   })
 );
 
-// find user infoormation with the userId
-router.get(
-  "/user-info/:id",
-  catchAsyncErrors(async (req, res, next) => {
-    try {
-      const user = await User.findById(req.params.id);
-
-      res.status(201).json({
-        success: true,
-        user,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
-  })
-);
-
-// all users --- for admin
+// All users (Admin)
 router.get(
   "/admin-all-users",
   isAdmin,
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      const users = await User.find().sort({
-        createdAt: -1,
-      });
-      res.status(201).json({
-        success: true,
-        users,
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
-    }
+    const users = await User.find().sort({
+      createdAt: -1,
+    });
+    res.status(201).json({
+      success: true,
+      users,
+    });
   })
 );
 
-// delete users --- admin
+// Delete user (Admin)
 router.delete(
   "/delete-user/:id",
   isAdmin,
   catchAsyncErrors(async (req, res, next) => {
-    try {
-      const user = await User.findById(req.params.id);
-
-      if (!user) {
-        return next(new ErrorHandler("User not found", 404));
-      }
-
-      // Delete the user from the database
-      await User.findByIdAndDelete(req.params.id);
-
-      // Construct HTML content for the email
-      const htmlContent = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              color: #333;
-            }
-          </style>
-        </head>
-        <body style="margin: 0; padding: 0;">
-          <div style="max-width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
-            <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc;">
-              <div style="font-size: 20px; font-weight: 300; margin: 0;">CottonStyle</div>
-            </div>
-            <p>Hello ${user.name},</p>
-            <p>We regret to inform you that your user account has been deleted from CottonStyle. If you have any questions or concerns, please contact our support team at ${
-              process.env.ADMIN_EMAIL
-            }.</p>
-            <p>Thank you for your understanding.</p>
-            <div style="text-align: center; padding: 10px; background-color: #f4f4f4; border-top: 1px solid #ccc; font-size: 12px; color: #999;">
-              <p>&copy; ${new Date().getFullYear()} Your Website Name. All rights reserved.</p>
-            </div>
-          </div>
-        </body>
-        </html>
-      `;
-
-      // Send email notification to user
-      await sendMail({
-        email: user.email,
-        subject: "Your Account Has Been Deleted",
-        html: htmlContent,
-      });
-
-      res.status(200).json({
-        success: true,
-        message: "User deleted successfully!",
-      });
-    } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return next(new ErrorHandler("User is not found with this id", 400));
     }
+    const imageId = user.avatar.public_id;
+    await cloudinary.v2.uploader.destroy(imageId);
+    await User.findByIdAndDelete(req.params.id);
+    const bodyContent = getAccountDeletionEmailTemplate(
+      process.env.ADMIN_EMAIL
+    );
+    const htmlContent = generateEmailTemplate({
+      recipientName: user.name,
+      bodyContent,
+    });
+    await sendMail({
+      email: user.email,
+      subject: "Account Deleted",
+      html: htmlContent,
+    });
+    res.status(201).json({
+      success: true,
+      message: "User deleted successfully!",
+    });
   })
 );
 
