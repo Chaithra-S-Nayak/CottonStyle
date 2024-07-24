@@ -13,37 +13,36 @@ const razorpay = new Razorpay({
 // Razorpay order creation
 router.post(
   "/create/orderId",
-  catchAsyncErrors(async (req, res) => {
-    try {
-      const options = {
-        amount: req.body.amount, // amount in the smallest currency unit
-        currency: "INR",
-        receipt: "receipt#" + Math.random(), // Generate a random receipt number
-      };
-      const order = await razorpay.orders.create(options);
-      if (!order) return res.status(500).send("Some error occurred");
-      res.json({ orderId: order.id, amount: order.amount });
-    } catch (error) {
-      res.status(500).send(error);
+  catchAsyncErrors(async (req, res, next) => {
+    const options = {
+      amount: req.body.amount, // amount in the smallest currency unit
+      currency: "INR",
+      // receipt: "receipt#" + Math.random(), // Generate a random receipt number
+    };
+    const order = await razorpay.orders.create(options);
+    if (!order) {
+      return res.status(500).json({ message: "Some error occurred" });
     }
+    res.json({ orderId: order.id, amount: order.amount });
   })
 );
 
 // Payment verification
-router.post("/verify", (req, res) => {
-  const secret = process.env.RAZORPAY_SECRET;
-
-  const shasum = crypto.createHmac("sha256", secret);
-  shasum.update(
-    `${req.body.razorpay_order_id}|${req.body.razorpay_payment_id}`
-  );
-  const digest = shasum.digest("hex");
-
-  if (digest === req.body.razorpay_signature) {
-    res.json({ signatureIsValid: "true" });
-  } else {
-    res.json({ signatureIsValid: "false" });
-  }
-});
+router.post(
+  "/verify",
+  catchAsyncErrors((req, res, next) => {
+    const secret = process.env.RAZORPAY_SECRET;
+    const shasum = crypto.createHmac("sha256", secret);
+    shasum.update(
+      `${req.body.razorpay_order_id}|${req.body.razorpay_payment_id}`
+    );
+    const digest = shasum.digest("hex");
+    if (digest === req.body.razorpay_signature) {
+      res.json({ signatureIsValid: "true" });
+    } else {
+      res.status(400).json({ signatureIsValid: "false" });
+    }
+  })
+);
 
 module.exports = router;

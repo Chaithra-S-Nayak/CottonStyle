@@ -3,24 +3,23 @@ import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import logo from "../../Assets/CottonStyle.png";
 
 const RazorpayPayment = ({ orderData, onSuccess }) => {
   const { user } = useSelector((state) => state.user);
-  const navigate = useNavigate();
 
   const handlePayment = async () => {
     try {
       const { data } = await axios.post(`${server}/payment/create/orderId`, {
         amount: Math.round(orderData?.totalPrice * 100),
       });
-
       const options = {
         key: process.env.RAZORPAY_KEY_ID,
         amount: data.amount,
         currency: "INR",
         name: "CottonStyle",
         description: "Payment for your order",
+        image: logo,
         order_id: data.orderId,
         handler: async (response) => {
           const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
@@ -30,12 +29,21 @@ const RazorpayPayment = ({ orderData, onSuccess }) => {
             razorpay_order_id,
             razorpay_signature,
           };
-          await razorpayPaymentHandler(paymentInfo);
+          // Call backend to verify payment
+          const verificationResponse = await axios.post(
+            `${server}/payment/verify`,
+            paymentInfo
+          );
+          if (verificationResponse.data.signatureIsValid === "true") {
+            await razorpayPaymentHandler(paymentInfo);
+          } else {
+            toast.error("Payment verification failed. Please try again.");
+          }
         },
         prefill: {
-          name: user.name,
-          email: user.email,
-          contact: "9999999999",
+          name: orderData.user.name,
+          email: orderData.user.email,
+          contact: orderData.user.phoneNumber,
         },
         notes: {
           address: "Razorpay Corporate Office",
@@ -44,7 +52,6 @@ const RazorpayPayment = ({ orderData, onSuccess }) => {
           color: "#243450",
         },
       };
-
       const rzp1 = new window.Razorpay(options);
       rzp1.open();
     } catch (error) {
@@ -57,12 +64,12 @@ const RazorpayPayment = ({ orderData, onSuccess }) => {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
     };
-
     const order = {
       cart: orderData?.cart,
       shippingAddress: orderData?.shippingAddress,
-      user: user && user,
+      user: user,
       totalPrice: orderData?.totalPrice,
       gstPercentage: orderData?.gstPercentage,
       paymentInfo: {
@@ -73,28 +80,22 @@ const RazorpayPayment = ({ orderData, onSuccess }) => {
       coupon: orderData?.coupon,
       sellerDeliveryFees: orderData?.sellerDeliveryFees,
     };
-
-    await axios
-      .post(`${server}/order/create-order`, order, config)
-      .then((res) => {
-        navigate("/order/success");
-        toast.success("Order successful!");
-        localStorage.setItem("cartItems", JSON.stringify([]));
-        localStorage.setItem("latestOrder", JSON.stringify([]));
-        window.location.reload();
-      });
+    try {
+      await axios.post(`${server}/order/create-order`, order, config);
+      onSuccess();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Order creation failed");
+    }
   };
 
   return (
-    <div>
-      <div className="w-full flex">
-        <button
-          className="bg-[#243450] text-white py-2 px-4 ml-7 rounded"
-          onClick={handlePayment}
-        >
-          Pay Now
-        </button>
-      </div>
+    <div className="w-full flex">
+      <button
+        className="bg-[#243450] text-white py-2 px-4 ml-7 rounded"
+        onClick={handlePayment}
+      >
+        Pay Now
+      </button>
     </div>
   );
 };

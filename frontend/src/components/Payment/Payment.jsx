@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import RazorpayPayment from "./RazorpayPayment";
@@ -6,14 +6,9 @@ import CashOnDelivery from "./CashOnDelivery";
 import CartData from "./CartData";
 
 const Payment = () => {
-  const [orderData, setOrderData] = useState([]);
+  const orderData = JSON.parse(localStorage.getItem("latestOrder"));
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(1);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const orderData = JSON.parse(localStorage.getItem("latestOrder"));
-    setOrderData(orderData);
-  }, []);
 
   const onSuccess = () => {
     navigate("/order/success");
