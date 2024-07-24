@@ -7,11 +7,12 @@ export const getAllOrdersOfUser = (userId) => async (dispatch) => {
     dispatch({
       type: "getAllOrdersUserRequest",
     });
-
     const { data } = await axios.get(
-      `${server}/order/get-all-orders/${userId}`
+      `${server}/order/get-all-orders/${userId}`,
+      {
+        withCredentials: true,
+      }
     );
-
     dispatch({
       type: "getAllOrdersUserSuccess",
       payload: data.orders,
@@ -30,9 +31,7 @@ export const getOrderById = (orderId) => async (dispatch) => {
     dispatch({
       type: "getOrderByIdRequest",
     });
-
     const { data } = await axios.get(`${server}/order/get-order/${orderId}`);
-
     dispatch({
       type: "getOrderByIdSuccess",
       payload: data.order,
@@ -45,17 +44,18 @@ export const getOrderById = (orderId) => async (dispatch) => {
   }
 };
 
-// get all orders of seller
+// get all orders of a shop
 export const getAllOrdersOfShop = (shopId) => async (dispatch) => {
   try {
     dispatch({
       type: "getAllOrdersShopRequest",
     });
-
     const { data } = await axios.get(
-      `${server}/order/get-seller-all-orders/${shopId}`
+      `${server}/order/get-seller-all-orders/${shopId}`,
+      {
+        withCredentials: true,
+      }
     );
-
     dispatch({
       type: "getAllOrdersShopSuccess",
       payload: data.orders,
@@ -68,17 +68,15 @@ export const getAllOrdersOfShop = (shopId) => async (dispatch) => {
   }
 };
 
-// get all orders of Admin
-export const getAllOrdersOfAdmin = () => async (dispatch) => {
+// get all orders (Admin)
+export const getAllOrdersForAdmin = () => async (dispatch) => {
   try {
     dispatch({
       type: "adminAllOrdersRequest",
     });
-
     const { data } = await axios.get(`${server}/order/admin-all-orders`, {
       withCredentials: true,
     });
-
     dispatch({
       type: "adminAllOrdersSuccess",
       payload: data.orders,

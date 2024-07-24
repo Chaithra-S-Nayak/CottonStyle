@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import AdminHeader from "../components/Layout/AdminHeader";
 import { DataGrid } from "@material-ui/data-grid";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllOrdersOfAdmin } from "../redux/actions/order";
+import { getAllOrdersForAdmin } from "../redux/actions/order";
 import styles from "../styles/styles";
 
 const AdminDashboardOrders = () => {
@@ -11,7 +11,7 @@ const AdminDashboardOrders = () => {
   const { adminOrders } = useSelector((state) => state.order);
 
   useEffect(() => {
-    dispatch(getAllOrdersOfAdmin());
+    dispatch(getAllOrdersForAdmin());
   }, [dispatch]);
 
   const columns = [
@@ -63,6 +63,7 @@ const AdminDashboardOrders = () => {
   ];
 
   const row = [];
+
   adminOrders &&
     adminOrders.forEach((item) => {
       row.push({
@@ -73,6 +74,7 @@ const AdminDashboardOrders = () => {
         createdAt: item?.createdAt.slice(0, 10),
       });
     });
+
   return (
     <div>
       <AdminHeader />

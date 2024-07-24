@@ -31,7 +31,6 @@ const UserOrderDetails = () => {
       toast.error("Please rate the product to submit a review.");
       return;
     }
-
     try {
       const response = await axios.put(
         `${server}/product/create-new-review`,
@@ -99,16 +98,15 @@ const UserOrderDetails = () => {
           </div>
           <div>
             <h5>
-              Total Price: Total Price: <span>₹{totalPrice}</span>
+              Total Price:<span> ₹{totalPrice}</span>
             </h5>
-
             <h5>
               {data?.coupon ? (
                 <>
                   Coupon: <span>{data?.coupon.name}</span>
                   <br />
                   Coupon Discount Percentage:
-                  <span>{data?.coupon.couponDiscountPercentage}%</span>
+                  <span> {data?.coupon.couponDiscountPercentage}%</span>
                   <br />
                   Coupon Discount: <span>₹{data?.coupon.couponDiscount}</span>
                 </>
@@ -122,7 +120,7 @@ const UserOrderDetails = () => {
               Seller Delivery Fees:
               <span>
                 {data?.sellerDeliveryFees ? (
-                  <>₹{data.sellerDeliveryFees}</>
+                  <> ₹{data.sellerDeliveryFees}</>
                 ) : (
                   "Free"
                 )}
@@ -152,7 +150,6 @@ const UserOrderDetails = () => {
                     {item.name}
                   </Link>
                 </h5>
-
                 <h5>
                   ₹{item.discountPrice} x {item.qty}
                 </h5>
@@ -312,11 +309,6 @@ const UserOrderDetails = () => {
             Initiate Refund
           </div>
         )}
-        {/* <Link to="/">
-          <div className={`${styles.button} text-white py-2 px-4 rounded-md shadow focus:outline-none mr-4`}>
-            Send Message
-          </div>
-        </Link> */}
         <Link to={`/user/order/invoice/${id}`}>
           <div
             className={`${styles.button} text-white py-2 px-4 rounded-md shadow focus:outline-none`}

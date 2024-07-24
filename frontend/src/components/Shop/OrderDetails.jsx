@@ -17,56 +17,28 @@ const OrderDetails = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfShop(seller._id));
-  }, [dispatch, seller._id]);
-
-  useEffect(() => {
     dispatch(getProductDetails(id));
-  }, [dispatch, id]);
+  }, [dispatch, seller._id, id]);
 
   const data = orders && orders.find((item) => item._id === id);
 
-  const checkStock = async () => {
-    const promises = data.cart.map((item) =>
-      axios.get(`${server}/product/get-product/${item._id}`)
-    );
-    const products = await Promise.all(promises);
-
-    for (const product of products) {
-      if (
-        product.data.product.stock <
-        data.cart.find((item) => item._id === product.data.product._id).qty
-      ) {
-        return false;
-      }
+  useEffect(() => {
+    if (data) {
+      setStatus(data.status);
     }
-    return true;
-  };
+  }, [data]);
 
   const orderUpdateHandler = async () => {
+    if (status === data.status) {
+      toast.info("The status is already set to this value.");
+      return;
+    }
     try {
-      const isStockAvailable = await checkStock();
-      if (!isStockAvailable && data.status === "Processing") {
-        toast.error("Insufficient product stock!");
-        return;
-      }
-
       await axios.put(
         `${server}/order/update-order-status/${id}`,
         { status },
         { withCredentials: true }
       );
-
-      if (
-        data?.paymentInfo?.type === "Cash on Delivery" &&
-        status === "Delivered"
-      ) {
-        await axios.put(
-          `${server}/order/update-payment-status/${id}`,
-          { paymentStatus: "succeeded" },
-          { withCredentials: true }
-        );
-      }
-
       toast.success("Order updated!");
       navigate("/dashboard-orders");
     } catch (error) {
@@ -75,6 +47,10 @@ const OrderDetails = () => {
   };
 
   const refundOrderUpdateHandler = async () => {
+    if (status === data.status) {
+      toast.info("The status is already set to this value.");
+      return;
+    }
     try {
       await axios.put(
         `${server}/order/order-refund-success/${id}`,
