@@ -24,42 +24,54 @@ const {
 router.post(
   "/create-shop",
   catchAsyncErrors(async (req, res, next) => {
-    const { email } = req.body;
-    const sellerEmail = await Shop.findOne({ email });
-    if (sellerEmail) {
+    const { email, avatar, name, password, address, phoneNumber, zipCode } =
+      req.body;
+
+    // Check if the seller already exists
+    const existingSeller = await Shop.findOne({ email });
+    if (existingSeller) {
       console.error("User already exists with email:", email);
       return next(new ErrorHandler("User already exists", 400));
     }
-    // Upload avatar to Cloudinary
-    if (req.body.avatar) {
-      const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-        folder: "avatars",
-      });
-      sellerAvatar = {
-        public_id: myCloud.public_id,
-        url: myCloud.secure_url,
-      };
+
+    // Upload avatar to Cloudinary if provided
+    let sellerAvatar;
+    if (avatar) {
+      try {
+        const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+          folder: "avatars",
+        });
+        sellerAvatar = {
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
+        };
+      } catch (error) {
+        return next(new ErrorHandler("Avatar upload failed", 500));
+      }
     } else {
       sellerAvatar = {
         public_id: "default_avatar_id",
         url: "https://res.cloudinary.com/dqyauy2y8/image/upload/v1721471562/avatars/default_eyjfy4.jpg",
       };
     }
+
+    // Create the seller object
     const seller = {
-      name: req.body.name,
-      email: email,
-      password: req.body.password,
+      name,
+      email,
+      password,
       avatar: sellerAvatar,
-      address: req.body.address,
-      phoneNumber: req.body.phoneNumber,
-      zipCode: req.body.zipCode,
+      address,
+      phoneNumber,
+      zipCode,
     };
     const activationToken = createActivationToken(seller);
     const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`;
+
     // Send activation email
     const bodyContent = getActivationEmailTemplate(activationUrl);
     const htmlContent = generateEmailTemplate({
-      recipientName: seller.name,
+      recipientName: name,
       bodyContent,
     });
     try {
@@ -73,12 +85,12 @@ router.post(
         message: `Please check your email: ${seller.email} to activate your shop!`,
       });
     } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
+      return next(new ErrorHandler("Email sending failed", 500));
     }
   })
 );
 
-// create activation token
+// Create activation token
 const createActivationToken = (seller) => {
   return jwt.sign(seller, process.env.ACTIVATION_SECRET, {
     expiresIn: "5m",
@@ -90,15 +102,32 @@ router.post(
   "/activation",
   catchAsyncErrors(async (req, res, next) => {
     const { activation_token } = req.body;
-    const newSeller = jwt.verify(
-      activation_token,
-      process.env.ACTIVATION_SECRET
-    );
-    if (!newSeller) {
-      return next(new ErrorHandler("Invalid token", 400));
+
+    // Verify the activation token
+    let newSellerData;
+    try {
+      newSellerData = jwt.verify(
+        activation_token,
+        process.env.ACTIVATION_SECRET
+      );
+    } catch (error) {
+      return next(new ErrorHandler("Token expired or invalid", 400));
     }
+
+    // Check if a seller with the same email already exists
+    const existingSeller = await Shop.findOne({ email: newSellerData.email });
+    if (existingSeller) {
+      return next(new ErrorHandler("Seller already exists", 400));
+    }
+
     // Create new seller
-    let seller = await Shop.create(newSeller);
+    let seller;
+    try {
+      seller = await Shop.create(newSellerData);
+    } catch (error) {
+      return next(new ErrorHandler("Error creating seller", 500));
+    }
+
     // Notify admin
     const adminBodyContent = getAdminNotificationEmailTemplate(
       seller.name,
@@ -122,8 +151,9 @@ router.post(
         html: adminHtmlContent,
       });
     } catch (error) {
-      return next(new ErrorHandler(error.message, 500));
+      return next(new ErrorHandler("Error notifying admin", 500));
     }
+
     sendShopToken(seller, 201, res);
   })
 );
