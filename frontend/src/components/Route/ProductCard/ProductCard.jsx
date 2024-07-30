@@ -8,8 +8,8 @@ import { Link } from "react-router-dom";
 import styles from "../../../styles/styles";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addToWishlist,
-  removeFromWishlist,
+  createWishlist,
+  deleteWishlistItem,
 } from "../../../redux/actions/wishlist";
 import { addTocart } from "../../../redux/actions/cart";
 import { toast } from "react-toastify";
@@ -20,23 +20,32 @@ const ProductCard = ({ data }) => {
   const { cart } = useSelector((state) => state.cart);
   const [click, setClick] = useState(false);
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (wishlist && wishlist.find((i) => i._id === data._id)) {
+    if (
+      wishlist &&
+      wishlist.orderItems &&
+      wishlist.orderItems.find((i) => i.product._id === data._id)
+    ) {
       setClick(true);
     } else {
       setClick(false);
     }
   }, [wishlist, data._id]);
 
-  const removeFromWishlistHandler = (data) => {
-    setClick(!click);
-    dispatch(removeFromWishlist(data));
+  const removeFromWishlistHandler = (productId) => {
+    dispatch(deleteWishlistItem(productId));
   };
 
-  const addToWishlistHandler = (data) => {
+  const addToWishlistHandler = (product) => {
     setClick(!click);
-    dispatch(addToWishlist(data));
+    dispatch(
+      createWishlist({
+        user: user._id,
+        orderItems: [{ product: product._id }],
+      })
+    );
   };
 
   const addToCartHandler = (id) => {
@@ -100,7 +109,7 @@ const ProductCard = ({ data }) => {
           <AiFillHeart
             size={22}
             className="cursor-pointer absolute right-2 top-5"
-            onClick={() => removeFromWishlistHandler(data)}
+            onClick={() => removeFromWishlistHandler(data._id)}
             color={click ? "red" : "#333"}
             title="Remove from wishlist"
           />

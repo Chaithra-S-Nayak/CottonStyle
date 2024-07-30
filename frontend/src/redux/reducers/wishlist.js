@@ -1,25 +1,52 @@
 import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
-  wishlist: localStorage.getItem("wishlistItems")
-    ? JSON.parse(localStorage.getItem("wishlistItems"))
-    : [],
+  wishlist: [],
+  loading: false,
+  error: null,
+  success: false,
 };
 
 export const wishlistReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase('addToWishlist', (state, action) => {
-      const item = action.payload;
-      const isItemExist = state.wishlist.find((i) => i._id === item._id);
-      if (isItemExist) {
-        state.wishlist = state.wishlist.map((i) =>
-          i._id === isItemExist._id ? item : i
-        );
-      } else {
-        state.wishlist.push(item);
-      }
+    .addCase("CreateWishlistRequest", (state) => {
+      state.loading = true;
+      state.error = null;
+      state.success = false;
     })
-    .addCase('removeFromWishlist', (state, action) => {
-      state.wishlist = state.wishlist.filter((i) => i._id !== action.payload);
+    .addCase("CreateWishlistSuccess", (state, action) => {
+      state.loading = false;
+      state.success = true;
+      state.wishlist = action.payload;
+    })
+    .addCase("CreateWishlistFail", (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
+    .addCase("DeleteWishlistItemRequest", (state) => {
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    })
+    .addCase("DeleteWishlistItemSuccess", (state, action) => {
+      state.loading = false;
+      state.success = true;
+      state.wishlist = action.payload;
+    })
+    .addCase("DeleteWishlistItemFail", (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
+    .addCase("GetWishlistRequest", (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase("GetWishlistSuccess", (state, action) => {
+      state.loading = false;
+      state.wishlist = action.payload;
+    })
+    .addCase("GetWishlistFail", (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
     });
 });

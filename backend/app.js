@@ -38,6 +38,7 @@ const returnRequestRoutes = require("./controller/returnRequest");
 const withdrawRoutes = require("./controller/withdraw");
 const adminOptionsRoutes = require("./controller/adminOptions");
 const notificationRoutes = require("./controller/notification");
+const wishlistRoutes = require("./controller/wishlist");
 
 // Route Middleware
 app.use("/api/v2/user", userRoutes);
@@ -51,6 +52,7 @@ app.use("/api/v2/payment", paymentRoutes);
 app.use("/api/v2/withdraw", withdrawRoutes);
 app.use("/api/v2/adminOptions", adminOptionsRoutes);
 app.use("/api/v2/notifications", notificationRoutes);
+app.use("/api/v2/wishlist", wishlistRoutes);
 
 // Error handling middleware
 app.use(ErrorHandler);

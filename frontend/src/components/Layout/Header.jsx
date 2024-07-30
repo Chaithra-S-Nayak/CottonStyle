@@ -11,12 +11,14 @@ import { IoIosArrowForward } from "react-icons/io";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import Navbar from "./Navbar";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Wishlist from "../Wishlist/Wishlist";
 import { RxCross1 } from "react-icons/rx";
 import logo from "../../Assets/CottonStyle.png";
+import { getWishlist } from "../../redux/actions/wishlist";
 
 const Header = ({ activeHeading }) => {
+  const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const { isSeller } = useSelector((state) => state.seller);
   const { isAdmin } = useSelector((state) => state.admin);
@@ -65,6 +67,12 @@ const Header = ({ activeHeading }) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    if (openWishlist) {
+      dispatch(getWishlist());
+    }
+  }, [openWishlist, dispatch]);
 
   return (
     <>
@@ -150,7 +158,9 @@ const Header = ({ activeHeading }) => {
               >
                 <AiOutlineHeart size={30} color="rgb(255 255 255 / 83%)" />
                 <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
-                  {wishlist && wishlist.length}
+                  {wishlist &&
+                    wishlist.orderItems &&
+                    wishlist.orderItems.length}
                 </span>
               </div>
             </div>
