@@ -138,8 +138,8 @@ const Header = ({ activeHeading }) => {
       <div
         className={`${
           active
-            ? "shadow-sm fixed top-0 left-0 z-10 bg-[#243450] transition-all duration-300"
-            : "bg-[#243450]"
+            ? `shadow-sm fixed top-0 left-0 z-10  bg-${styles.primaryColor} transition-all duration-300`
+            : `bg-${styles.primaryColor}`
         } transition hidden 800px:flex items-center justify-between w-full h-[70px]`}
       >
         <div

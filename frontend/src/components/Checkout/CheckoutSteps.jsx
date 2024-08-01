@@ -13,8 +13,8 @@ const CheckoutSteps = ({ active }) => {
           <div
             className={`${
               active > 1
-                ? "w-[30px] 800px:w-[70px] h-[4px] !bg-[#243450]"
-                : "w-[30px] 800px:w-[70px] h-[4px] !bg-[#24345023]"
+                ? `w-[30px] 800px:w-[70px] h-[4px] bg-${styles.primaryColor}`
+                : `w-[30px] 800px:w-[70px] h-[4px] bg-${styles.secondaryColor}`
             }`}
           />
         </div>
@@ -24,14 +24,14 @@ const CheckoutSteps = ({ active }) => {
             className={`${
               active > 1
                 ? `${styles.cart_button}`
-                : `${styles.cart_button} !bg-[#24345023]`
+                : `${styles.cart_button} ${styles.secondaryColor}`
             }`}
           >
             <span
               className={`${
                 active > 1
                   ? `${styles.cart_button_text}`
-                  : `${styles.cart_button_text} !text-[#243450]`
+                  : `${styles.cart_button_text} text-${styles.secondaryColor}`
               }`}
             >
               2. Address
@@ -40,8 +40,8 @@ const CheckoutSteps = ({ active }) => {
           <div
             className={`${
               active > 2
-                ? "w-[30px] 800px:w-[70px] h-[4px] !bg-[#243450]"
-                : "w-[30px] 800px:w-[70px] h-[4px] !bg-[#24345023]"
+                ? `w-[30px] 800px:w-[70px] h-[4px] bg-${styles.primaryColor}`
+                : `w-[30px] 800px:w-[70px] h-[4px] bg-${styles.secondaryColor}`
             }`}
           />
         </div>
@@ -51,14 +51,14 @@ const CheckoutSteps = ({ active }) => {
             className={`${
               active > 2
                 ? `${styles.cart_button}`
-                : `${styles.cart_button} !bg-[#24345023]`
+                : `${styles.cart_button} ${styles.secondaryColor}`
             }`}
           >
             <span
               className={`${
                 active > 2
                   ? `${styles.cart_button_text}`
-                  : `${styles.cart_button_text} !text-[#243450]`
+                  : `${styles.cart_button_text} text-${styles.secondaryColor}`
               }`}
             >
               3. Payment
@@ -67,8 +67,8 @@ const CheckoutSteps = ({ active }) => {
           <div
             className={`${
               active > 3
-                ? "w-[30px] 800px:w-[70px] h-[4px] !bg-[#243450]"
-                : "w-[30px] 800px:w-[70px] h-[4px] !bg-[#24345023]"
+                ? `w-[30px] 800px:w-[70px] h-[4px] bg-${styles.primaryColor}`
+                : `w-[30px] 800px:w-[70px] h-[4px] bg-${styles.secondaryColor}`
             }`}
           />
         </div>
@@ -78,14 +78,14 @@ const CheckoutSteps = ({ active }) => {
             className={`${
               active > 3
                 ? `${styles.cart_button}`
-                : `${styles.cart_button} !bg-[#24345023]`
+                : `${styles.cart_button} ${styles.secondaryColor}`
             }`}
           >
             <span
               className={`${
                 active > 3
                   ? `${styles.cart_button_text}`
-                  : `${styles.cart_button_text} !text-[#243450]`
+                  : `${styles.cart_button_text} text-${styles.secondaryColor}`
               }`}
             >
               4. Success

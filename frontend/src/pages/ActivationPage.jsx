@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { server } from "../server";
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
+import styles from "../styles/styles";
 
 const ActivationPage = () => {
   const { activation_token } = useParams();
@@ -47,7 +48,7 @@ const ActivationPage = () => {
             <>
               <p className=" text-lg mb-10">Your token is expired!</p>
               <button
-                className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#243450]"
+                className={`${styles.simpleButton}`}
                 onClick={navigateHome}
               >
                 Go to Home
@@ -59,7 +60,7 @@ const ActivationPage = () => {
                 Your account has been created successfully!
               </p>
               <button
-                className="group relative w-1/2 h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#243450]  mx-auto"
+                className={`${styles.simpleButton}`}
                 onClick={navigateHome}
               >
                 Go to Home

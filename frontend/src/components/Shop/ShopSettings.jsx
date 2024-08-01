@@ -4,6 +4,7 @@ import { AiOutlineCamera } from "react-icons/ai";
 import axios from "axios";
 import { loadSeller } from "../../redux/actions/user";
 import { toast } from "react-toastify";
+import styles from "../../styles/styles";
 import { server } from "../../server";
 
 const ShopSettings = () => {
@@ -185,11 +186,9 @@ const ShopSettings = () => {
             />
           </div>
           <div className="mt-4">
-            <input
-              type="submit"
-              value="Update Shop"
-              className="px-4 py-2 bg-[#243450] text-white rounded"
-            />
+            <button type="submit" className={`${styles.simpleButton}`}>
+              Update Shop
+            </button>
           </div>
         </form>
       </div>

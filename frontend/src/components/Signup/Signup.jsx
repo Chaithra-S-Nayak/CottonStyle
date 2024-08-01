@@ -163,15 +163,9 @@ const Singup = () => {
                   </label>
                 </div>
               </div>
-
-              <div>
-                <button
-                  type="submit"
-                  className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#243450]"
-                >
-                  Submit
-                </button>
-              </div>
+              <button type="submit" className={`${styles.wideButton}`}>
+                Submit
+              </button>
               <div className={`${styles.noramlFlex} w-full`}>
                 <h4>Already have an account?</h4>
                 <Link to="/login" className="text-blue-600 pl-2">

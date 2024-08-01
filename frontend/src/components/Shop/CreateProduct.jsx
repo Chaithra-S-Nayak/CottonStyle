@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../redux/actions/product";
 import { fetchAdminOptions } from "../../redux/actions/adminOptions";
 import { toast } from "react-toastify";
+import styles from "../../styles/styles";
 
 const CreateProduct = () => {
   const { seller } = useSelector((state) => state.seller);
@@ -271,11 +272,9 @@ const CreateProduct = () => {
           </div>
         </div>
         <div className="mt-4">
-          <input
-            type="submit"
-            value="Create Product"
-            className="px-4 py-2 bg-[#243450] text-white rounded cursor-pointer"
-          />
+          <button type="submit" className={`${styles.simpleButton}`}>
+            Create Product
+          </button>
         </div>
       </form>
     </div>

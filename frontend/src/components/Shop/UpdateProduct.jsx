@@ -5,6 +5,7 @@ import { getProductDetails, updateProduct } from "../../redux/actions/product";
 import { toast } from "react-toastify";
 import { AiOutlinePlusCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { fetchAdminOptions } from "../../redux/actions/adminOptions";
+import styles from "../../styles/styles";
 
 const UpdateProduct = () => {
   const { id } = useParams();
@@ -290,11 +291,11 @@ const UpdateProduct = () => {
               ))}
           </div>
         </div>
-        <input
-          type="submit"
-          value="Update Product"
-          className="px-4 py-2 bg-[#243450] text-white rounded cursor-pointer w-1/4"
-        />
+        <div className="mt-4">
+          <button type="submit" className={`${styles.simpleButton}`}>
+            Update Product
+          </button>
+        </div>
       </form>
     </div>
   );

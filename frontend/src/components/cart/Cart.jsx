@@ -5,6 +5,7 @@ import { fetchAdminOptions } from "../../redux/actions/adminOptions";
 import { Link, useNavigate } from "react-router-dom";
 import { RxCross1 } from "react-icons/rx";
 import { toast } from "react-toastify";
+import styles from "../../styles/styles";
 
 const Cart = () => {
   const { cart } = useSelector((state) => state.cart);
@@ -188,7 +189,7 @@ const Cart = () => {
             Add some products to your cart to see them here.
           </p>
           <Link to="/">
-            <button className="mt-6 bg-[#243450] text-white py-2 px-4 rounded">
+            <button className={`${styles.simpleButton} mt-4`}>
               Continue Shopping
             </button>
           </Link>
@@ -268,7 +269,7 @@ const Cart = () => {
             </div>
             <button
               onClick={handleContinue}
-              className="mt-6 w-full bg-[#243450] text-white py-2 rounded"
+              className={`${styles.wideButton} mt-4`}
             >
               Continue
             </button>
@@ -370,7 +371,7 @@ const Cart = () => {
                 </div>
                 <button
                   onClick={handleUpdateItem}
-                  className="w-full bg-[#243450] text-white py-2 rounded-lg"
+                  className={`${styles.wideButton}`}
                 >
                   Update Item
                 </button>

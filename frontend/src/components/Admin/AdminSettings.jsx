@@ -10,6 +10,7 @@ import {
 } from "../../redux/actions/admin";
 import axios from "axios";
 import { AiOutlineCamera } from "react-icons/ai";
+import styles from "../../styles/styles";
 
 const AdminSettings = () => {
   const { admin, error, successMessage } = useSelector((state) => state.admin);
@@ -122,10 +123,7 @@ const AdminSettings = () => {
             onChange={(e) => setPhoneNumber(e.target.value)}
           />
         </div>
-        <button
-          type="submit"
-          className="w-full bg-[#243450] text-white py-2 rounded-md transition duration-300"
-        >
+        <button type="submit" className={`${styles.wideButton}`}>
           Update Profile
         </button>
       </form>

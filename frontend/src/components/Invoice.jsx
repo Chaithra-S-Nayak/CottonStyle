@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getOrderById } from "../redux/actions/order";
+import styles from "../styles/styles";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
@@ -256,17 +257,13 @@ const Invoice = () => {
                                 </tr>
                               )}
                               <tr>
-                                <td
-                                  className="bg-[#243450] p-3"
-                                  style={{ backgroundColor: "#243450" }}
-                                >
+                                <td className={`bg-${styles.primaryColor} p-3`}>
                                   <div className="whitespace-nowrap font-bold text-white">
                                     Total:
                                   </div>
                                 </td>
                                 <td
-                                  className="bg-[#243450] p-3 text-right"
-                                  style={{ backgroundColor: "#243450" }}
+                                  className={`bg-${styles.primaryColor} p-3 text-right`}
                                 >
                                   <div className="whitespace-nowrap font-bold text-white">
                                     ₹{totalPrice.toFixed(2)}
@@ -323,7 +320,7 @@ const Invoice = () => {
       {/* Button to download PDF */}
       <div className="flex justify-center mb-3">
         <button
-          className="m-4 w-auto bg-[#243450] text-white px-5 py-2 rounded"
+          className={`${styles.simpleButton} mt-4`}
           onClick={downloadPDF}
           disabled={loading}
         >

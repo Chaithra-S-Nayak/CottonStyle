@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { verifyAdminOtp } from "../../redux/actions/admin";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import styles from "../../styles/styles";
 
 const OtpVerification = ({ email }) => {
   const dispatch = useDispatch();
@@ -51,10 +52,7 @@ const OtpVerification = ({ email }) => {
               </div>
             </div>
             <div>
-              <button
-                type="submit"
-                className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#243450]"
-              >
+              <button type="submit" className={`${styles.wideButton}`}>
                 Verify OTP
               </button>
             </div>

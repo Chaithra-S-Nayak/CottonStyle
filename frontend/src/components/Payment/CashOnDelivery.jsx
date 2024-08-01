@@ -3,6 +3,7 @@ import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import styles from "../../styles/styles";
 
 const CashOnDelivery = ({ orderData, onSuccess }) => {
   const { user } = useSelector((state) => state.user);
@@ -39,7 +40,7 @@ const CashOnDelivery = ({ orderData, onSuccess }) => {
   return (
     <div className="w-full flex">
       <button
-        className="bg-[#243450] text-white py-2 px-4 ml-7 rounded"
+        className={`${styles.simpleButton} ml-7`}
         onClick={cashOnDeliveryHandler}
       >
         Confirm

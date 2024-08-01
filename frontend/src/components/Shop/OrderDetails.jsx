@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { getAllOrdersOfShop } from "../../redux/actions/order";
 import { getProductDetails } from "../../redux/actions/product";
 import { server } from "../../server";
+import styles from "../../styles/styles";
 
 const OrderDetails = () => {
   const { orders } = useSelector((state) => state.order);
@@ -223,7 +224,7 @@ const OrderDetails = () => {
               ? orderUpdateHandler
               : refundOrderUpdateHandler
           }
-          className="bg-[#243450]  text-white py-2 px-4 mx-4 rounded-md shadow focus:outline-none mt-4"
+          className={`${styles.simpleButton} m-4`}
         >
           Update Status
         </button>

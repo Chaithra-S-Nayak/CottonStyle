@@ -15,6 +15,7 @@ import {
 import { addTocart } from "../../redux/actions/cart";
 import { toast } from "react-toastify";
 import Ratings from "./Ratings";
+import styles from "../../styles/styles";
 
 const ProductDetails = ({ data }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -192,7 +193,7 @@ const ProductDetails = ({ data }) => {
 
             <div className="flex items-center mt-4">
               <button
-                className="px-4 py-2 bg-[#243450] text-white rounded-l"
+                className={`${styles.simpleButton}`}
                 onClick={decrementCount}
                 disabled={data.stock < 1}
               >
@@ -202,14 +203,14 @@ const ProductDetails = ({ data }) => {
                 {count}
               </span>
               <button
-                className="px-4 py-2 bg-[#243450] text-white rounded-r"
+                className={`${styles.simpleButton}`}
                 onClick={incrementCount}
                 disabled={data.stock < 1}
               >
                 +
               </button>
               <button
-                className="mx-4 px-4 py-2 bg-[#243450] text-white rounded w-1/2"
+                className={`${styles.wideButton} mx-4`}
                 onClick={() => addToCartHandler(data._id)}
                 disabled={data.stock < 1}
               >
@@ -279,7 +280,7 @@ const ProductDetails = ({ data }) => {
                 <p className="mt-2 text-gray-600">{data.shop.description}</p>
                 <button
                   onClick={() => navigate(`/shop/preview/${data?.shop._id}`)}
-                  className="mt-4 px-4 py-2 bg-[#243450] text-white rounded"
+                  className={`${styles.simpleButton}`}
                 >
                   Visit Shop to get Coupons
                 </button>

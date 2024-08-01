@@ -142,10 +142,7 @@ const ProfileContent = ({ active }) => {
               />
             </div>
             <div className="flex justify-center">
-              <button
-                type="submit"
-                className="w-1/2 bg-[#243450] text-white py-2 rounded-md transition duration-300"
-              >
+              <button type="submit" className={`${styles.simpleButton}`}>
                 Update Profile
               </button>
             </div>
@@ -499,12 +496,9 @@ const ChangePassword = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
-            <input
-              className={`w-[95%] h-[40px] bg-[#243450] text-center text-white rounded-[3px] mt-8 cursor-pointer`}
-              required
-              value="Update"
-              type="submit"
-            />
+            <button className={`${styles.wideButton} mt-4`} type="submit">
+              Update
+            </button>
           </div>
         </form>
       </div>
@@ -691,12 +685,12 @@ const Address = () => {
                   </div>
 
                   <div className=" w-full pb-2">
-                    <input
+                    <button
+                      className={`${styles.wideButton} mt-4`}
                       type="submit"
-                      className={`${styles.input} mt-5 bg-[#243450] text-white cursor-pointer`}
-                      required
-                      readOnly
-                    />
+                    >
+                      Update
+                    </button>
                   </div>
                 </div>
               </form>
@@ -708,12 +702,13 @@ const Address = () => {
         <h1 className="text-[20px] font-[600] text-[#000000ba] pb-2">
           My Address
         </h1>
-        <div
-          className={`${styles.button} !rounded-md`}
+        <button
+          className={`${styles.simpleButton}`}
+          type="submit"
           onClick={() => setOpen(true)}
         >
-          <span className="text-[#fff]">Add New</span>
-        </div>
+          Add new
+        </button>
       </div>
       <br />
       {user &&

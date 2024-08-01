@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { server } from "../../server";
+import styles from "../../styles/styles";
 
 const OTPInput = ({ email, onSuccess }) => {
   const [otp, setOtp] = useState("");
@@ -60,10 +61,7 @@ const OTPInput = ({ email, onSuccess }) => {
             </div>
           </div>
           <div>
-            <button
-              type="submit"
-              className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white  bg-[#243450] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
+            <button type="submit" className={`${styles.wideButton}`}>
               Verify OTP
             </button>
           </div>

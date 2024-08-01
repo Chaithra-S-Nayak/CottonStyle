@@ -4,7 +4,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { RxCross1 } from "react-icons/rx";
-import {useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import styles from "../../styles/styles";
 import Loader from "../Layout/Loader";
 import { server } from "../../server";
@@ -33,7 +33,7 @@ const AllCoupons = () => {
       .catch((error) => {
         setIsLoading(false);
       });
-    }, [seller._id]);
+  }, [seller._id]);
 
   const handleDelete = async (id) => {
     axios
@@ -220,13 +220,9 @@ const AllCoupons = () => {
                   </div>
 
                   <br />
-                  <div>
-                    <input
-                      type="submit"
-                      value="Create"
-                      className="mt-2 appearance-none block w-full bg-[#243450] text-white px-3 h-[35px]  rounded-[3px] placeholder-gray-400  sm:text-sm"
-                    />
-                  </div>
+                  <button type="submit" className={`${styles.wideButton}`}>
+                    Create
+                  </button>
                 </form>
               </div>
             </div>

@@ -66,23 +66,28 @@ const Checkout = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const name = couponCode;
-    await axios.post(`${server}/coupon/get-coupon-value`, { name, cart })
-    .then((res) => {
-      const { shopId, value: couponCodeValue, discount: couponDiscount } = res.data.couponCode;
-      toast.success("Coupon code applied successfully!");
-      setCouponDiscount(couponDiscount);
-      setCoupon({
-        name: res.data.couponCode.name,
-        couponDiscountPercentage: couponCodeValue,
-        couponDiscount,
-        shopId,
+    await axios
+      .post(`${server}/coupon/get-coupon-value`, { name, cart })
+      .then((res) => {
+        const {
+          shopId,
+          value: couponCodeValue,
+          discount: couponDiscount,
+        } = res.data.couponCode;
+        toast.success("Coupon code applied successfully!");
+        setCouponDiscount(couponDiscount);
+        setCoupon({
+          name: res.data.couponCode.name,
+          couponDiscountPercentage: couponCodeValue,
+          couponDiscount,
+          shopId,
+        });
+        setCouponCode("");
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+        setCouponCode("");
       });
-      setCouponCode("");
-    })
-    .catch((err) => {
-      toast.error(err.response.data.message);
-      setCouponCode("");
-    });
   };
 
   const latestOrder = JSON.parse(localStorage.getItem("latestOrder")) || {};
@@ -197,7 +202,7 @@ const ShippingInfo = ({
         </div>
 
         <div className="w-full flex pb-3">
-        <div className="w-[50%]">
+          <div className="w-[50%]">
             <label className="block pb-2">Phone Number</label>
             <input
               type="tel"
@@ -320,8 +325,6 @@ const ShippingInfo = ({
           </div>
         )}
       </form>
-      
-      
     </div>
   );
 };
@@ -387,7 +390,7 @@ const CartData = ({
             />
             <button
               type="submit"
-              className="bg-[#243450] text-white px-4 py-2 rounded-r-lg"
+              className={`bg-${styles.primaryColor} text-white px-4 py-2 rounded-r-lg`}
             >
               Apply
             </button>
@@ -397,11 +400,7 @@ const CartData = ({
           <p>Order Total</p>
           <p>₹{totalPrice}</p>
         </div>
-
-        <button
-          onClick={paymentSubmit}
-          className="mt-6 w-full bg-[#243450] text-white py-2 rounded"
-        >
+        <button onClick={paymentSubmit} className={`${styles.wideButton} mt-4`}>
           Go to Payment
         </button>
       </div>

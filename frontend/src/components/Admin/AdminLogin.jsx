@@ -3,6 +3,7 @@ import axios from "axios";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { server } from "../../server";
 import { toast } from "react-toastify";
+import styles from "../../styles/styles";
 
 const AdminLogin = ({ setOtpSent, setEmail }) => {
   const [email, setEmailLocal] = useState("");
@@ -100,10 +101,7 @@ const AdminLogin = ({ setOtpSent, setEmail }) => {
               </a>
             </div>
             <div>
-              <button
-                type="submit"
-                className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#243450]"
-              >
+              <button type="submit" className={`${styles.wideButton}`}>
                 Submit
               </button>
             </div>

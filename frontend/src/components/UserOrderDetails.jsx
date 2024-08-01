@@ -256,7 +256,7 @@ const UserOrderDetails = () => {
             <div className="flex justify-end">
               <button
                 onClick={confirmRefund}
-                className="bg-[#243450] text-white py-2 px-4 rounded-md shadow focus:outline-none"
+                className={`${styles.simpleButton}`}
               >
                 Confirm
               </button>

@@ -80,10 +80,7 @@ const SellerChangePassword = () => {
           />
         </div>
         <div className="w-full mb-4">
-          <button
-            type="submit"
-            className="w-full bg-[#243450] text-white py-2 rounded-md transition duration-300"
-          >
+          <button type="submit" className={`${styles.wideButton}`}>
             Update Password
           </button>
         </div>

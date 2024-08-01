@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { server } from "../server.js";
 import Header from "../components/Layout/Header";
 import Footer from "../components/Layout/Footer";
+import styles from "../styles/styles";
 
 const UserForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
@@ -70,10 +71,7 @@ const UserForgotPasswordPage = () => {
                   </div>
                 </div>
                 <div>
-                  <button
-                    onClick={sendOtp}
-                    className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white  bg-[#243450]"
-                  >
+                  <button onClick={sendOtp} className={`${styles.wideButton}`}>
                     Send OTP
                   </button>
                 </div>

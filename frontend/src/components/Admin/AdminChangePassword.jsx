@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { server } from "../../server";
+import styles from "../../styles/styles";
 
 const AdminChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
@@ -71,10 +72,7 @@ const AdminChangePassword = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </div>
-        <button
-          type="submit"
-          className="w-full bg-[#243450] text-white py-2 rounded-md transition duration-300"
-        >
+        <button type="submit" className={`${styles.wideButton}`}>
           Update Password
         </button>
       </form>

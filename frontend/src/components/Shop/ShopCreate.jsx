@@ -235,10 +235,7 @@ const ShopCreate = () => {
               </div>
 
               <div>
-                <button
-                  type="submit"
-                  className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#243450]"
-                >
+                <button type="submit" className={`${styles.wideButton}`}>
                   Submit
                 </button>
               </div>

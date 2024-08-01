@@ -360,7 +360,7 @@ const AdminOptions = () => {
             <button
               type="button"
               onClick={addFabric}
-              className="bg-[#243450] text-white py-1 px-2 rounded"
+              className={`${styles.simpleButton}`}
             >
               Add Fabric
             </button>
@@ -388,7 +388,7 @@ const AdminOptions = () => {
             <button
               type="button"
               onClick={addColor}
-              className="bg-[#243450] text-white py-1 px-2 rounded"
+              className={`${styles.simpleButton}`}
             >
               Add Color
             </button>
@@ -451,7 +451,7 @@ const AdminOptions = () => {
           <button
             type="button"
             onClick={addSizeChart}
-            className="bg-[#243450] text-white py-1 px-2 rounded"
+            className={`${styles.simpleButton}`}
           >
             Add Size
           </button>
@@ -461,14 +461,14 @@ const AdminOptions = () => {
         <button
           type="button"
           onClick={handleSubmit}
-          className="bg-[#243450] text-white py-2 px-4 rounded mr-2"
+          className={`${styles.simpleButton}`}
         >
           Save
         </button>
         <button
           type="button"
           onClick={handleCancel}
-          className="bg-gray-500 text-white py-2 px-4 rounded"
+          className="bg-gray-500 text-white py-2 m-4 px-4 rounded"
         >
           Cancel
         </button>
