@@ -129,12 +129,12 @@ const WithdrawMoney = () => {
             </div>
             {paymentMethod ? (
               <div>
-                <h3 className="text-[18px] font-Poppins text-center font-[400]">
+                <h1 className={`${styles.formHeading}`}>
                   Add new Withdraw Method:
-                </h3>
+                </h1>
                 <form onSubmit={handleSubmit}>
                   <div>
-                    <label>
+                    <label className={`${styles.formLabel}`}>
                       Bank Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -147,11 +147,11 @@ const WithdrawMoney = () => {
                       }
                       id=""
                       placeholder="Enter your Bank name"
-                      className={`${styles.input} mt-2`}
+                      className={`${styles.formInput}`}
                     />
                   </div>
                   <div className="pt-2">
-                    <label>
+                    <label className={`${styles.formLabel}`}>
                       Bank Country <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -167,11 +167,11 @@ const WithdrawMoney = () => {
                       id=""
                       required
                       placeholder="Enter your bank Country"
-                      className={`${styles.input} mt-2`}
+                      className={`${styles.formInput}`}
                     />
                   </div>
                   <div className="pt-2">
-                    <label>
+                    <label className={`${styles.formLabel}`}>
                       Bank Swift Code <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -187,12 +187,12 @@ const WithdrawMoney = () => {
                         })
                       }
                       placeholder="Enter your Bank Swift Code"
-                      className={`${styles.input} mt-2`}
+                      className={`${styles.formInput}`}
                     />
                   </div>
 
                   <div className="pt-2">
-                    <label>
+                    <label className={`${styles.formLabel}`}>
                       Bank Account Number
                       <span className="text-red-500">*</span>
                     </label>
@@ -209,11 +209,11 @@ const WithdrawMoney = () => {
                       }
                       required
                       placeholder="Enter your bank account number"
-                      className={`${styles.input} mt-2`}
+                      className={`${styles.formInput}`}
                     />
                   </div>
                   <div className="pt-2">
-                    <label>
+                    <label className={`${styles.formLabel}`}>
                       Bank Holder Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -229,15 +229,14 @@ const WithdrawMoney = () => {
                       }
                       id=""
                       placeholder="Enter your bank Holder name"
-                      className={`${styles.input} mt-2`}
+                      className={`${styles.formInput}`}
                     />
                   </div>
-
                   <div className="pt-2">
-                    <label>
+                    <label className={`${styles.formLabel}`}>
                       Bank Address <span className="text-red-500">*</span>
                     </label>
-                    <input
+                    <textarea
                       type="text"
                       name=""
                       required
@@ -250,13 +249,12 @@ const WithdrawMoney = () => {
                         })
                       }
                       placeholder="Enter your bank address"
-                      className={`${styles.input} mt-2`}
+                      className={`${styles.formInput}`}
                     />
                   </div>
-
                   <button
                     type="submit"
-                    className={`${styles.button} text-white !h-[42px] !rounded`}
+                    className={`${styles.simpleButton} mt-4`}
                   >
                     Add
                   </button>
@@ -264,9 +262,9 @@ const WithdrawMoney = () => {
               </div>
             ) : (
               <>
-                <h3 className="text-[18px] font-Poppins">
+                <h1 className={`${styles.formHeading}`}>
                   Available Withdraw Methods:
-                </h3>
+                </h1>
 
                 {seller && seller?.withdrawMethod ? (
                   <div>

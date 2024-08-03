@@ -34,18 +34,13 @@ const AdminLogin = ({ setOtpSent, setEmail }) => {
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <p className="mt-6 text-center text-2xl font-weight:300 text-gray-700">
-          Login as Admin
-        </p>
+        <h1 className={`${styles.formHeading}`}>Login as Admin</h1>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="email" className={`${styles.formLabel}`}>
                 Email address
               </label>
               <div className="mt-1">
@@ -56,15 +51,12 @@ const AdminLogin = ({ setOtpSent, setEmail }) => {
                   required
                   value={email}
                   onChange={(e) => setEmailLocal(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className={`${styles.formInput}`}
                 />
               </div>
             </div>
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="password" className={`${styles.formLabel}`}>
                 Password
               </label>
               <div className="mt-1 relative">
@@ -75,7 +67,7 @@ const AdminLogin = ({ setOtpSent, setEmail }) => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className={`${styles.formInput}`}
                 />
                 {visible ? (
                   <AiOutlineEye

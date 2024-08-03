@@ -36,44 +36,42 @@ const SellerChangePassword = () => {
 
   return (
     <div className="w-full max-w-md mx-auto my-10 px-5 py-8 border rounded-md">
-      <h1 className="text-xl  text-gray-700 mb-4 text-center">
-        Change Password
-      </h1>
+      <h1 className={`${styles.formHeading}`}>Change Password</h1>
       <form
         onSubmit={passwordChangeHandler}
         className="flex flex-col items-center"
       >
         <div className="w-full mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className={`${styles.formLabel}`}>
             Enter your old password
           </label>
           <input
             type="password"
-            className={`${styles.input} w-full`}
+            className={`${styles.formInput}`}
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
             required
           />
         </div>
         <div className="w-full mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className={`${styles.formLabel}`}>
             Enter your new password
           </label>
           <input
             type="password"
-            className={`${styles.input} w-full`}
+            className={`${styles.formInput}`}
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             required
           />
         </div>
         <div className="w-full mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className={`${styles.formLabel}`}>
             Confirm your new password
           </label>
           <input
             type="password"
-            className={`${styles.input} w-full`}
+            className={`${styles.formInput}`}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required

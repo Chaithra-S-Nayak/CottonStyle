@@ -84,7 +84,6 @@ const UpdateProduct = () => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-
     files.forEach((file) => {
       const reader = new FileReader();
       reader.onload = () => {
@@ -106,11 +105,11 @@ const UpdateProduct = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <h5 className="text-xl mb-6">Update Product</h5>
+      <h1 className={`${styles.formHeading}`}>Update Product</h1>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className={`${styles.formLabel}`}>
               Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -118,19 +117,19 @@ const UpdateProduct = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your product name"
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              className={`${styles.formInput}`}
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className={`${styles.formLabel}`}>
               Description <span className="text-red-500">*</span>
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter your product description"
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              className={`${styles.formInput}`}
               required
               rows="4"
             ></textarea>
@@ -138,13 +137,13 @@ const UpdateProduct = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className={`${styles.formLabel}`}>
               Fabric <span className="text-red-500">*</span>
             </label>
             <select
               value={fabric}
               onChange={(e) => setFabric(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              className={`${styles.formInput}`}
               required
             >
               <option value="">Choose the Fabric</option>
@@ -157,13 +156,13 @@ const UpdateProduct = () => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className={`${styles.formLabel}`}>
               Color <span className="text-red-500">*</span>
             </label>
             <select
               value={color}
               onChange={(e) => setColor(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              className={`${styles.formInput}`}
               required
             >
               <option value="">Choose a color</option>
@@ -176,7 +175,7 @@ const UpdateProduct = () => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className={`${styles.formLabel}`}>
               Available Sizes <span className="text-red-500">*</span>
             </label>
             <div className="flex flex-wrap gap-2 mt-1">
@@ -203,7 +202,7 @@ const UpdateProduct = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className={`${styles.formLabel}`}>
               Original Price(₹) <span className="text-red-500">*</span>
             </label>
             <input
@@ -211,12 +210,12 @@ const UpdateProduct = () => {
               value={originalPrice}
               onChange={(e) => setOriginalPrice(e.target.value)}
               placeholder="Enter your product price"
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              className={`${styles.formInput}`}
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className={`${styles.formLabel}`}>
               Discount Price(₹) <span className="text-red-500">*</span>
             </label>
             <input
@@ -224,12 +223,12 @@ const UpdateProduct = () => {
               value={discountPrice}
               onChange={(e) => setDiscountPrice(e.target.value)}
               placeholder="Enter discount product price"
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              className={`${styles.formInput}`}
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className={`${styles.formLabel}`}>
               Product Stock <span className="text-red-500">*</span>
             </label>
             <input
@@ -237,7 +236,7 @@ const UpdateProduct = () => {
               value={stock}
               onChange={(e) => setStock(e.target.value)}
               placeholder="Enter your product stock"
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              className={`${styles.formInput}`}
               required
             />
           </div>

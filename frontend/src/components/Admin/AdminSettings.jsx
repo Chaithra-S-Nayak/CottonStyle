@@ -87,36 +87,30 @@ const AdminSettings = () => {
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Full Name
-          </label>
+          <label className={`${styles.formLabel}`}>Full Name</label>
           <input
             type="text"
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            className={`${styles.formInput}`}
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Email Address
-          </label>
+          <label className={`${styles.formLabel}`}>Email Address</label>
           <input
             type="email"
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            className={`${styles.formInput}`}
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Phone Number
-          </label>
+          <label className={`${styles.formLabel}`}>Phone Number</label>
           <input
             type="tel"
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            className={`${styles.formInput}`}
             required
             maxLength={10}
             value={phoneNumber}

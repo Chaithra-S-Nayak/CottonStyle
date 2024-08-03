@@ -1,6 +1,6 @@
 const styles = {
   primaryColor: "[#243450]",
-  secondaryColor: "bg-[#24345023]",
+  secondaryColor: "[#24345023]",
   simpleButton: "bg-[#243450]  w-auto text-white px-5 py-2 rounded",
   wideButton:
     "w-full bg-[#243450] text-white py-2 rounded-md transition duration-300",
@@ -16,9 +16,13 @@ const styles = {
   button:
     "w-[170px] bg-[#243450] h-[50px] my-3 flex items-center justify-center rounded-xl cursor-pointer",
   cart_button:
-    "px-[20px] h-[38px] rounded-[20px] bg-[#243450] flex items-center justify-center cursor-pointer",
+    "px-[20px] h-[38px] rounded-[20px] flex items-center justify-center cursor-pointer",
   cart_button_text: "text-[#fff] text-[16px] font-[600]",
   input: "w-full border p-1 rounded-[5px]",
+  formInput:
+    "mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500",
+  formLabel: "block text-sm font-medium text-gray-700",
+  formHeading: "text-xl font-semibold text-gray-700 mb-4 text-center",
   activeStatus:
     "w-[10px] h-[10px] rounded-full absolute top-0 right-1 bg-[#40d132]",
   noramlFlex: "flex items-center",

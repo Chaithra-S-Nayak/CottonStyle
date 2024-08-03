@@ -20,7 +20,7 @@ const OTPInput = ({ email, onSuccess }) => {
         toast.error("Invalid OTP, please try again.");
       }
     } catch (error) {
-      console.error("OTP verification error:", error.response || error); // Log the error
+      console.error("OTP verification error:", error.response || error);
       toast.error(
         error.response?.data?.message ||
           "An error occurred while verifying OTP."
@@ -30,9 +30,7 @@ const OTPInput = ({ email, onSuccess }) => {
 
   return (
     <>
-      <p className="mt-6 text-center text-2xl font-weight:300 text-gray-700">
-        Verify OTP
-      </p>
+      <h1 className={`${styles.formHeading}`}>Verify OTP</h1>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <form
           className="space-y-6"
@@ -42,10 +40,7 @@ const OTPInput = ({ email, onSuccess }) => {
           }}
         >
           <div>
-            <label
-              htmlFor="otp"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="otp" className={`${styles.formLabel}`}>
               OTP
             </label>
             <div className="mt-1">
@@ -56,7 +51,7 @@ const OTPInput = ({ email, onSuccess }) => {
                 required
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
-                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className={`${styles.formInput}`}
               />
             </div>
           </div>

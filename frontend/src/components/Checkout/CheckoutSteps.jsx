@@ -7,7 +7,7 @@ const CheckoutSteps = ({ active }) => {
     <div className="w-full flex justify-center">
       <div className="w-[90%] 800px:w-[50%] flex items-center flex-wrap">
         <div className={`${styles.noramlFlex}`}>
-          <div className={`${styles.cart_button}`}>
+          <div className={`${styles.cart_button} bg-${styles.primaryColor}`}>
             <span className={`${styles.cart_button_text}`}>1. Cart</span>
           </div>
           <div
@@ -23,8 +23,8 @@ const CheckoutSteps = ({ active }) => {
           <div
             className={`${
               active > 1
-                ? `${styles.cart_button}`
-                : `${styles.cart_button} ${styles.secondaryColor}`
+                ? `${styles.cart_button} bg-${styles.primaryColor}`
+                : `${styles.cart_button} bg-${styles.secondaryColor}`
             }`}
           >
             <span
@@ -50,8 +50,8 @@ const CheckoutSteps = ({ active }) => {
           <div
             className={`${
               active > 2
-                ? `${styles.cart_button}`
-                : `${styles.cart_button} ${styles.secondaryColor}`
+                ? `${styles.cart_button} bg-${styles.primaryColor}`
+                : `${styles.cart_button} bg-${styles.secondaryColor}`
             }`}
           >
             <span
@@ -77,8 +77,8 @@ const CheckoutSteps = ({ active }) => {
           <div
             className={`${
               active > 3
-                ? `${styles.cart_button}`
-                : `${styles.cart_button} ${styles.secondaryColor}`
+                ? `${styles.cart_button} bg-${styles.primaryColor}`
+                : `${styles.cart_button} bg-${styles.secondaryColor}`
             }`}
           >
             <span

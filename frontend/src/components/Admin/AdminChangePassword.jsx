@@ -32,41 +32,39 @@ const AdminChangePassword = () => {
 
   return (
     <div className=" p-6 rounded-md border ">
-      <h1 className="text-xl font-semibold text-gray-700 mb-4 text-center">
-        Change Password
-      </h1>
+      <h1 className={`${styles.formHeading}`}>Change Password</h1>
       <form onSubmit={passwordChangeHandler} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className={`${styles.formLabel}`}>
             Enter your old password
           </label>
           <input
             type="password"
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            className={`${styles.formInput}`}
             required
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className={`${styles.formLabel}`}>
             Enter your new password
           </label>
           <input
             type="password"
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            className={`${styles.formInput}`}
             required
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className={`${styles.formLabel}`}>
             Confirm your new password
           </label>
           <input
             type="password"
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            className={`${styles.formInput}`}
             required
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}

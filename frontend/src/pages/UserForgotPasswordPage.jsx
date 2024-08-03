@@ -39,9 +39,7 @@ const UserForgotPasswordPage = () => {
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           {!showOtpInput && !showPasswordReset && (
             <>
-              <p className="mt-6 text-center text-2xl font-weight:300 text-gray-700">
-                Forgot Your Password?
-              </p>
+              <h1 className={`${styles.formHeading}`}>Forgot Your Password?</h1>
               <p className="mt-2 text-center text-sm text-gray-600">
                 Enter your email to receive an OTP for password reset.
               </p>
@@ -53,10 +51,7 @@ const UserForgotPasswordPage = () => {
             {!showOtpInput && !showPasswordReset && (
               <div className="space-y-6">
                 <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="email" className={`${styles.formLabel}`}>
                     Email address
                   </label>
                   <div className="mt-1">
@@ -66,7 +61,7 @@ const UserForgotPasswordPage = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Enter your email"
                       required
-                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className={`${styles.formInput}`}
                     />
                   </div>
                 </div>

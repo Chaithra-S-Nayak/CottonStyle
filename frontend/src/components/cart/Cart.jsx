@@ -242,6 +242,7 @@ const Cart = () => {
               </div>
             ))}
           </div>
+
           {/* Price Details */}
           <div className="w-full lg:w-1/3 bg-white p-5 rounded-lg shadow-md mt-6 lg:mt-0 lg:ml-6">
             <h2 className="text-xl font-semibold mb-4">
@@ -276,6 +277,7 @@ const Cart = () => {
           </div>
         </div>
       )}
+
       {/* Suggestions */}
       {suggestions.length > 0 && (
         <div className="mt-6 bg-yellow-100 p-4 rounded-lg shadow-md">
@@ -322,9 +324,7 @@ const Cart = () => {
                   </div>
                 </div>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Size
-                  </label>
+                  <label className={`${styles.formLabel}`}>Size</label>
                   <select
                     value={size}
                     onChange={handleSizeChange}
@@ -339,9 +339,7 @@ const Cart = () => {
                   </select>
                 </div>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Quantity
-                  </label>
+                  <label className={`${styles.formLabel}`}>Quantity</label>
                   <div className="flex items-center mt-1">
                     <button
                       onClick={() => handleQuantityChange("decrease")}

@@ -45,9 +45,7 @@ const Checkout = () => {
         country,
         city,
       };
-
       const latestOrder = JSON.parse(localStorage.getItem("latestOrder")) || {};
-
       const updatedOrderData = {
         ...latestOrder,
         totalPrice,
@@ -56,7 +54,6 @@ const Checkout = () => {
         shippingAddress,
         user,
       };
-
       // update local storage with the updated orders array
       localStorage.setItem("latestOrder", JSON.stringify(updatedOrderData));
       navigate("/payment");
@@ -177,63 +174,61 @@ const ShippingInfo = ({
 
   return (
     <div className="w-full 800px:w-[95%] bg-white rounded-md p-5 pb-8">
-      <h5 className="text-[18px] font-[500]">Shipping Address</h5>
+      <h1 className={`${styles.formHeading}`}>Shipping Address</h1>
       <br />
       <form>
         <div className="w-full flex pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">Full Name</label>
+            <label className={`${styles.formLabel}`}>Full Name</label>
             <input
               type="text"
               value={user && user.name}
               required
-              className={`${styles.input} !w-[95%]`}
+              className={`${styles.formInput} !w-[95%]`}
             />
           </div>
           <div className="w-[50%]">
-            <label className="block pb-2">Email Address</label>
+            <label className={`${styles.formLabel}`}>Email Address</label>
             <input
               type="email"
               value={user && user.email}
               required
-              className={`${styles.input}`}
+              className={`${styles.formInput}`}
             />
           </div>
         </div>
-
         <div className="w-full flex pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">Phone Number</label>
+            <label className={`${styles.formLabel}`}>Phone Number</label>
             <input
               type="tel"
               value={phoneNumber}
               maxLength={10}
               onChange={(e) => setPhoneNumber(e.target.value)}
               required
-              className={`${styles.input} !w-[95%]`}
+              className={`${styles.formInput} !w-[95%]`}
             />
           </div>
           <div className="w-[50%]">
-            <label className="block pb-2">Zip Code</label>
+            <label className={`${styles.formLabel}`}>Zip Code</label>
             <input
               type="number"
               value={zipCode}
               onChange={(e) => setZipCode(e.target.value)}
               required
-              className={`${styles.input}`}
+              className={`${styles.formInput}`}
             />
           </div>
         </div>
-
         <div className="w-full flex pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">Country</label>
+            <label className={`${styles.formLabel}`}>Country</label>
             <select
-              className="w-[95%] border h-[40px] rounded-[5px]"
+              className={`${styles.formInput} !w-[95%]`}
               value={country}
               onChange={(e) => setCountry(e.target.value)}
             >
-              <option className="block pb-2" value="">
+              <option className={`${styles.formLabel}`} value="">
                 Choose your country
               </option>
               {Country &&
@@ -245,13 +240,13 @@ const ShippingInfo = ({
             </select>
           </div>
           <div className="w-[50%]">
-            <label className="block pb-2">State</label>
+            <label className={`${styles.formLabel}`}>State</label>
             <select
-              className="w-[95%] border h-[40px] rounded-[5px]"
+              className={`${styles.formInput}`}
               value={city}
               onChange={(e) => setCity(e.target.value)}
             >
-              <option className="block pb-2" value="">
+              <option className={`${styles.formLabel}`} value="">
                 Choose your State
               </option>
               {State &&
@@ -265,23 +260,23 @@ const ShippingInfo = ({
         </div>
         <div className="w-full flex pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">Address1</label>
+            <label className={`${styles.formLabel}`}>Address1</label>
             <textarea
               type="address"
               required
               value={address1}
               onChange={(e) => setAddress1(e.target.value)}
-              className={`${styles.input} !w-[95%]`}
+              className={`${styles.formInput} !w-[95%]`}
             />
           </div>
           <div className="w-[50%]">
-            <label className="block pb-2">Address2</label>
+            <label className={`${styles.formLabel}`}>Address2</label>
             <textarea
               type="address"
               value={address2}
               onChange={(e) => setAddress2(e.target.value)}
               required
-              className={`${styles.input}`}
+              className={`${styles.formInput}`}
             />
           </div>
         </div>
@@ -295,12 +290,11 @@ const ShippingInfo = ({
           <button
             type="button"
             onClick={clearForm}
-            className="bg-red-500 text-white py-2 px-4 rounded"
+            className={`${styles.simpleButton} !bg-red-500`}
           >
             Clear Form
           </button>
         </div>
-
         {userInfo && (
           <div className="mt-4">
             {user &&

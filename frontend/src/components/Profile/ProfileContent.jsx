@@ -105,36 +105,30 @@ const ProfileContent = ({ active }) => {
           </div>
           <form onSubmit={handleSubmit} className="space-y-4 w-1/2 mx-auto">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Full Name
-              </label>
+              <label className={`${styles.formLabel}`}>Full Name</label>
               <input
                 type="text"
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className={`${styles.formInput}`}
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Email Address
-              </label>
+              <label className={`${styles.formLabel}`}>Email Address</label>
               <input
                 type="email"
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className={`${styles.formInput}`}
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Phone Number
-              </label>
+              <label className={`${styles.formLabel}`}>Phone Number</label>
               <input
                 type="tel"
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className={`${styles.formInput}`}
                 required
                 value={phoneNumber}
                 maxLength={10}
@@ -459,39 +453,43 @@ const ChangePassword = () => {
 
   return (
     <div className="w-full px-5">
-      <h1 className="block text-[25px] text-center font-[600] text-[#000000ba] pb-2">
-        Change Password
-      </h1>
+      <h1 className={`${styles.formHeading}`}>Change Password</h1>
       <div className="w-full">
         <form
           onSubmit={passwordChangeHandler}
           className="flex flex-col items-center"
         >
           <div className=" w-[100%] 800px:w-[50%] mt-5">
-            <label className="block pb-2">Enter your old password</label>
+            <label className={`${styles.formLabel}`}>
+              Enter your old password
+            </label>
             <input
               type="password"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+              className={`${styles.formInput}`}
               required
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
             />
           </div>
           <div className=" w-[100%] 800px:w-[50%] mt-2">
-            <label className="block pb-2">Enter your new password</label>
+            <label className={`${styles.formLabel}`}>
+              Enter your new password
+            </label>
             <input
               type="password"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+              className={`${styles.formInput}`}
               required
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
             />
           </div>
           <div className=" w-[100%] 800px:w-[50%] mt-2">
-            <label className="block pb-2">Enter your confirm password</label>
+            <label className={`${styles.formLabel}`}>
+              Enter your confirm password
+            </label>
             <input
               type="password"
-              className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+              className={`${styles.formInput}`}
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -571,20 +569,18 @@ const Address = () => {
                 onClick={() => setOpen(false)}
               />
             </div>
-            <h1 className="text-center text-[20px] font-Poppins">
-              Add New Address
-            </h1>
+            <h1 className={`${styles.formHeading}`}>Add New Address</h1>
             <div className="w-full">
               <form onSubmit={handleSubmit} className="w-full">
                 <div className="w-full block p-4">
                   <div className="w-full pb-2">
-                    <label className="block pb-2">Country</label>
+                    <label className={`${styles.formLabel}`}>Country</label>
                     <select
                       name=""
                       id=""
                       value={country}
                       onChange={(e) => setCountry(e.target.value)}
-                      className="w-full border h-[40px] rounded-[5px]"
+                      className={`${styles.formInput}`}
                     >
                       <option value="" className="block border pb-2">
                         Select your country
@@ -592,7 +588,7 @@ const Address = () => {
                       {Country &&
                         Country.getAllCountries().map((item) => (
                           <option
-                            className="block pb-2"
+                            className={`${styles.formLabel}`}
                             key={item.isoCode}
                             value={item.isoCode}
                           >
@@ -603,13 +599,15 @@ const Address = () => {
                   </div>
 
                   <div className="w-full pb-2">
-                    <label className="block pb-2">Choose your City</label>
+                    <label className={`${styles.formLabel}`}>
+                      Choose your City
+                    </label>
                     <select
                       name=""
                       id=""
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
-                      className="w-full border h-[40px] rounded-[5px]"
+                      className={`${styles.formInput}`}
                     >
                       <option value="" className="block border pb-2">
                         Select your city
@@ -617,7 +615,7 @@ const Address = () => {
                       {State &&
                         State.getStatesOfCountry(country).map((item) => (
                           <option
-                            className="block pb-2"
+                            className={`${styles.formLabel}`}
                             key={item.isoCode}
                             value={item.isoCode}
                           >
@@ -628,20 +626,20 @@ const Address = () => {
                   </div>
 
                   <div className="w-full pb-2">
-                    <label className="block pb-2">Address 1</label>
-                    <input
+                    <label className={`${styles.formLabel}`}>Address 1</label>
+                    <textarea
                       type="address"
-                      className={`${styles.input}`}
+                      className={`${styles.formInput}`}
                       required
                       value={address1}
                       onChange={(e) => setAddress1(e.target.value)}
                     />
                   </div>
                   <div className="w-full pb-2">
-                    <label className="block pb-2">Address 2</label>
-                    <input
+                    <label className={`${styles.formLabel}`}>Address 2</label>
+                    <textarea
                       type="address"
-                      className={`${styles.input}`}
+                      className={`${styles.formInput}`}
                       required
                       value={address2}
                       onChange={(e) => setAddress2(e.target.value)}
@@ -649,24 +647,25 @@ const Address = () => {
                   </div>
 
                   <div className="w-full pb-2">
-                    <label className="block pb-2">Zip Code</label>
+                    <label className={`${styles.formLabel}`}>Zip Code</label>
                     <input
                       type="number"
-                      className={`${styles.input}`}
+                      className={`${styles.formInput}`}
                       required
                       value={zipCode}
                       onChange={(e) => setZipCode(e.target.value)}
                     />
                   </div>
-
                   <div className="w-full pb-2">
-                    <label className="block pb-2">Address Type</label>
+                    <label className={`${styles.formLabel}`}>
+                      Address Type
+                    </label>
                     <select
                       name=""
                       id=""
                       value={addressType}
                       onChange={(e) => setAddressType(e.target.value)}
-                      className="w-full border h-[40px] rounded-[5px]"
+                      className={`${styles.formInput}`}
                     >
                       <option value="" className="block border pb-2">
                         Choose your Address Type
@@ -674,7 +673,7 @@ const Address = () => {
                       {addressTypeData &&
                         addressTypeData.map((item) => (
                           <option
-                            className="block pb-2"
+                            className={`${styles.formLabel}`}
                             key={item.name}
                             value={item.name}
                           >
@@ -683,7 +682,6 @@ const Address = () => {
                         ))}
                     </select>
                   </div>
-
                   <div className=" w-full pb-2">
                     <button
                       className={`${styles.wideButton} mt-4`}

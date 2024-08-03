@@ -26,18 +26,13 @@ const OtpVerification = ({ email }) => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <p className="mt-6 text-center text-2xl font-weight:300 text-gray-700">
-          Enter OTP
-        </p>
+        <h1 className={`${styles.formHeading}`}> Enter OTP</h1>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label
-                htmlFor="otp"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="otp" className={`${styles.formLabel}`}>
                 OTP
               </label>
               <div className="mt-1">
@@ -47,7 +42,7 @@ const OtpVerification = ({ email }) => {
                   required
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className={`${styles.formInput}`}
                 />
               </div>
             </div>

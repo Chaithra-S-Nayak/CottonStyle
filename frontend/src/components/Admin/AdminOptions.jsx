@@ -196,9 +196,9 @@ const AdminOptions = () => {
     <div className="w-full flex flex-col items-center py-8">
       <div className="w-[90%] 1000px:w-[70%] max-h-[70vh] overflow-y-auto grid grid-cols-1 gap-4">
         {/* Row 1: Primary Color and Secondary Color */}
-        <div className="grid grid-cols-1 1000px:grid-cols-2 gap-4">
+        {/* <div className="grid grid-cols-1 1000px:grid-cols-2 gap-4">
           <div className="p-4">
-            <label className="block pb-2">Website Primary Color</label>
+            <label className={`${styles.formLabel}`}>Website Primary Color</label>
             <input
               type="text"
               value={primaryColor}
@@ -207,7 +207,7 @@ const AdminOptions = () => {
             />
           </div>
           <div className="p-4">
-            <label className="block pb-2">Website Secondary Color</label>
+            <label className={`${styles.formLabel}`}>Website Secondary Color</label>
             <input
               type="text"
               value={secondaryColor}
@@ -215,35 +215,35 @@ const AdminOptions = () => {
               className={`${styles.input}`}
             />
           </div>
-        </div>
+        </div> */}
 
         {/* Row 2: GST, Delivery Fee, Threshold Fee */}
         <div className="grid grid-cols-1 1000px:grid-cols-3 gap-4">
           <div className="p-4">
-            <label className="block pb-2">GST Tax (%)</label>
+            <label className={`${styles.formLabel}`}>GST Tax (%)</label>
             <input
               type="number"
               value={gstTax}
               onChange={(e) => setGstTax(e.target.value)}
-              className={`${styles.input}`}
+              className={`${styles.formInput}`}
             />
           </div>
           <div className="p-4">
-            <label className="block pb-2">Delivery Fee</label>
+            <label className={`${styles.formLabel}`}>Delivery Fee</label>
             <input
               type="number"
               value={deliveryFee}
               onChange={(e) => setDeliveryFee(e.target.value)}
-              className={`${styles.input}`}
+              className={`${styles.formInput}`}
             />
           </div>
           <div className="p-4">
-            <label className="block pb-2">Threshold Fee</label>
+            <label className={`${styles.formLabel}`}>Threshold Fee</label>
             <input
               type="number"
               value={thresholdFee}
               onChange={(e) => setThresholdFee(e.target.value)}
-              className={`${styles.input}`}
+              className={`${styles.formInput}`}
             />
           </div>
         </div>
@@ -338,7 +338,7 @@ const AdminOptions = () => {
         {/* Row 4: Fabrics and Colors */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="p-4">
-            <label className="block pb-2">T-Shirt Fabrics</label>
+            <label className={`${styles.formLabel}`}>T-Shirt Fabrics</label>
             {fabrics.map((fabric, index) => (
               <div key={index} className="mb-2 flex items-center">
                 <input
@@ -366,7 +366,7 @@ const AdminOptions = () => {
             </button>
           </div>
           <div className="p-4">
-            <label className="block pb-2">T-Shirt Colors</label>
+            <label className={`${styles.formLabel}`}>T-Shirt Colors</label>
             {colors.map((color, index) => (
               <div key={index} className="mb-2 flex items-center">
                 <input
@@ -397,7 +397,9 @@ const AdminOptions = () => {
 
         {/* Row 5: Size Chart */}
         <div className="p-4">
-          <label className="block pb-2">T-Shirt Size Chart (inches)</label>
+          <label className={`${styles.formLabel}`}>
+            T-Shirt Size Chart (inches)
+          </label>
           {sizeChart.map((size, index) => (
             <div
               key={index}
@@ -468,7 +470,7 @@ const AdminOptions = () => {
         <button
           type="button"
           onClick={handleCancel}
-          className="bg-gray-500 text-white py-2 m-4 px-4 rounded"
+          className={`${styles.simpleButton} !bg-gray-500 m-4`}
         >
           Cancel
         </button>
