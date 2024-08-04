@@ -31,7 +31,7 @@ const generateEmailTemplate = ({ recipientName, bodyContent }) => `
           CottonStyle
         </div>
       </div>
-      <p>Hello, ${recipientName}</p>
+      <p>Hello ${recipientName},</p>
       ${bodyContent}
       <div
         style="

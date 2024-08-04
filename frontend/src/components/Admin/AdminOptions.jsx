@@ -14,10 +14,6 @@ const AdminOptions = () => {
   const { adminOptions, updateSuccess, error } = useSelector(
     (state) => state.adminOptions
   );
-  const [logoUrl, setLogoUrl] = useState("");
-  const [primaryColor, setPrimaryColor] = useState("");
-  const [secondaryColor, setSecondaryColor] = useState("");
-  const [banners, setBanners] = useState([]);
   const [gstTax, setGstTax] = useState(0);
   const [deliveryFee, setDeliveryFee] = useState(0);
   const [thresholdFee, setThresholdFee] = useState(0);
@@ -33,10 +29,6 @@ const AdminOptions = () => {
   useEffect(() => {
     if (adminOptions) {
       const initialValues = {
-        logoUrl: adminOptions.logoUrl,
-        primaryColor: adminOptions.theme?.primaryColor,
-        secondaryColor: adminOptions.theme?.secondaryColor,
-        banners: adminOptions.banners || [],
         gstTax: adminOptions.gstTax,
         deliveryFee: adminOptions.deliveryFee,
         thresholdFee: adminOptions.thresholdFee,
@@ -45,10 +37,6 @@ const AdminOptions = () => {
         sizeChart: adminOptions.sizeChart || [],
       };
       setInitialState(initialValues);
-      setLogoUrl(initialValues.logoUrl);
-      setPrimaryColor(initialValues.primaryColor);
-      setSecondaryColor(initialValues.secondaryColor);
-      setBanners(initialValues.banners);
       setGstTax(initialValues.gstTax);
       setDeliveryFee(initialValues.deliveryFee);
       setThresholdFee(initialValues.thresholdFee);
@@ -73,9 +61,6 @@ const AdminOptions = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const updatedOptions = {
-      logoUrl,
-      theme: { primaryColor, secondaryColor },
-      banners,
       gstTax,
       deliveryFee,
       thresholdFee,
@@ -87,59 +72,12 @@ const AdminOptions = () => {
   };
 
   const handleCancel = () => {
-    setLogoUrl(initialState.logoUrl);
-    setPrimaryColor(initialState.primaryColor);
-    setSecondaryColor(initialState.secondaryColor);
-    setBanners(initialState.banners);
     setGstTax(initialState.gstTax);
     setDeliveryFee(initialState.deliveryFee);
     setThresholdFee(initialState.thresholdFee);
     setFabrics(initialState.fabrics);
     setColors(initialState.colors);
     setSizeChart(initialState.sizeChart);
-  };
-
-  const handleBannerChange = (index, field, value) => {
-    setBanners((prevBanners) =>
-      prevBanners.map((banner, i) =>
-        i === index ? { ...banner, [field]: value } : banner
-      )
-    );
-  };
-
-  const addBanner = () => {
-    setBanners([...banners, { imageUrl: "", textLines: [] }]);
-  };
-
-  const removeBanner = (index) => {
-    const newBanners = banners.filter((_, i) => i !== index);
-    setBanners(newBanners);
-  };
-
-  const addTextLine = (bannerIndex) => {
-    const newBanners = [...banners];
-    newBanners[bannerIndex].textLines.push({
-      text: "",
-      fontSize: 12,
-      fontStyle: "normal",
-      color: "#000000",
-    });
-    setBanners(newBanners);
-  };
-
-  const handleTextLineChange = (bannerIndex, textLineIndex, field, value) => {
-    setBanners((prevBanners) =>
-      prevBanners.map((banner, i) =>
-        i === bannerIndex
-          ? {
-              ...banner,
-              textLines: banner.textLines.map((line, j) =>
-                j === textLineIndex ? { ...line, [field]: value } : line
-              ),
-            }
-          : banner
-      )
-    );
   };
 
   const addFabric = () => {
@@ -195,29 +133,7 @@ const AdminOptions = () => {
   return (
     <div className="w-full flex flex-col items-center py-8">
       <div className="w-[90%] 1000px:w-[70%] max-h-[70vh] overflow-y-auto grid grid-cols-1 gap-4">
-        {/* Row 1: Primary Color and Secondary Color */}
-        {/* <div className="grid grid-cols-1 1000px:grid-cols-2 gap-4">
-          <div className="p-4">
-            <label className={`${styles.formLabel}`}>Website Primary Color</label>
-            <input
-              type="text"
-              value={primaryColor}
-              onChange={(e) => setPrimaryColor(e.target.value)}
-              className={`${styles.input}`}
-            />
-          </div>
-          <div className="p-4">
-            <label className={`${styles.formLabel}`}>Website Secondary Color</label>
-            <input
-              type="text"
-              value={secondaryColor}
-              onChange={(e) => setSecondaryColor(e.target.value)}
-              className={`${styles.input}`}
-            />
-          </div>
-        </div> */}
-
-        {/* Row 2: GST, Delivery Fee, Threshold Fee */}
+        {/* Row 1: GST, Delivery Fee, Threshold Fee */}
         <div className="grid grid-cols-1 1000px:grid-cols-3 gap-4">
           <div className="p-4">
             <label className={`${styles.formLabel}`}>GST Tax (%)</label>
@@ -248,94 +164,7 @@ const AdminOptions = () => {
           </div>
         </div>
 
-        {/* Row 3: Logo URL and Banners */}
-        {/* <div className="grid grid-cols-1 1000px:grid-cols-2 gap-4">
-          <div className="p-4">
-            <h5 className="text-xl font-bold mb-4">Logo URL</h5>
-            <input
-              type="text"
-              value={logoUrl}
-              onChange={(e) => setLogoUrl(e.target.value)}
-              className="w-full p-2 border rounded max-w-xs"
-            />
-          </div>
-          <div className="p-4">
-            <h5 className="text-xl font-bold mb-4">Banners</h5>
-            {banners.map((banner, index) => (
-              <div key={index} className="mb-4">
-                <input
-                  type="text"
-                  placeholder="Banner Image URL"
-                  value={banner.imageUrl}
-                  onChange={(e) => handleBannerChange(index, "imageUrl", e.target.value)}
-                  className="w-full p-2 border rounded mb-2 max-w-xs"
-                />
-                <button
-                  type="button"
-                  onClick={() => addTextLine(index)}
-                  className="mb-2 bg-blue-500 text-white py-1 px-2 rounded"
-                >
-                  Add Text Line
-                </button>
-                {banner.textLines.map((line, lineIndex) => (
-                  <div key={lineIndex} className="mb-2">
-                    <input
-                      type="text"
-                      placeholder="Text"
-                      value={line.text}
-                      onChange={(e) =>
-                        handleTextLineChange(index, lineIndex, "text", e.target.value)
-                      }
-                      className="w-full p-2 border rounded mb-1"
-                    />
-                    <input
-                      type="number"
-                      placeholder="Font Size"
-                      value={line.fontSize}
-                      onChange={(e) =>
-                        handleTextLineChange(index, lineIndex, "fontSize", e.target.value)
-                      }
-                      className="w-full p-2 border rounded mb-1"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Font Style"
-                      value={line.fontStyle}
-                      onChange={(e) =>
-                        handleTextLineChange(index, lineIndex, "fontStyle", e.target.value)
-                      }
-                      className="w-full p-2 border rounded mb-1"
-                    />
-                    <input
-                      type="color"
-                      value={line.color}
-                      onChange={(e) =>
-                        handleTextLineChange(index, lineIndex, "color", e.target.value)
-                      }
-                      className="w-full p-2 border rounded"
-                    />
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => removeBanner(index)}
-                  className="bg-red-500 text-white py-1 px-2 rounded"
-                >
-                  Remove Banner
-                </button>
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={addBanner}
-              className="bg-green-500 text-white py-2 px-4 rounded"
-            >
-              Add Banner
-            </button>
-          </div>
-        </div> */}
-
-        {/* Row 4: Fabrics and Colors */}
+        {/* Row 2: Fabrics and Colors */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="p-4">
             <label className={`${styles.formLabel}`}>T-Shirt Fabrics</label>
@@ -395,7 +224,7 @@ const AdminOptions = () => {
           </div>
         </div>
 
-        {/* Row 5: Size Chart */}
+        {/* Row 3: Size Chart */}
         <div className="p-4">
           <label className={`${styles.formLabel}`}>
             T-Shirt Size Chart (inches)
