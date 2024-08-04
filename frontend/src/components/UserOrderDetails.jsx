@@ -156,7 +156,7 @@ const UserOrderDetails = () => {
               </div>
               {!item.isReviewed && data?.status === "Delivered" && (
                 <div
-                  className={`${styles.button} text-white ml-auto`}
+                  className={`${styles.simpleButton} text-white ml-auto`}
                   onClick={() => setOpen(true) || setSelectedItem(item)}
                 >
                   Write a review
@@ -227,7 +227,7 @@ const UserOrderDetails = () => {
               ></textarea>
             </div>
             <button
-              className={`${styles.button} text-white py-2 px-4 rounded-md shadow focus:outline-none`}
+              className={`${styles.simpleButton} text-white py-2 px-4 rounded-md shadow focus:outline-none`}
               onClick={reviewHandler}
             >
               Submit Review
@@ -303,7 +303,7 @@ const UserOrderDetails = () => {
       <div className="flex items-center">
         {data?.status === "Delivered" && (
           <div
-            className={`${styles.button} text-white py-2 px-4 rounded-md shadow focus:outline-none mr-4`}
+            className={`${styles.simpleButton} text-white py-2 px-4 rounded-md shadow focus:outline-none mr-4`}
             onClick={handleRefundConfirmation}
           >
             Initiate Refund
@@ -311,7 +311,7 @@ const UserOrderDetails = () => {
         )}
         <Link to={`/user/order/invoice/${id}`}>
           <div
-            className={`${styles.button} text-white py-2 px-4 rounded-md shadow focus:outline-none`}
+            className={`${styles.simpleButton} text-white py-2 px-4 rounded-md shadow focus:outline-none`}
           >
             View Invoice
           </div>

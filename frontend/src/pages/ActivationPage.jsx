@@ -21,7 +21,6 @@ const ActivationPage = () => {
             { withCredentials: true }
           )
           .then((res) => {
-            console.log(res);
             // Wait for 3 seconds before reloading the page
             setTimeout(() => {
               window.location.reload();

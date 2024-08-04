@@ -72,13 +72,13 @@ const ShopSettings = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center">
-      <div className="w-full 800px:w-[80%] flex flex-col justify-center my-5">
+      <div className="w-full md:w-[80%] flex flex-col justify-center my-5 px-4 md:px-0">
         <div className="w-full flex items-center justify-center">
           <div className="relative">
             <img
               src={avatar ? avatar : `${seller.avatar?.url}`}
               alt=""
-              className="w-[200px] h-[200px] rounded-full cursor-pointer"
+              className="w-[150px] h-[150px] md:w-[200px] md:h-[200px] rounded-full cursor-pointer"
             />
             <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[10px] right-[15px]">
               <input
@@ -108,7 +108,7 @@ const ShopSettings = () => {
               required
             />
           </div>
-          <div>
+          <div className="w-full">
             <label className={`${styles.formLabel}`}>
               Shop Description <span className="text-red-500">*</span>
             </label>
@@ -170,8 +170,11 @@ const ShopSettings = () => {
               required
             />
           </div>
-          <div className="mt-4">
-            <button type="submit" className={`${styles.simpleButton}`}>
+          <div className="w-full md:col-span-2">
+            <button
+              type="submit"
+              className={`${styles.simpleButton} w-full md:w-auto`}
+            >
               Update Shop
             </button>
           </div>

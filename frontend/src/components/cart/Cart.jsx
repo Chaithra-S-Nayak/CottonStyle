@@ -52,7 +52,6 @@ const Cart = () => {
     setIsEditSidebarOpen(false);
   };
 
-  // Function to calculate total amount for each seller
   const sellerAmounts = cart.reduce((acc, item) => {
     const { shopId, discountPrice, qty } = item;
     const total = discountPrice * qty;
@@ -68,12 +67,10 @@ const Cart = () => {
   const gstTax = adminOptions.gstTax || 0;
   const threshold = adminOptions.thresholdFee || 0;
 
-  // Function to calculate total product price
   const totalProductPrice = cart
     .reduce((acc, item) => acc + item.originalPrice * item.qty, 0)
     .toFixed(2);
 
-  // Function to calculate total discount
   const OverallProductDiscount = cart
     .reduce(
       (acc, item) =>
@@ -85,10 +82,8 @@ const Cart = () => {
     )
     .toFixed(2);
 
-  // Calculate the delivery fee based on the seller's total amount and threshold
   const calculateDeliveryFee = (total) => (total < threshold ? deliveryFee : 0);
 
-  // Calculate the delivery fee for each seller and store it in an object
   const sellerDeliveryFees = Object.entries(sellerAmounts).reduce(
     (acc, [shopId, { total }]) => {
       acc[shopId] = calculateDeliveryFee(total);
@@ -104,14 +99,12 @@ const Cart = () => {
     0
   );
 
-  // Calculate the GST amount
   const gstAmount = (
     ((parseFloat(totalProductPrice) - parseFloat(OverallProductDiscount)) *
       parseFloat(gstTax)) /
     100
   ).toFixed(2);
 
-  // Calculate order total
   const OverallProductPrice = (
     parseFloat(totalProductPrice) +
     parseFloat(gstAmount) -
@@ -119,7 +112,6 @@ const Cart = () => {
     parseFloat(totalDeliveryFee)
   ).toFixed(2);
 
-  // Calculate suggestions for each seller
   const suggestions = Object.values(sellerAmounts)
     .map(({ total, items }) => {
       const remainingAmount = threshold - total;
@@ -134,7 +126,6 @@ const Cart = () => {
     })
     .filter((suggestion) => suggestion !== null);
 
-  // Store order data in local storage
   useEffect(() => {
     const orderData = {
       cart,
@@ -181,7 +172,7 @@ const Cart = () => {
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 px-4 md:px-8">
       {cart.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <h2 className="text-xl font-semibold mb-4">Your cart is empty</h2>
@@ -196,15 +187,14 @@ const Cart = () => {
         </div>
       ) : (
         <div className="flex flex-col lg:flex-row">
-          {/* Product Details */}
-          <div className="w-full lg:w-2/3 bg-white p-5 rounded-lg shadow-md">
+          <div className="w-full lg:w-2/3 bg-white p-5 rounded-lg shadow-md mb-6 lg:mb-0 lg:mr-6">
             <h2 className="text-xl font-semibold mb-4">Product Details</h2>
             {cart.map((item) => (
               <div
                 key={item.id}
-                className="flex justify-between items-center border-b pb-4 mb-4"
+                className="flex flex-col md:flex-row justify-between items-center border-b pb-4 mb-4"
               >
-                <div className="flex items-center">
+                <div className="flex items-center mb-4 md:mb-0">
                   <img
                     src={`${item?.images[0]?.url}`}
                     alt=""
@@ -217,11 +207,11 @@ const Cart = () => {
                     <p className="text-gray-600">₹{item.discountPrice}</p>
                     <p className="text-gray-600">Qty: {item.qty}</p>
                     <p className="text-gray-600">
-                      total: ₹{item.discountPrice * item.qty}
+                      Total: ₹{item.discountPrice * item.qty}
                     </p>
                     <button
                       onClick={() => handleEditClick(item)}
-                      className="text-blue-500 mt-2 "
+                      className="text-blue-500 mt-2"
                     >
                       EDIT
                     </button>
@@ -231,7 +221,6 @@ const Cart = () => {
                     >
                       REMOVE
                     </button>
-
                     <p className="text-gray-600">Sold by: {item.shop.name}</p>
                   </div>
                 </div>
@@ -243,8 +232,7 @@ const Cart = () => {
             ))}
           </div>
 
-          {/* Price Details */}
-          <div className="w-full lg:w-1/3 bg-white p-5 rounded-lg shadow-md mt-6 lg:mt-0 lg:ml-6">
+          <div className="w-full lg:w-1/3 bg-white p-5 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4">
               Price Details ({cart.length} Items)
             </h2>
@@ -278,7 +266,6 @@ const Cart = () => {
         </div>
       )}
 
-      {/* Suggestions */}
       {suggestions.length > 0 && (
         <div className="mt-6 bg-yellow-100 p-4 rounded-lg shadow-md">
           <h3 className="text-xl font-semibold mb-4">
@@ -287,7 +274,7 @@ const Cart = () => {
           {suggestions.map((suggestion) => (
             <div key={suggestion.shopId} className="mb-4">
               <p className="text-gray-800">
-                Add products worth ₹{suggestion.remainingAmount} more from
+                Add products worth ₹{suggestion.remainingAmount} more from{" "}
                 {suggestion.shopName} to avoid the delivery fee.
               </p>
             </div>
@@ -295,7 +282,6 @@ const Cart = () => {
         </div>
       )}
 
-      {/* Edit Sidebar */}
       {isEditSidebarOpen && (
         <div className="fixed inset-0 flex items-center justify-end z-50">
           <div className="fixed inset-0 bg-black opacity-50"></div>
