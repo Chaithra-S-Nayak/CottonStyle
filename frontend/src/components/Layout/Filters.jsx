@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAdminOptions } from "../../redux/actions/adminOptions";
+import styles from "../../styles/styles";
 
 const Filters = ({ onFilterChange }) => {
   const dispatch = useDispatch();
@@ -16,7 +17,7 @@ const Filters = ({ onFilterChange }) => {
   const [visibleColorCount, setVisibleColorCount] = useState(4);
   const [visibleFabricCount, setVisibleFabricCount] = useState(4);
 
-  const handleFiltersChange = () => {
+  const handleFiltersChange = useCallback(() => {
     onFilterChange({
       price: price || { min: "", max: "" },
       ratings: ratings || { min: "", max: "" },
@@ -26,7 +27,16 @@ const Filters = ({ onFilterChange }) => {
       mostSold,
       inStock,
     });
-  };
+  }, [
+    onFilterChange,
+    price,
+    ratings,
+    sizes,
+    colors,
+    fabrics,
+    mostSold,
+    inStock,
+  ]);
 
   useEffect(() => {
     dispatch(fetchAdminOptions());
@@ -34,7 +44,7 @@ const Filters = ({ onFilterChange }) => {
 
   useEffect(() => {
     handleFiltersChange();
-  }, [price, ratings, sizes, colors, fabrics, mostSold, inStock]);
+  }, [handleFiltersChange]);
 
   const handleCheckboxChange = (setter, value) => {
     setter((prev) =>
@@ -57,47 +67,47 @@ const Filters = ({ onFilterChange }) => {
   };
 
   return (
-    <div className="flex flex-wrap justify-around items-start py-4">
+    <div className="flex flex-wrap justify-around items-start">
       <div className="flex flex-col m-2">
-        <label className="font-semibold mb-1">Price</label>
+        <label className={`${styles.formLabel}`}>Price</label>
         <div className="flex space-x-2">
           <input
             type="number"
             placeholder="Min"
             value={price.min}
             onChange={(e) => setPrice({ ...price, min: e.target.value })}
-            className="border rounded p-2"
+            className={`${styles.formInput}`}
           />
           <input
             type="number"
             placeholder="Max"
             value={price.max}
             onChange={(e) => setPrice({ ...price, max: e.target.value })}
-            className="border rounded p-2"
+            className={`${styles.formInput}`}
           />
         </div>
       </div>
       <div className="flex flex-col m-2">
-        <label className="font-semibold mb-1">Ratings</label>
+        <label className={`${styles.formLabel}`}>Ratings</label>
         <div className="flex space-x-2">
           <input
             type="number"
             placeholder="Min"
             value={ratings.min}
             onChange={(e) => setRatings({ ...ratings, min: e.target.value })}
-            className="border rounded p-2"
+            className={`${styles.formInput}`}
           />
           <input
             type="number"
             placeholder="Max"
             value={ratings.max}
             onChange={(e) => setRatings({ ...ratings, max: e.target.value })}
-            className="border rounded p-2"
+            className={`${styles.formInput}`}
           />
         </div>
       </div>
       <div className="flex flex-col m-2">
-        <label className="font-semibold mb-1">Size</label>
+        <label className={`${styles.formLabel}`}>Size</label>
         <div className="overflow-hidden">
           {adminOptions.sizeChart?.slice(0, visibleSizeCount).map((sizeObj) => (
             <div key={sizeObj.size} className="flex items-center">
@@ -118,7 +128,7 @@ const Filters = ({ onFilterChange }) => {
         </div>
       </div>
       <div className="flex flex-col m-2">
-        <label className="font-semibold mb-1">Color</label>
+        <label className={`${styles.formLabel}`}>Color</label>
         <div className="overflow-hidden">
           {adminOptions.color
             ?.slice(0, visibleColorCount)
@@ -141,7 +151,7 @@ const Filters = ({ onFilterChange }) => {
         </div>
       </div>
       <div className="flex flex-col m-2">
-        <label className="font-semibold mb-1">Fabric</label>
+        <label className={`${styles.formLabel}`}>Fabric</label>
         <div className="overflow-hidden">
           {adminOptions.fabric
             ?.slice(0, visibleFabricCount)

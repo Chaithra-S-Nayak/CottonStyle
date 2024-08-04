@@ -21,14 +21,13 @@ const ProductsPage = () => {
   });
 
   const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 12;
 
   useEffect(() => {
     if (!allProducts) return;
 
     let filteredProducts = [...allProducts];
-
-    // console.log("All Products:", allProducts);
-    // console.log("Current Filters:", filters);
 
     if (filters.price.min !== "") {
       const minPrice = parseFloat(filters.price.min);
@@ -88,12 +87,20 @@ const ProductsPage = () => {
       );
     }
 
-    // console.log("Filtered Products:", filteredProducts);
     setData(filteredProducts);
+    setCurrentPage(1); // Reset to first page when filters change
   }, [allProducts, filters]);
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = data.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(data.length / productsPerPage);
+
   const handleFilterChange = (newFilters) => {
-    // console.log("New Filters Received:", newFilters);
     setFilters(newFilters);
   };
 
@@ -106,18 +113,51 @@ const ProductsPage = () => {
           <Header activeHeading={3} />
           <br />
           <br />
-          <div className={`${styles.section}`}>
-            <Filters onFilterChange={handleFilterChange} />
-            <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-5 xl:gap-[30px] mb-12">
-              {data && data.length > 0 ? (
-                data.map((product, index) => (
-                  <ProductCard key={index} data={product} />
-                ))
-              ) : (
-                <h1 className="text-center w-full pb-[100px] text-[20px]">
-                  No products Found!
-                </h1>
-              )}
+          <div className={`${styles.section} flex`}>
+            <div className="w-1/4 p-4 border-r">
+              <Filters onFilterChange={handleFilterChange} />
+            </div>
+            <div className="w-3/4 p-4">
+              <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-4 xl:gap-[30px] mb-12">
+                {currentProducts && currentProducts.length > 0 ? (
+                  currentProducts.map((product, index) => (
+                    <ProductCard key={index} data={product} />
+                  ))
+                ) : (
+                  <h1 className="text-center w-full pb-[100px] text-[20px]">
+                    No products Found!
+                  </h1>
+                )}
+              </div>
+              <div className="flex justify-center m-4">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 mx-1 bg-gray-300 rounded"
+                >
+                  Previous
+                </button>
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handlePageChange(index + 1)}
+                    className={`px-4 py-2 mx-1 ${
+                      currentPage === index + 1
+                        ? "bg-[#243450] text-white"
+                        : "bg-gray-300"
+                    } rounded`}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 mx-1 bg-gray-300 rounded"
+                >
+                  Next
+                </button>
+              </div>
             </div>
           </div>
           <Footer />
