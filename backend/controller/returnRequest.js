@@ -6,6 +6,7 @@ const { isAuthenticated } = require("../middleware/auth");
 const cloudinary = require("cloudinary");
 const ReturnRequest = require("../model/returnRequest");
 const Shop = require("../model/shop");
+const Admin = require("../model/admin");
 const sendNotification = require("../utils/notification");
 const sendMail = require("../utils/sendMail");
 const {
@@ -77,15 +78,16 @@ router.post(
       recipientName: "Admin",
       bodyContent,
     });
+    const admin = await Admin.findOne();
     await sendMail({
-      email: process.env.ADMIN_EMAIL,
+      email: admin.email,
       subject: "Return/Exchange Request Notification",
       html: adminEmailContent,
     });
     await sendNotification(
       "return_request",
       `Return/exchange request for Order ID: ${orderId}, Product ID: ${productId}`,
-      process.env.ADMIN_ID,
+      admin._id,
       null
     );
     res.status(201).json({

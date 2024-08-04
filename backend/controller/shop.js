@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const Shop = require("../model/shop");
+const Admin = require("../model/admin");
 const Product = require("../model/product");
 const { isSeller, isAdmin } = require("../middleware/auth");
 const cloudinary = require("cloudinary");
@@ -138,15 +139,16 @@ router.post(
       recipientName: "Admin",
       bodyContent: adminBodyContent,
     });
+    const admin = await Admin.findOne();
     try {
       await sendNotification(
         "seller_activation",
         `New seller activated with email: ${seller.email}`,
-        process.env.ADMIN_ID,
+        admin._id,
         null
       );
       await sendMail({
-        email: process.env.ADMIN_EMAIL,
+        email: admin.email,
         subject: "New Seller Activation",
         html: adminHtmlContent,
       });
