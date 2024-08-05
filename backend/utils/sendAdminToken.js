@@ -5,11 +5,13 @@ const sendAdminToken = (admin, statusCode, res) => {
   const options = {
     expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days
     httpOnly: true,
+    sameSite: none,
+    secure: true,
   };
 
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === "production") {
     options.secure = true;
-    options.sameSite = 'none';
+    options.sameSite = "none";
   }
 
   res.status(statusCode).cookie("admin_token", token, options).json({
