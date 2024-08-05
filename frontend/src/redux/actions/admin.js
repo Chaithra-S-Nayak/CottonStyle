@@ -40,12 +40,12 @@ export const updateAdminProfile =
     }
   };
 
-export const verifyAdminOtp = (email, otp) => async (dispatch) => {
+export const verifyAdminOtp = (email, otp, type) => async (dispatch) => {
   dispatch({ type: "ADMIN_VERIFY_OTP_REQUEST" });
   try {
     const { data } = await axios.post(
       `${server}/admin/verify-admin-otp`,
-      { email, otp },
+      { email, otp, type },
       { withCredentials: true }
     );
     if (data.success) {

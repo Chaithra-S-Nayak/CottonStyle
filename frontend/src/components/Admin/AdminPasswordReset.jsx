@@ -16,13 +16,18 @@ const AdminPasswordReset = ({ email }) => {
       return;
     }
     try {
-      const response = await axios.put(`${server}/admin/admin-reset-password`, {
-        email,
-        newPassword: password,
-      });
+      const response = await axios.put(
+        `${server}/admin/admin-reset-password`,
+        {
+          email,
+          newPassword: password,
+        },
+        { withCredentials: true }
+      );
       if (response.data.success) {
         toast.success("Password has been reset successfully.");
         navigate("/admin/dashboard");
+        window.location.reload(true);
       } else {
         toast.error("Failed to reset password.");
       }
@@ -36,9 +41,7 @@ const AdminPasswordReset = ({ email }) => {
 
   return (
     <>
-     <h1 className={`${styles.formHeading}`}>
-        Reset Password
-      </h1>
+      <h1 className={`${styles.formHeading}`}>Reset Password</h1>
       <form
         className="space-y-6"
         onSubmit={(e) => {

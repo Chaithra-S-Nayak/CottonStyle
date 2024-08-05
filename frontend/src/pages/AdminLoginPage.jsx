@@ -24,7 +24,7 @@ const AdminLoginPage = () => {
       {!otpSent ? (
         <AdminLogin setOtpSent={setOtpSent} setEmail={setEmail} />
       ) : (
-        <OtpVerification email={email} />
+        <OtpVerification email={email} type="login" />
       )}
       <Footer />
     </>

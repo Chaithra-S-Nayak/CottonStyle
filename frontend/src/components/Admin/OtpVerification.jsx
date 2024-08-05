@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import styles from "../../styles/styles";
 
-const OtpVerification = ({ email }) => {
+const OtpVerification = ({ email, type, onSuccess }) => {
   const dispatch = useDispatch();
   const [otp, setOtp] = useState("");
   const navigate = useNavigate();
@@ -13,12 +13,16 @@ const OtpVerification = ({ email }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(verifyAdminOtp(email, otp));
-      toast.success("OTP Verified! Redirecting to dashboard.");
-      navigate("/admin/dashboard");
+      await dispatch(verifyAdminOtp(email, otp, type));
+      toast.success("OTP Verified!");
+      if (type === "login") {
+        navigate("/admin/dashboard");
+      } else if (type === "forgot-password") {
+        onSuccess();
+      }
     } catch (err) {
       toast.error(
-        err.response.data.message || "Something went wrong. Please try again."
+        err.response?.data?.message || "Something went wrong. Please try again."
       );
     }
   };

@@ -78,6 +78,7 @@ const AdminForgotPasswordPage = () => {
             {showOtpInput && !showPasswordReset && (
               <OtpVerification // By making the OTP component common for both admin login and admin forgot password, there is more padding at the top and bottom from parent(will try to fix it later).
                 email={email}
+                type="forgot-password"
                 onSuccess={() => setShowPasswordReset(true)}
               />
             )}

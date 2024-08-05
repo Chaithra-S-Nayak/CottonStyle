@@ -86,14 +86,21 @@ const verifyOtp = async (email, otp, next) => {
   return admin;
 };
 
-// Verify OTP (for admin login and send token upon success)
+// Verify OTP (for admin login (send token upon success) and forgot password)
 router.post(
   "/verify-admin-otp",
   catchAsyncErrors(async (req, res, next) => {
-    const { email, otp } = req.body;
+    const { email, otp, type } = req.body;
+
     const admin = await verifyOtp(email, otp, next);
-    if (admin) {
-      sendAdminToken(admin, 200, res);
+    if (type === "login") {
+      sendAdminToken(admin, 200, res); // Send token for login
+    } else if (type === "forgot-password") {
+      res
+        .status(200)
+        .json({ success: true, message: "OTP verified successfully." }); // Send response for forgot password
+    } else {
+      res.status(400).json({ success: false, message: "Invalid request type" });
     }
   })
 );
@@ -134,10 +141,7 @@ router.put(
     admin.otp = undefined;
     admin.otpExpiry = undefined;
     await admin.save();
-    res.status(200).json({
-      success: true,
-      message: "Password has been reset successfully",
-    });
+    sendAdminToken(admin, 200, res);
   })
 );
 
