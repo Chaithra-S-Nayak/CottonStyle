@@ -54,7 +54,14 @@ const UpdateProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (images.length === 0) {
+      toast.error("Please upload at least one image.");
+      return;
+    }
+    if (availableSizes.length === 0) {
+      toast.error("Please select at least one size.");
+      return;
+    }
     const productData = {
       name,
       description,

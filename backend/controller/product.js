@@ -13,10 +13,8 @@ router.post(
   "/create-product",
   catchAsyncErrors(async (req, res, next) => {
     const shopId = req.body.shopId;
-    console.log(req);
     const shop = await Shop.findById(shopId);
     if (!shop) {
-      console.error("Shop not found:", shopId); // Debug log
       return next(new ErrorHandler("Shop Id is invalid!", 400));
     }
     let images = [];

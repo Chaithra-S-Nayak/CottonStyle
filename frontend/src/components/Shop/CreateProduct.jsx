@@ -66,6 +66,14 @@ const CreateProduct = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (images.length === 0) {
+      toast.error("Please upload at least one image.");
+      return;
+    }
+    if (availableSizes.length === 0) {
+      toast.error("Please select at least one size.");
+      return;
+    }
     const newForm = new FormData();
     images.forEach((image) => {
       newForm.append("images", image);
