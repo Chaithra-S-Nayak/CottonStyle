@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import logo from "../../Assets/CottonStyle.png";
+import logo from "../../Assets/TshirtGalaxy.png";
 import { logoutAdmin } from "../../redux/actions/admin";
 import NotificationIcon from "../../components/NotificationIcon";
 import { NotificationProvider } from "../../context/NotificationContext";

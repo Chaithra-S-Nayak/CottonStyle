@@ -28,7 +28,7 @@ const generateEmailTemplate = ({ recipientName, bodyContent }) => `
         "
       >
         <div style="font-size: 20px; font-weight: 300; margin: 0">
-          CottonStyle
+          Tshirt Galaxy
         </div>
       </div>
       <p>Hello ${recipientName},</p>
@@ -43,7 +43,7 @@ const generateEmailTemplate = ({ recipientName, bodyContent }) => `
           color: #999;
         "
       >
-        <p>&copy; 2024 CottonStyle. All rights reserved.</p>
+        <p>&copy; 2024 Tshirt Galaxy. All rights reserved.</p>
       </div>
     </div>
   </body>
@@ -72,7 +72,7 @@ const getOtpEmailTemplate = (otp) => `
 
 const getActivationEmailTemplate = (activationUrl) => `
     <p>
-      Thank you for registering with CottonStyle! Please click the button below
+      Thank you for registering with Tshirt Galaxy! Please click the button below
       to activate your account:
     </p>
     <a
@@ -106,7 +106,7 @@ const getAdminNotificationEmailTemplate = (name, email, phoneNumber) => `
 const getAccountDeletionEmailTemplate = (adminEmail) => `
     <p>
       We regret to inform you that your account has been deleted from
-      CottonStyle.
+      Tshirt Galaxy.
     </p>
     <p>
       If you have any questions or concerns, please contact our support team at
@@ -118,7 +118,7 @@ const getAccountDeletionEmailTemplate = (adminEmail) => `
 const getShopDeletionEmailTemplate = (adminEmail) => `
     <p>
       We regret to inform you that your seller account has been deleted from
-      CottonStyle.
+      Tshirt Galaxy.
     </p>
     <p>
       If you have any questions or concerns, please contact our support team at
@@ -159,7 +159,7 @@ const getWithdrawConfirmationEmailTemplate = (amount) => `
 const getOrderCreationEmailTemplate = (orderId) => `
     <p>You have received a new order with ID: ${orderId}.</p>
     <p>Please review the order details and prepare for shipping:</p>
-    <p>Thank you for using CottonStyle!</p>
+    <p>Thank you for using Tshirt Galaxy!</p>
 `;
 
 const getOutOfStockEmailTemplate = (productName, productId) => `

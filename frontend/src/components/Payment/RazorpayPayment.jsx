@@ -3,7 +3,7 @@ import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import logo from "../../Assets/CottonStyle.png";
+import logo from "../../Assets/TshirtGalaxy.png";
 import styles from "../../styles/styles";
 
 const RazorpayPayment = ({ orderData, onSuccess }) => {
@@ -18,7 +18,7 @@ const RazorpayPayment = ({ orderData, onSuccess }) => {
         key: process.env.RAZORPAY_KEY_ID,
         amount: data.amount,
         currency: "INR",
-        name: "CottonStyle",
+        name: "Tshirt Galaxy",
         description: "Payment for your order",
         image: logo,
         order_id: data.orderId,

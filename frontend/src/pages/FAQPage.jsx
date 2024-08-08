@@ -73,7 +73,7 @@ const Faq = () => {
               <p className="text-base text-gray-500">
                 If you're not satisfied with your purchase, we accept returns
                 within 7 days of delivery. To initiate a return, please email us
-                at cottonstyle@gmail.com with your order number and a brief
+                at tshirtgalaxy@gmail.com with your order number and a brief
                 explanation of why you're returning the item.
               </p>
             </div>
@@ -171,7 +171,7 @@ const Faq = () => {
             <div className="mt-4">
               <p className="text-base text-gray-500">
                 You can contact our customer support team by emailing us at
-                cottonstyle@gmail.com.
+                tshirtgalaxy@gmail.com.
               </p>
             </div>
           )}

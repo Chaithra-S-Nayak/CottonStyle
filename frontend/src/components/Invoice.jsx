@@ -105,12 +105,12 @@ const Invoice = () => {
           <div className="flex justify-between">
             <div className="w-1/2">
               <p className="font-bold">Sender:</p>
-              <p>CottonStyle</p>
+              <p>Tshirt Galaxy</p>
               <p>3rd Main Road, VP Nagar</p>
               <p>Udupi, Karnataka, India</p>
               <p>PIN Code: 576102</p>
               <p>Phone: 8012345678</p>
-              <p>Email: info@cottonstyle.com</p>
+              <p>Email: info@tshirtgalaxy.com</p>
             </div>
             <div className="w-1/2">
               <p className="font-bold">Recipient:</p>
@@ -309,9 +309,9 @@ const Invoice = () => {
 
         <div className="pt-10 text-sm text-neutral-700">
           <footer className="bottom-0 left-0 bg-gray-100 w-full text-neutral-600 text-center text-xs py-3">
-            CottonStyle
+            Tshirt Galaxy
             <span className="text-slate-300 px-2">|</span>
-            info@cottonstyle.com
+            info@tshirtgalaxy.com
             <span className="text-slate-300 px-2">|</span>
             +91 8012345678
           </footer>

@@ -14,7 +14,7 @@ import Navbar from "./Navbar";
 import { useSelector, useDispatch } from "react-redux";
 import Wishlist from "../Wishlist/Wishlist";
 import { RxCross1 } from "react-icons/rx";
-import logo from "../../Assets/CottonStyle.png";
+import logo from "../../Assets/TshirtGalaxy.png";
 import { getWishlist } from "../../redux/actions/wishlist";
 
 const Header = ({ activeHeading }) => {
@@ -36,14 +36,18 @@ const Header = ({ activeHeading }) => {
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-
-    const filteredProducts =
-      allProducts &&
-      allProducts.filter((product) =>
-        product.name.toLowerCase().includes(term.toLowerCase())
-      );
-    setSearchData(filteredProducts);
-    setDropdownVisible(true); // Show dropdown when typing
+    if (term.trim()) {
+      const filteredProducts =
+        allProducts &&
+        allProducts.filter((product) =>
+          product.name.toLowerCase().includes(term.toLowerCase())
+        );
+      setSearchData(filteredProducts);
+      setDropdownVisible(true);
+    } else {
+      setSearchData(null);
+      setDropdownVisible(false);
+    }
   };
 
   const handleClickOutside = () => {
@@ -91,7 +95,7 @@ const Header = ({ activeHeading }) => {
               placeholder="Search Product"
               value={searchTerm}
               onChange={handleSearchChange}
-              className="h-[40px] w-full px-2 border-[#243450] border-[1.5px] rounded-md"
+              className={`${styles.formInput}`}
             />
             <AiOutlineSearch
               size={30}
@@ -215,14 +219,6 @@ const Header = ({ activeHeading }) => {
         } w-full h-[60px] z-50 top-0 left-0 flex items-center justify-between 800px:hidden`}
       >
         <div className="flex items-center w-full px-4">
-          {/* Menu Icon */}
-          <BiMenuAltLeft
-            size={40}
-            className="ml-4"
-            onClick={() => setOpen(true)}
-          />
-
-          {/* Logo */}
           <div className="flex-grow text-center">
             <Link to="/">
               <img src={logo} alt="Logo" className="w-auto h-12" />
@@ -249,48 +245,75 @@ const Header = ({ activeHeading }) => {
               </span>
             </div>
           </Link>
+
+          {/* User Icon */}
+          <div className="relative mr-[10px]">
+            {isAuthenticated ? (
+              <Link to="/profile">
+                <img
+                  src={`${user?.avatar?.url}`}
+                  className="w-[35px] h-[35px] rounded-full"
+                  alt=""
+                />
+              </Link>
+            ) : (
+              <Link to="/login">
+                <CgProfile size={30} />
+              </Link>
+            )}
+          </div>
+
+          {/* Menu Icon */}
+          <div onClick={() => setOpen(!open)}>
+            {open ? <RxCross1 size={30} /> : <BiMenuAltLeft size={30} />}
+          </div>
         </div>
 
-        {/* Mobile Menu Sidebar */}
-        {open && (
-          <div className="fixed w-full bg-[#0000005f] z-20 h-full top-0 left-0">
-            <div className="fixed w-[70%] bg-[#fff] h-screen top-0 left-0 z-10 overflow-y-scroll">
-              <div className="w-full flex justify-between items-center p-4">
-                <RxCross1
-                  size={30}
-                  className="text-[#000]"
-                  onClick={() => setOpen(false)}
-                />
+        {/* Navbar */}
+        {open ? (
+          <div className="fixed w-full bg-[#fff] z-10 top-0 left-0 min-h-full flex flex-col justify-between">
+            <div>
+              <div className="relative flex justify-end items-center mr-[15px] cursor-pointer">
+                {open ? (
+                  <RxCross1 size={30} onClick={() => setOpen(!open)} />
+                ) : (
+                  <BiMenuAltLeft size={30} onClick={() => setOpen(!open)} />
+                )}
               </div>
 
               <div className="my-8 w-[92%] m-auto h-[40px] relative">
                 <input
-                  type="search"
+                  type="text"
                   placeholder="Search Product"
-                  className="h-[40px] w-full px-2 border-[#243450] border-[2px] rounded-md"
                   value={searchTerm}
                   onChange={handleSearchChange}
+                  className={`${styles.formInput}`}
                 />
-                {searchData && (
-                  <div className="absolute bg-[#fff] z-10 shadow w-full left-0 p-3">
-                    {searchData.map((i) => (
-                      <Link to={`/product/${i._id}`} key={i._id}>
-                        <div className="flex items-center">
-                          <img
-                            src={i.images[0]?.url}
-                            alt=""
-                            className="w-[50px] mr-2"
-                          />
-                          <h5>{i.name}</h5>
-                        </div>
-                      </Link>
-                    ))}
+                <AiOutlineSearch
+                  size={30}
+                  className="absolute right-2 top-1.5 cursor-pointer"
+                />
+                {dropdownVisible && searchData && searchData.length !== 0 ? (
+                  <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
+                    {searchData &&
+                      searchData.map((i, index) => {
+                        return (
+                          <Link to={`/product/${i._id}`} key={index}>
+                            <div className="w-full flex items-start-py-3 m-2">
+                              <img
+                                src={`${i.images[0]?.url}`}
+                                alt=""
+                                className="w-[40px] h-[40px] mr-[10px]"
+                              />
+                              <h1>{i.name}</h1>
+                            </div>
+                          </Link>
+                        );
+                      })}
                   </div>
-                )}
+                ) : null}
               </div>
-
               <Navbar active={activeHeading} />
-
               <div className="p-4">
                 <div className={`${styles.button} mb-4`}>
                   <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
@@ -308,36 +331,10 @@ const Header = ({ activeHeading }) => {
                     </h1>
                   </Link>
                 </div>
-                <div className="flex justify-center">
-                  {isAuthenticated ? (
-                    <Link to="/profile">
-                      <img
-                        src={`${user.avatar?.url}`}
-                        alt="Profile"
-                        className="w-[60px] h-[60px] rounded-full border-[3px] border-[#0eae88]"
-                      />
-                    </Link>
-                  ) : (
-                    <>
-                      <Link
-                        to="/login"
-                        className="text-[18px] pr-[10px] text-[#000000b7]"
-                      >
-                        Login /
-                      </Link>
-                      <Link
-                        to="/sign-up"
-                        className="text-[18px] text-[#000000b7]"
-                      >
-                        Sign up
-                      </Link>
-                    </>
-                  )}
-                </div>
               </div>
             </div>
           </div>
-        )}
+        ) : null}
       </div>
     </>
   );

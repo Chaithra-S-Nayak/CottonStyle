@@ -113,12 +113,12 @@ const ProductsPage = () => {
           <Header activeHeading={3} />
           <br />
           <br />
-          <div className={`${styles.section} flex`}>
-            <div className="w-1/4 p-4 border-r">
+          <div className={`${styles.section} flex flex-col md:flex-row`}>
+            <div className="w-full md:w-1/4 p-4 md:border-r border-r-0">
               <Filters onFilterChange={handleFilterChange} />
             </div>
-            <div className="w-3/4 p-4">
-              <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-4 xl:gap-[30px] mb-12">
+            <div className="w-full md:w-3/4 p-4">
+              <div className="grid grid-cols-2 gap-[10px] sm:grid-cols-3 sm:gap-[15px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-4 xl:gap-[30px] mb-12">
                 {currentProducts && currentProducts.length > 0 ? (
                   currentProducts.map((product, index) => (
                     <ProductCard key={index} data={product} />
@@ -160,6 +160,7 @@ const ProductsPage = () => {
               </div>
             </div>
           </div>
+
           <Footer />
         </div>
       )}
