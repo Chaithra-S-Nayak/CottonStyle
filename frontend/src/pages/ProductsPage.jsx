@@ -87,8 +87,11 @@ const ProductsPage = () => {
       );
     }
 
-    setData(filteredProducts);
-    setCurrentPage(1); // Reset to first page when filters change
+    // Only update data state if the filtered result is different
+    if (JSON.stringify(filteredProducts) !== JSON.stringify(data)) {
+      setData(filteredProducts);
+      setCurrentPage(1); // Reset to first page when filters change
+    }
   }, [allProducts, filters]);
 
   const handlePageChange = (page) => {
