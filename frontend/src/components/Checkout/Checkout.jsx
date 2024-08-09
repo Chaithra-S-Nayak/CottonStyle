@@ -281,16 +281,16 @@ const ShippingInfo = ({
           </div>
         </div>
         <div className="w-full flex justify-between items-center mt-4">
-          <h5
-            className="text-[17px] cursor-pointer"
+          <button
+            className={`${styles.simpleButton}`}
             onClick={() => setUserInfo(!userInfo)}
           >
-            Choose from saved address
-          </h5>
+            Use Saved Address
+          </button>
           <button
             type="button"
             onClick={clearForm}
-            className={`${styles.simpleButton} !bg-red-500`}
+            className={`${styles.simpleButton} !bg-red-500 ml-1`}
           >
             Clear Form
           </button>

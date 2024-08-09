@@ -236,6 +236,9 @@ const Header = ({ activeHeading }) => {
             </span>
           </div>
 
+          {/* Wishlist Popup */}
+          {openWishlist && <Wishlist setOpenWishlist={setOpenWishlist} />}
+
           {/* Cart Icon */}
           <Link to="/cart">
             <div className="relative mr-[20px]">

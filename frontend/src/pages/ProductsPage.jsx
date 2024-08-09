@@ -121,7 +121,7 @@ const ProductsPage = () => {
               <Filters onFilterChange={handleFilterChange} />
             </div>
             <div className="w-full md:w-3/4 p-4">
-              <div className="grid grid-cols-2 gap-[10px] sm:grid-cols-3 sm:gap-[15px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-4 xl:gap-[30px] mb-12">
+              <div className="grid grid-cols-1 gap-[20px] sm:grid-cols-2 sm:gap-[15px] md:grid-cols-3 md:gap-[20px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-4 xl:gap-[30px] mb-12">
                 {currentProducts && currentProducts.length > 0 ? (
                   currentProducts.map((product, index) => (
                     <ProductCard key={index} data={product} />
@@ -163,7 +163,6 @@ const ProductsPage = () => {
               </div>
             </div>
           </div>
-
           <Footer />
         </div>
       )}

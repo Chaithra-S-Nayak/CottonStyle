@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   AiOutlineArrowRight,
   AiOutlineCamera,
@@ -19,7 +19,6 @@ import {
   updateUserInformation,
 } from "../../redux/actions/user";
 import { Country, State } from "country-state-city";
-import { useEffect } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { getAllOrdersOfUser } from "../../redux/actions/order";
@@ -69,7 +68,7 @@ const ProfileContent = ({ active }) => {
           )
           .then(() => {
             dispatch(loadUser());
-            toast.success("avatar updated successfully!");
+            toast.success("Avatar updated successfully!");
           })
           .catch((error) => {
             toast.error(error);
@@ -80,10 +79,10 @@ const ProfileContent = ({ active }) => {
   };
 
   return (
-    <div className="mx-auto w-full">
+    <div className="w-full">
       {active === 1 && (
         <>
-          <div className="flex justify-center mb-4 w-1/2 mx-auto">
+          <div className="flex justify-center mb-4 w-full md:w-1/2 mx-auto">
             <div className="relative">
               <img
                 src={`${user?.avatar?.url}`}
@@ -103,7 +102,10 @@ const ProfileContent = ({ active }) => {
               </div>
             </div>
           </div>
-          <form onSubmit={handleSubmit} className="space-y-4 w-1/2 mx-auto">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4 w-full md:w-1/2 px-4 md:px-0 mx-auto"
+          >
             <div>
               <label className={`${styles.formLabel}`}>Full Name</label>
               <input

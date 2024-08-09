@@ -86,25 +86,25 @@ const WishlistItem = ({
 }) => {
   return (
     <div className="border-b p-4">
-      <div className="w-full 800px:flex items-center justify-between">
+      <div className="w-full flex items-center justify-between">
         <div className="flex items-center">
           <RxCross1
-            className="cursor-pointer 800px:mb-['unset'] 800px:ml-['unset'] mb-2 ml-2"
+            className="cursor-pointer mb-2 ml-2"
             onClick={() => removeFromWishlistHandler(data.product._id)}
           />
           <img
             src={`${data.product.images[0]?.url}`}
             alt=""
-            className="w-[130px] h-min ml-2 mr-2 rounded-[5px]"
+            className="w-[80px] h-[80px] ml-2 mr-2 rounded-[5px]"
           />
-          <div className="pl-[5px]">
+          <div className="pl-[5px] flex-1">
             <Link
               to={`/product/${data.product._id}`}
               className="text-blue-500 hover:underline"
             >
-              <h1>{data.product.name}</h1>
+              <h1 className="text-sm md:text-base">{data.product.name}</h1>
             </Link>
-            <h4 className="pt-3 800px:pt-[3px] text-[15px] font-Roboto">
+            <h4 className="pt-1 text-[15px] font-Roboto">
               ₹{data.product.discountPrice}
             </h4>
           </div>

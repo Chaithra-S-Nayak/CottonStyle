@@ -1,97 +1,41 @@
 import React from "react";
-import styles from "../../styles/styles";
 
 const CheckoutSteps = ({ active }) => {
-  console.log(active);
+  const steps = ["Cart", "Address", "Payment", "Success"];
+  const stepWidth = `${100 / steps.length}%`;
+
   return (
-    <div className="w-full flex justify-center">
-      <div className="w-[90%] 800px:w-[50%] flex items-center flex-wrap">
-        <div className={`${styles.noramlFlex}`}>
-          <div className={`${styles.cart_button} bg-${styles.primaryColor}`}>
-            <span className={`${styles.cart_button_text}`}>1. Cart</span>
-          </div>
-          <div
-            className={`${
-              active > 1
-                ? `w-[30px] 800px:w-[70px] h-[4px] bg-${styles.primaryColor}`
-                : `w-[30px] 800px:w-[70px] h-[4px] bg-${styles.secondaryColor}`
-            }`}
-          />
-        </div>
-
-        <div className={`${styles.noramlFlex}`}>
-          <div
-            className={`${
-              active > 1
-                ? `${styles.cart_button} bg-${styles.primaryColor}`
-                : `${styles.cart_button} bg-${styles.secondaryColor}`
-            }`}
-          >
-            <span
-              className={`${
-                active > 1
-                  ? `${styles.cart_button_text}`
-                  : `${styles.cart_button_text} text-${styles.secondaryColor}`
+    <div className="w-full flex justify-center bg-gray-100 py-4">
+      <div className="flex justify-between w-full max-w-xl">
+        {steps.map((step, index) => {
+          return (
+            <div
+              key={index}
+              className={`flex flex-col items-center ${
+                index < steps.length - 1 ? "mr-2" : ""
               }`}
+              style={{ width: stepWidth }}
             >
-              2. Address
-            </span>
-          </div>
-          <div
-            className={`${
-              active > 2
-                ? `w-[30px] 800px:w-[70px] h-[4px] bg-${styles.primaryColor}`
-                : `w-[30px] 800px:w-[70px] h-[4px] bg-${styles.secondaryColor}`
-            }`}
-          />
-        </div>
-
-        <div className={`${styles.noramlFlex}`}>
-          <div
-            className={`${
-              active > 2
-                ? `${styles.cart_button} bg-${styles.primaryColor}`
-                : `${styles.cart_button} bg-${styles.secondaryColor}`
-            }`}
-          >
-            <span
-              className={`${
-                active > 2
-                  ? `${styles.cart_button_text}`
-                  : `${styles.cart_button_text} text-${styles.secondaryColor}`
-              }`}
-            >
-              3. Payment
-            </span>
-          </div>
-          <div
-            className={`${
-              active > 3
-                ? `w-[30px] 800px:w-[70px] h-[4px] bg-${styles.primaryColor}`
-                : `w-[30px] 800px:w-[70px] h-[4px] bg-${styles.secondaryColor}`
-            }`}
-          />
-        </div>
-
-        <div className={`${styles.noramlFlex}`}>
-          <div
-            className={`${
-              active > 3
-                ? `${styles.cart_button} bg-${styles.primaryColor}`
-                : `${styles.cart_button} bg-${styles.secondaryColor}`
-            }`}
-          >
-            <span
-              className={`${
-                active > 3
-                  ? `${styles.cart_button_text}`
-                  : `${styles.cart_button_text} text-${styles.secondaryColor}`
-              }`}
-            >
-              4. Success
-            </span>
-          </div>
-        </div>
+              <div
+                className={`h-8 w-8 flex items-center justify-center rounded-full border-2 ${
+                  active >= index + 1
+                    ? "bg-green-600 text-white"
+                    : "bg-gray-300 border-gray-600"
+                }`}
+              >
+                {index + 1}
+              </div>
+              <span className="mt-2 text-center text-xs">{step}</span>
+              {index < steps.length && (
+                <div
+                  className={`w-full h-0.5 ${
+                    active > index ? "bg-green-600" : "bg-gray-600"
+                  } mt-1`}
+                ></div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
