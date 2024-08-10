@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { BiMenuAltLeft } from "react-icons/bi";
+import { RxCross1 } from "react-icons/rx";
 import logo from "../../../Assets/TshirtGalaxy.png";
 import NotificationIcon from "../../../components/NotificationIcon";
 import { NotificationProvider } from "../../../context/NotificationContext";
+import { useOnClickOutside } from "usehooks-ts";
 
 const DashboardHeader = () => {
   const { seller } = useSelector((state) => state.seller);
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [active, setActive] = useState(false);
+  const dropdownRef = useRef(null);
 
   const isActive = (path) => location.pathname === path;
 
@@ -17,22 +21,45 @@ const DashboardHeader = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handleClickOutside = () => {
+    setIsMenuOpen(false);
+  };
+
+  useOnClickOutside(dropdownRef, handleClickOutside);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 95) {
+        setActive(true);
+      } else {
+        setActive(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <NotificationProvider context="seller">
-      <div className="w-full h-[70px] bg-white shadow sticky top-0 left-0 z-30 flex items-center justify-between px-4">
-        <div>
-          <Link to="/">
-            <img src={logo} alt="Logo" className="w-auto h-16" />
-          </Link>
-        </div>
+      <div
+        className={`${
+          active
+            ? "shadow-sm fixed top-0 left-0 z-10 bg-white transition-all duration-300"
+            : "bg-white"
+        } transition flex items-center justify-between w-full h-[70px] px-4`}
+      >
+        <Link to="/">
+          <img src={logo} alt="Logo" className="w-auto h-16" />
+        </Link>
+
         <div className="flex items-center">
-          <div className="800px:hidden flex items-center">
-            <button onClick={toggleMenu} className="text-2xl">
-              {isMenuOpen ? <FaTimes /> : <FaBars />}
-            </button>
-          </div>
           <div className="hidden 800px:flex items-center mr-4">
-            <Link to="/dashboard" className="800px:block hidden">
+            {/* Links for larger screens */}
+            <Link to="/dashboard">
               <span
                 className={`text-md mx-3 cursor-pointer ${
                   isActive("/dashboard") ? "text-[green]" : "text-[#555]"
@@ -41,7 +68,8 @@ const DashboardHeader = () => {
                 Dashboard
               </span>
             </Link>
-            <Link to="/dashboard-coupons" className="800px:block hidden">
+            {/* Additional Links */}
+            <Link to="/dashboard-coupons">
               <span
                 className={`text-md mx-3 cursor-pointer ${
                   isActive("/dashboard-coupons")
@@ -52,7 +80,7 @@ const DashboardHeader = () => {
                 Coupon Codes
               </span>
             </Link>
-            <Link to="/dashboard-products" className="800px:block hidden">
+            <Link to="/dashboard-products">
               <span
                 className={`text-md mx-3 cursor-pointer ${
                   isActive("/dashboard-products")
@@ -63,7 +91,7 @@ const DashboardHeader = () => {
                 All Products
               </span>
             </Link>
-            <Link to="/dashboard-create-product" className="800px:block hidden">
+            <Link to="/dashboard-create-product">
               <span
                 className={`text-md mx-3 cursor-pointer ${
                   isActive("/dashboard-create-product")
@@ -74,7 +102,7 @@ const DashboardHeader = () => {
                 Create Product
               </span>
             </Link>
-            <Link to="/dashboard-orders" className="800px:block hidden">
+            <Link to="/dashboard-orders">
               <span
                 className={`text-md mx-3 cursor-pointer ${
                   isActive("/dashboard-orders") ? "text-[green]" : "text-[#555]"
@@ -83,7 +111,7 @@ const DashboardHeader = () => {
                 All Orders
               </span>
             </Link>
-            <Link to="/dashboard-refunds" className="800px:block hidden">
+            <Link to="/dashboard-refunds">
               <span
                 className={`text-md mx-3 cursor-pointer ${
                   isActive("/dashboard-refunds")
@@ -94,7 +122,7 @@ const DashboardHeader = () => {
                 Refunds
               </span>
             </Link>
-            <Link to="/update-shop" className="800px:block hidden">
+            <Link to="/update-shop">
               <span
                 className={`text-md mx-3 cursor-pointer ${
                   isActive("/update-shop") ? "text-[green]" : "text-[#555]"
@@ -103,7 +131,7 @@ const DashboardHeader = () => {
                 Update Shop
               </span>
             </Link>
-            <Link to="/seller-change-password" className="800px:block hidden">
+            <Link to="/seller-change-password">
               <span
                 className={`text-md mx-3 cursor-pointer ${
                   isActive("/seller-change-password")
@@ -118,27 +146,34 @@ const DashboardHeader = () => {
           <NotificationIcon />
           <Link to={`/shop/${seller._id}`} className="flex items-center">
             <img
-              src={`${seller.avatar?.url}`}
+              src={seller.avatar?.url}
               alt=""
               className="w-[50px] h-[50px] rounded-full object-cover"
             />
           </Link>
+          {/* BiMenuAltLeft icon for mobile screens */}
+          <div className="800px:hidden ml-4" onClick={toggleMenu}>
+            <BiMenuAltLeft size={30} />
+          </div>
         </div>
       </div>
-
       {/* Mobile Menu Sidebar */}
       {isMenuOpen && (
         <div className="fixed w-full bg-[#0000005f] z-20 h-full top-0 left-0">
-          <div className="fixed w-[70%] bg-[#fff] h-screen top-0 left-0 z-10 overflow-y-scroll">
+          <div
+            className="fixed w-[70%] bg-white h-screen top-0 left-0 z-10 overflow-y-scroll"
+            ref={dropdownRef}
+          >
             <div className="w-full flex justify-between items-center p-4">
-              <FaTimes
+              <RxCross1
                 size={30}
                 className="text-[#000]"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={toggleMenu}
               />
             </div>
             <div className="flex flex-col items-start p-4">
-              <Link to="/dashboard" className="my-2">
+              {/* Links for mobile screens */}
+              <Link to="/dashboard" className="my-2" onClick={toggleMenu}>
                 <span
                   className={`text-md cursor-pointer ${
                     isActive("/dashboard") ? "text-[green]" : "text-[#555]"
@@ -147,7 +182,12 @@ const DashboardHeader = () => {
                   Dashboard
                 </span>
               </Link>
-              <Link to="/dashboard-coupons" className="my-2">
+              {/* Additional Links */}
+              <Link
+                to="/dashboard-coupons"
+                className="my-2"
+                onClick={toggleMenu}
+              >
                 <span
                   className={`text-md cursor-pointer ${
                     isActive("/dashboard-coupons")
@@ -158,7 +198,11 @@ const DashboardHeader = () => {
                   Coupon Codes
                 </span>
               </Link>
-              <Link to="/dashboard-products" className="my-2">
+              <Link
+                to="/dashboard-products"
+                className="my-2"
+                onClick={toggleMenu}
+              >
                 <span
                   className={`text-md cursor-pointer ${
                     isActive("/dashboard-products")
@@ -169,7 +213,11 @@ const DashboardHeader = () => {
                   All Products
                 </span>
               </Link>
-              <Link to="/dashboard-create-product" className="my-2">
+              <Link
+                to="/dashboard-create-product"
+                className="my-2"
+                onClick={toggleMenu}
+              >
                 <span
                   className={`text-md cursor-pointer ${
                     isActive("/dashboard-create-product")
@@ -180,7 +228,11 @@ const DashboardHeader = () => {
                   Create Product
                 </span>
               </Link>
-              <Link to="/dashboard-orders" className="my-2">
+              <Link
+                to="/dashboard-orders"
+                className="my-2"
+                onClick={toggleMenu}
+              >
                 <span
                   className={`text-md cursor-pointer ${
                     isActive("/dashboard-orders")
@@ -191,7 +243,11 @@ const DashboardHeader = () => {
                   All Orders
                 </span>
               </Link>
-              <Link to="/dashboard-refunds" className="my-2">
+              <Link
+                to="/dashboard-refunds"
+                className="my-2"
+                onClick={toggleMenu}
+              >
                 <span
                   className={`text-md cursor-pointer ${
                     isActive("/dashboard-refunds")
@@ -202,7 +258,7 @@ const DashboardHeader = () => {
                   Refunds
                 </span>
               </Link>
-              <Link to="/update-shop" className="my-2">
+              <Link to="/update-shop" className="my-2" onClick={toggleMenu}>
                 <span
                   className={`text-md cursor-pointer ${
                     isActive("/update-shop") ? "text-[green]" : "text-[#555]"
@@ -211,7 +267,11 @@ const DashboardHeader = () => {
                   Update Shop
                 </span>
               </Link>
-              <Link to="/seller-change-password" className="my-2">
+              <Link
+                to="/seller-change-password"
+                className="my-2"
+                onClick={toggleMenu}
+              >
                 <span
                   className={`text-md cursor-pointer ${
                     isActive("/seller-change-password")

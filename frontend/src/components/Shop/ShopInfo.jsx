@@ -27,7 +27,7 @@ const ShopInfo = ({ isOwner }) => {
         console.log(error);
         setIsLoading(false);
       });
-    }, [dispatch, id]);
+  }, [dispatch, id]);
 
   const logoutHandler = async () => {
     axios.get(`${server}/shop/logout`, {
@@ -55,17 +55,19 @@ const ShopInfo = ({ isOwner }) => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div>
-          <div className="w-full py-5">
-            <div className="w-full flex item-center justify-center">
+        <div className="p-4">
+          <div className="w-full py-5 ">
+            <div className="w-full flex items-center justify-center">
               <img
                 src={`${data.avatar?.url}`}
                 alt=""
-                className="w-[150px] h-[150px] object-cover rounded-full"
+                className="w-[100px] h-[100px] md:w-[150px] md:h-[150px] object-cover rounded-full"
               />
             </div>
-            <h3 className="text-center py-2 text-[20px]">{data.name}</h3>
-            <p className="text-[16px] text-[#000000a6] p-[10px] flex items-center">
+            <h3 className="text-center py-2 text-[18px] md:text-[20px]">
+              {data.name}
+            </h3>
+            <p className="text-[14px] md:text-[16px] text-[#000000a6] p-[10px] flex items-center">
               {data.description}
             </p>
           </div>
@@ -75,13 +77,12 @@ const ShopInfo = ({ isOwner }) => {
           </div>
           <div className="p-3">
             <h5 className="font-[600]">Email</h5>
-            <h4 className="text-[#000000a6]">{data.email}</h4>
+            <h4 className="text-[#000000a6] break-words">{data.email}</h4>
           </div>
           <div className="p-3">
             <h5 className="font-[600]">Phone Number</h5>
             <h4 className="text-[#000000a6]">{data.phoneNumber}</h4>
           </div>
-
           <div className="p-3">
             <h5 className="font-[600]">Total Products</h5>
             <h4 className="text-[#000000a6]">{products && products.length}</h4>
