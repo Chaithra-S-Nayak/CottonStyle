@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import NotFound from "./pages/NotFound";
 import {
   LoginPage,
   SignupPage,
@@ -316,6 +317,7 @@ const App = () => {
           path="/admin-forgot-password"
           element={<AdminForgotPasswordPage />}
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <ToastContainer
         position="bottom-center"
