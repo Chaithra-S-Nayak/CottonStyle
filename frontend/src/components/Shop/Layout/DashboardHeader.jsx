@@ -7,6 +7,7 @@ import logo from "../../../Assets/TshirtGalaxy.png";
 import NotificationIcon from "../../../components/NotificationIcon";
 import { NotificationProvider } from "../../../context/NotificationContext";
 import { useOnClickOutside } from "usehooks-ts";
+import styles from "../../../styles/styles";
 
 const DashboardHeader = () => {
   const { seller } = useSelector((state) => state.seller);
@@ -56,7 +57,7 @@ const DashboardHeader = () => {
           <img src={logo} alt="Logo" className="w-auto h-16" />
         </Link>
 
-        <div className="flex items-center">
+        <div className={`${styles.noramlFlex}`}>
           <div className="hidden 800px:flex items-center mr-4">
             {/* Links for larger screens */}
             <Link to="/dashboard">
@@ -144,7 +145,7 @@ const DashboardHeader = () => {
             </Link>
           </div>
           <NotificationIcon />
-          <Link to={`/shop/${seller._id}`} className="flex items-center">
+          <Link to={`/shop/${seller._id}`} className={`${styles.noramlFlex}`}>
             <img
               src={seller.avatar?.url}
               alt=""

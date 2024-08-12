@@ -26,13 +26,13 @@ const Success = () => {
     },
   };
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-green-100 to-blue-100">
+    <div className="min-h-screen flex flex-col items-center justify-center">
       <Lottie options={defaultOptions} width={300} height={300} />
       <div className="text-center">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
           Thank you! Your order has been placed successfully.
         </h2>
-        <p className="text-gray-600 mb-6">
+        <p className="text-gray-600 mb-6 p-4">
           We appreciate your purchase and are working to get your items to you
           as soon as possible.
         </p>

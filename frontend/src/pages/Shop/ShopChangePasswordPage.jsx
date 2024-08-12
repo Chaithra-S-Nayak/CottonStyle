@@ -1,6 +1,7 @@
 import React from "react";
 import SellerChangePassword from "../../components/Shop/SellerChangePassword";
 import DashboardHeader from "../../components/Shop/Layout/DashboardHeader";
+import Footer from "../../components/Layout/Footer";
 
 const ShopChangePasswordPage = () => {
   return (
@@ -9,6 +10,7 @@ const ShopChangePasswordPage = () => {
       <div className="flex items-start justify-between w-full">
         <SellerChangePassword />
       </div>
+      <Footer />
     </div>
   );
 };

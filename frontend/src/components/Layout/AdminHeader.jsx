@@ -9,6 +9,7 @@ import { NotificationProvider } from "../../context/NotificationContext";
 import { FiLogOut } from "react-icons/fi";
 import { useOnClickOutside } from "usehooks-ts";
 import { logoutAdmin } from "../../redux/actions/admin";
+import styles from "../../styles/styles";
 
 const AdminHeader = () => {
   const { admin } = useSelector((state) => state.admin);
@@ -68,7 +69,7 @@ const AdminHeader = () => {
         <Link to="/">
           <img src={logo} alt="Logo" className="w-auto h-16" />
         </Link>
-        <div className="flex items-center">
+        <div className={`${styles.noramlFlex}`}>
           <div className="hidden 800px:flex items-center mr-4">
             <Link to="/admin/dashboard">
               <span
@@ -137,7 +138,7 @@ const AdminHeader = () => {
             </Link>
           </div>
           <NotificationIcon />
-          <Link to="/admin-profile" className="flex items-center">
+          <Link to="/admin-profile" className={`${styles.noramlFlex}`}>
             <img
               src={admin?.avatar?.url}
               alt="avatar"

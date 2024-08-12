@@ -102,17 +102,28 @@ const WithdrawMoney = () => {
 
   return (
     <div className="w-full h-[90vh] p-8">
-      <div className="w-full  h-full rounded flex items-center justify-center flex-col">
-        <h5 className="text-[18px] pb-4">
-          Available Balance: ₹{availableBalance}
-        </h5>
-        <div
-          className={`${styles.button} text-white !h-[42px] !rounded`}
-          onClick={() => (availableBalance < 50 ? error() : setOpen(true))}
-        >
-          Withdraw
+      <div className="w-full h-full rounded flex items-center justify-center flex-col bg-white p-6 shadow-md">
+        <div className="flex items-center justify-center flex-col">
+          <h5 className="text-[22px] font-semibold text-gray-800 mb-4">
+            Available Balance
+          </h5>
+          <div className="flex items-center text-[18px] text-green-600 font-medium mb-6">
+            <span className="text-[28px] mr-2">₹</span>
+            <span>{availableBalance}</span>
+          </div>
+          <button
+            className={`${styles.simpleButton}`}
+            onClick={() => (availableBalance < 50 ? error() : setOpen(true))}
+          >
+            Withdraw
+          </button>
+
+          <p className="text-red-500 text-[14px] mt-4">
+            Minimum balance of ₹50 required to withdraw.
+          </p>
         </div>
       </div>
+
       {open && (
         <div className="w-full h-screen z-[9999] fixed top-0 left-0 flex items-center justify-center bg-[#0000004e]">
           <div
@@ -299,29 +310,31 @@ const WithdrawMoney = () => {
                         placeholder="Amount"
                         value={withdrawAmount}
                         onChange={(e) => setWithdrawAmount(e.target.value)}
-                        className="800px:w-[150px] w-[full] border 800px:mr-3 p-1 rounded"
+                        className={`${styles.formInput}`}
                       />
-                      <div
-                        className={`${styles.button} !h-[35px] text-white`}
+                      <button
+                        className={`${styles.simpleButton} ml-4`}
                         onClick={withdrawHandler}
                       >
                         Withdraw
-                      </div>
+                      </button>
                     </div>
                   </div>
                 ) : (
-                  <div>
-                    <p className="text-[17px] pt-2">
-                      No Withdraw Methods available!
+                  <div className="w-full p-6 rounded flex flex-col items-center">
+                    <p className="text-[18px] font-medium text-gray-700 mb-4">
+                      No Withdraw Methods Available
                     </p>
-                    <div className="w-full flex items-center">
-                      <div
-                        className={`${styles.button} text-white !h-[42px] !rounded`}
-                        onClick={() => setPaymentMethod(true)}
-                      >
-                        Add new
-                      </div>
-                    </div>
+                    <p className="text-[16px] text-gray-600 mb-6 text-center">
+                      You haven't added any withdraw methods yet. To withdraw
+                      funds, please add a new payment method.
+                    </p>
+                    <button
+                      className={`${styles.simpleButton}`}
+                      onClick={() => setPaymentMethod(true)}
+                    >
+                      Add New Method
+                    </button>
                   </div>
                 )}
               </>

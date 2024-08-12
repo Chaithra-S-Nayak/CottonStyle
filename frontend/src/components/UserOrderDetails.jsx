@@ -300,7 +300,7 @@ const UserOrderDetails = () => {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center">
+      <div className={`${styles.noramlFlex}`}>
         {data?.status === "Delivered" && (
           <div
             className={`${styles.simpleButton} text-white py-2 px-4 rounded-md shadow focus:outline-none mr-4`}

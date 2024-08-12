@@ -121,7 +121,6 @@ const ShopSettings = () => {
                   : "Enter your shop description"
               }`}
               className={`${styles.formInput}`}
-              required
               rows="4"
             ></textarea>
           </div>
@@ -150,14 +149,15 @@ const ShopSettings = () => {
           </div>
           <div className="w-full">
             <label className={`${styles.formLabel}`}>Shop Address</label>
-            <input
+            <textarea
               type="text"
               placeholder={seller?.address}
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               className={`${styles.formInput}`}
+              rows="4"
               required
-            />
+            ></textarea>
           </div>
           <div className="w-full">
             <label className={`${styles.formLabel}`}>Shop Zip Code</label>

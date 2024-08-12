@@ -1,5 +1,6 @@
 import React from "react";
 import DashboardHeader from "../../components/Shop/Layout/DashboardHeader";
+import Footer from "../../components/Layout/Footer";
 import CreateProduct from "../../components/Shop/CreateProduct";
 
 const ShopCreateProduct = () => {
@@ -11,6 +12,7 @@ const ShopCreateProduct = () => {
           <CreateProduct />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

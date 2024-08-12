@@ -283,7 +283,7 @@ const Cart = () => {
       )}
 
       {isEditSidebarOpen && (
-        <div className="fixed inset-0 flex items-center justify-end z-50">
+        <div className="fixed inset-0 flex items-center justify-end z-50 overflow-y-auto">
           <div className="fixed inset-0 bg-black opacity-50"></div>
           <div className="relative bg-white w-full md:w-1/3 h-full shadow-xl p-6">
             <RxCross1

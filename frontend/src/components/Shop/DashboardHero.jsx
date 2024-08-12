@@ -94,7 +94,7 @@ const DashboardHero = () => {
     <div className={`${styles.section}`}>
       <div className="w-full block 800px:flex items-center justify-between mt-4">
         <div className="w-full mb-4 800px:w-[30%] min-h-[10vh] shadow rounded px-2 py-5 flex flex-col items-center">
-          <div className="flex items-center">
+          <div className={`${styles.noramlFlex}`}>
             <h3
               className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
             >
@@ -108,7 +108,7 @@ const DashboardHero = () => {
           </Link>
         </div>
         <div className="w-full mb-4 800px:w-[30%] min-h-[10vh] shadow rounded px-2 py-5 flex flex-col items-center">
-          <div className="flex items-center">
+          <div className={`${styles.noramlFlex}`}>
             <h3
               className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
             >
@@ -123,7 +123,7 @@ const DashboardHero = () => {
           </Link>
         </div>
         <div className="w-full mb-4 800px:w-[30%] min-h-[10vh]  shadow rounded px-2 py-5 flex flex-col items-center">
-          <div className="flex items-center">
+          <div className={`${styles.noramlFlex}`}>
             <h3
               className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
             >

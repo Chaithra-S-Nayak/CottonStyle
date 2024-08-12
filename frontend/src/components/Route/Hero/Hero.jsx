@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import styles from "../../../styles/styles";
 import backgroundImage from "../../../Assets/c.png";
 
@@ -22,13 +21,6 @@ const Hero = () => {
           Discover our premium, stylish, and comfortable t-shirts. <br />
           Perfect fit, all-day comfort.
         </p>
-        <Link to="/products" className="inline-block">
-          <div className={`${styles.button} mt-5`}>
-            <span className="text-[#fff] font-[Poppins] text-[18px]">
-              Shop Now
-            </span>
-          </div>
-        </Link>
       </div>
     </div>
   );

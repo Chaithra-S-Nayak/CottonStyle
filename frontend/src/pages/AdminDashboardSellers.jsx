@@ -1,5 +1,6 @@
 import React from "react";
 import AdminHeader from "../components/Layout/AdminHeader";
+import Footer from "../components/Layout/Footer";
 import AllSellers from "../components/Admin/AllSellers";
 import styles from "../styles/styles";
 
@@ -14,6 +15,7 @@ const AdminDashboardSellers = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

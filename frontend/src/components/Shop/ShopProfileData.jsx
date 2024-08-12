@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { getAllProductsShop } from "../../redux/actions/product";
+import styles from "../../styles/styles";
 import ProductCard from "../Route/ProductCard/ProductCard";
 import { server } from "../../server";
 
@@ -49,7 +50,7 @@ const ShopProfileData = () => {
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
         <div className="w-full flex">
-          <div className="flex items-center" onClick={() => setActive(1)}>
+          <div className={`${styles.noramlFlex}`} onClick={() => setActive(1)}>
             <h5
               className={`font-[500] text-[18px] ${
                 active === 1 ? "text-green-500" : "text-[#333]"
@@ -58,7 +59,7 @@ const ShopProfileData = () => {
               Shop Products
             </h5>
           </div>
-          <div className="flex items-center" onClick={() => setActive(2)}>
+          <div className={`${styles.noramlFlex}`} onClick={() => setActive(2)}>
             <h5
               className={`font-[500] text-[18px] ${
                 active === 2 ? "text-green-500" : "text-[#333]"
@@ -139,9 +140,9 @@ const ShopProfileData = () => {
               ))}
             </>
           ) : (
-            <h5 className="w-full text-center py-5 text-lg">
-              No Coupons available for this shop!
-            </h5>
+            <p className="m-4 text-center">
+              Oops! No coupons are available for this shop right now.
+            </p>
           )}
         </div>
       )}

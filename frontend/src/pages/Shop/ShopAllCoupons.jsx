@@ -1,5 +1,6 @@
 import React from "react";
 import DashboardHeader from "../../components/Shop/Layout/DashboardHeader";
+import Footer from "../../components/Layout/Footer";
 import AllCoupons from "../../components/Shop/AllCoupons";
 import styles from "../../styles/styles";
 
@@ -14,6 +15,7 @@ const ShopAllCoupons = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

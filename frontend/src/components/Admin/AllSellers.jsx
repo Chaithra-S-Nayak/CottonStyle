@@ -144,26 +144,32 @@ const AllSellers = () => {
         </div>
         {open && (
           <div className="w-full fixed top-0 left-0 z-[999] bg-[#00000039] flex items-center justify-center h-screen">
-            <div className="w-[95%] bg-white 800px:w-[40%] min-h-[20vh]  p-5">
-              <div className="w-full  flex justify-end cursor-pointer">
-                <RxCross1 size={25} onClick={() => setOpen(false)} />
+            <div className="w-[95%] bg-white 800px:w-[40%] min-h-[20vh] p-6 rounded-lg shadow-lg">
+              <div className="flex justify-end cursor-pointer">
+                <RxCross1
+                  size={25}
+                  onClick={() => setOpen(false)}
+                  className="hover:text-red-500 transition duration-200"
+                />
               </div>
-              <h3 className="text-[25px] text-center py-5 font-Poppins text-[#000000cb]">
-                Are you sure you wanna delete this seller?
-              </h3>
-              <div className="w-full flex items-center justify-center">
-                <div
-                  className={`${styles.button} text-white text-[18px] !h-[42px] mr-4`}
+              <div className="text-center py-5">
+                <div className="text-[20px] font-semibold font-Poppins text-[#000000cb]">
+                  Are you sure you want to delete this seller?
+                </div>
+              </div>
+              <div className="flex justify-center gap-4 mt-4">
+                <button
+                  className={`${styles.simpleButton}`}
                   onClick={() => setOpen(false)}
                 >
-                  cancel
-                </div>
-                <div
-                  className={`${styles.button} text-white text-[18px] !h-[42px] ml-4`}
+                  Cancel
+                </button>
+                <button
+                  className={`${styles.simpleButton} !bg-red-500`}
                   onClick={() => setOpen(false) || handleDelete(userId)}
                 >
-                  confirm
-                </div>
+                  Confirm
+                </button>
               </div>
             </div>
           </div>

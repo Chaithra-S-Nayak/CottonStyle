@@ -101,7 +101,7 @@ const AdminDashboardMain = () => {
         <div className={`${styles.section}`}>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
             <div className=" rounded border px-2 py-5 flex flex-col items-center min-h-[10vh]">
-              <div className="flex items-center">
+              <div className={`${styles.noramlFlex}`}>
                 <h3
                   className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
                 >
@@ -112,7 +112,7 @@ const AdminDashboardMain = () => {
             </div>
 
             <div className="rounded border px-2 py-5 flex flex-col items-center min-h-[10vh]">
-              <div className="flex items-center">
+              <div className={`${styles.noramlFlex}`}>
                 <h3
                   className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
                 >

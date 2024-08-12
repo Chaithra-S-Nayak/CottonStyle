@@ -1,5 +1,6 @@
 import React from "react";
 import DashboardHeader from "../../components/Shop/Layout/DashboardHeader";
+import Footer from "../../components/Layout/Footer";
 import UpdateProduct from "../../components/Shop/UpdateProduct";
 
 const ShopUpdateProduct = () => {
@@ -11,6 +12,7 @@ const ShopUpdateProduct = () => {
           <UpdateProduct />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

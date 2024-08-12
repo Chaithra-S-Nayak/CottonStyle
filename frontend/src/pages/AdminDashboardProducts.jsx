@@ -1,5 +1,6 @@
 import React from "react";
 import AdminHeader from "../components/Layout/AdminHeader";
+import Footer from "../components/Layout/Footer";
 import AllProducts from "../components/Admin/AllProducts";
 
 const AdminDashboardProducts = () => {
@@ -11,6 +12,7 @@ const AdminDashboardProducts = () => {
           <AllProducts />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

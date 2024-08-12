@@ -1,6 +1,7 @@
 import React from "react";
 import AdminSettings from "../components/Admin/AdminSettings";
 import AdminHeader from "../components/Layout/AdminHeader";
+import Footer from "../components/Layout/Footer";
 import AdminChangePassword from "../components/Admin/AdminChangePassword";
 
 const AdminSettingsPage = () => {
@@ -13,6 +14,7 @@ const AdminSettingsPage = () => {
           <AdminChangePassword />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

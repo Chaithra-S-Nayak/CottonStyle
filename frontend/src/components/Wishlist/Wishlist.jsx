@@ -87,7 +87,7 @@ const WishlistItem = ({
   return (
     <div className="border-b p-4">
       <div className="w-full flex items-center justify-between">
-        <div className="flex items-center">
+        <div className={`${styles.noramlFlex}`}>
           <RxCross1
             className="cursor-pointer mb-2 ml-2"
             onClick={() => removeFromWishlistHandler(data.product._id)}

@@ -1,5 +1,6 @@
 import React from "react";
 import AdminHeader from "../components/Layout/AdminHeader";
+import Footer from "../components/Layout/Footer";
 import AdminOptions from "../components/Admin/AdminOptions";
 
 const AdminDashboardOptions = () => {
@@ -11,6 +12,7 @@ const AdminDashboardOptions = () => {
           <AdminOptions />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

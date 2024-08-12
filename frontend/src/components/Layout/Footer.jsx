@@ -14,7 +14,7 @@ import cod from "../../Assets/d.png";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="bg-gray-900 text-white mt-6">
       <div className="container mx-auto py-12 px-4">
         {/* Top Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">

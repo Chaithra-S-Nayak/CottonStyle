@@ -5,7 +5,7 @@ const CheckoutSteps = ({ active }) => {
   const stepWidth = `${100 / steps.length}%`;
 
   return (
-    <div className="w-full flex justify-center bg-gray-100 py-4">
+    <div className="w-full flex justify-center py-4">
       <div className="flex justify-between w-full max-w-xl">
         {steps.map((step, index) => {
           return (

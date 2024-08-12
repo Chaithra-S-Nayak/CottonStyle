@@ -143,30 +143,37 @@ const AllWithdraw = () => {
       </div>
       {open && (
         <div className="w-full fixed h-screen top-0 left-0 bg-[#00000031] z-[9999] flex items-center justify-center">
-          <div className="w-[50%] bg-white min-h-[40vh]  rounded shadow p-4">
+          <div className="w-[90%] 800px:w-[50%] bg-white min-h-[40vh] rounded-lg shadow-lg p-6">
             <div className="flex justify-end w-full">
-              <RxCross1 size={25} onClick={() => setOpen(false)} />
+              <RxCross1
+                size={25}
+                onClick={() => setOpen(false)}
+                className="cursor-pointer hover:text-red-500 transition duration-200"
+              />
             </div>
-            <h1 className="text-[20px] text-center font-Poppins">
-              Update Withdraw status
-            </h1>
-            <br />
-            <select
-              name=""
-              id=""
-              onChange={(e) => setWithdrawStatus(e.target.value)}
-              className="w-[200px] h-[35px] border rounded"
-            >
-              <option value={withdrawStatus}>{withdrawData.status}</option>
-              <option value={withdrawStatus}>Succeed</option>
-            </select>
-            <button
-              type="submit"
-              className={`block ${styles.button} text-white !h-[42px] mt-4 text-[18px]`}
-              onClick={handleSubmit}
-            >
-              Update
-            </button>
+            <div className="text-center mt-4">
+              <h2 className="text-[22px] font-semibold text-gray-800">
+                Update Withdraw Status
+              </h2>
+            </div>
+            <div className="mt-8 flex flex-col items-center">
+              <select
+                name="withdrawStatus"
+                id="withdrawStatus"
+                onChange={(e) => setWithdrawStatus(e.target.value)}
+                className="w-[80%] 800px:w-[200px] h-[40px] border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition duration-200 p-2"
+              >
+                <option value={withdrawStatus}>{withdrawData.status}</option>
+                <option value="Succeed">Succeed</option>
+              </select>
+              <button
+                type="submit"
+                className={`${styles.simpleButton} mt-4`}
+                onClick={handleSubmit}
+              >
+                Update
+              </button>
+            </div>
           </div>
         </div>
       )}

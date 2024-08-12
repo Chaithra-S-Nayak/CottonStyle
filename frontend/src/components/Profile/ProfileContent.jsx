@@ -6,6 +6,7 @@ import {
 } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { server } from "../../server";
+import Loader from "../Layout/Loader";
 import styles from "../../styles/styles";
 import { DataGrid } from "@material-ui/data-grid";
 import { Button } from "@material-ui/core";
@@ -186,7 +187,7 @@ const ProfileContent = ({ active }) => {
 
 const AllOrders = () => {
   const { user } = useSelector((state) => state.user);
-  const { orders } = useSelector((state) => state.order);
+  const { orders, isLoading } = useSelector((state) => state.order);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -195,13 +196,7 @@ const AllOrders = () => {
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-
-    {
-      field: "status",
-      headerName: "Status",
-      minWidth: 130,
-      flex: 0.7,
-    },
+    { field: "status", headerName: "Status", minWidth: 130, flex: 0.7 },
     {
       field: "itemsQty",
       headerName: "Items Qty",
@@ -209,7 +204,6 @@ const AllOrders = () => {
       minWidth: 130,
       flex: 0.7,
     },
-
     {
       field: "total",
       headerName: "Total",
@@ -217,56 +211,51 @@ const AllOrders = () => {
       minWidth: 130,
       flex: 0.8,
     },
-
     {
       field: " ",
       flex: 1,
       minWidth: 150,
       headerName: "",
-      type: "number",
       sortable: false,
-      renderCell: (params) => {
-        return (
-          <>
-            <Link to={`/user/order/${params.id}`}>
-              <Button>
-                <AiOutlineArrowRight size={20} />
-              </Button>
-            </Link>
-          </>
-        );
-      },
+      renderCell: (params) => (
+        <Link to={`/user/order/${params.id}`}>
+          <Button>
+            <AiOutlineArrowRight size={20} />
+          </Button>
+        </Link>
+      ),
     },
   ];
 
-  const row = [];
-
-  orders &&
-    orders.forEach((item) => {
-      row.push({
+  const rows = orders
+    ? orders.map((item) => ({
         id: item._id,
         itemsQty: item.cart.length,
         total: "₹" + item.totalPrice,
         status: item.status,
-      });
-    });
+      }))
+    : [];
 
   return (
     <div className="pl-8 pt-1">
-      <DataGrid
-        rows={row}
-        columns={columns}
-        pageSize={8}
-        disableSelectionOnClick
-        autoHeight
-      />
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={8}
+          disableSelectionOnClick
+          autoHeight
+        />
+      )}
     </div>
   );
 };
 
 const AllRefundOrders = () => {
   const { user } = useSelector((state) => state.user);
-  const { orders } = useSelector((state) => state.order);
+  const { orders, isLoading } = useSelector((state) => state.order);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -278,13 +267,7 @@ const AllRefundOrders = () => {
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-
-    {
-      field: "status",
-      headerName: "Status",
-      minWidth: 130,
-      flex: 0.7,
-    },
+    { field: "status", headerName: "Status", minWidth: 130, flex: 0.7 },
     {
       field: "itemsQty",
       headerName: "Items Qty",
@@ -292,7 +275,6 @@ const AllRefundOrders = () => {
       minWidth: 130,
       flex: 0.7,
     },
-
     {
       field: "total",
       headerName: "Total",
@@ -300,56 +282,51 @@ const AllRefundOrders = () => {
       minWidth: 130,
       flex: 0.8,
     },
-
     {
       field: " ",
       flex: 1,
       minWidth: 150,
       headerName: "",
-      type: "number",
       sortable: false,
-      renderCell: (params) => {
-        return (
-          <>
-            <Link to={`/user/order/${params.id}`}>
-              <Button>
-                <AiOutlineArrowRight size={20} />
-              </Button>
-            </Link>
-          </>
-        );
-      },
+      renderCell: (params) => (
+        <Link to={`/user/order/${params.id}`}>
+          <Button>
+            <AiOutlineArrowRight size={20} />
+          </Button>
+        </Link>
+      ),
     },
   ];
 
-  const row = [];
-
-  eligibleOrders &&
-    eligibleOrders.forEach((item) => {
-      row.push({
+  const rows = eligibleOrders
+    ? eligibleOrders.map((item) => ({
         id: item._id,
         itemsQty: item.cart.length,
         total: "₹" + item.totalPrice,
         status: item.status,
-      });
-    });
+      }))
+    : [];
 
   return (
     <div className="pl-8 pt-1">
-      <DataGrid
-        rows={row}
-        columns={columns}
-        pageSize={10}
-        autoHeight
-        disableSelectionOnClick
-      />
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={10}
+          autoHeight
+          disableSelectionOnClick
+        />
+      )}
     </div>
   );
 };
 
 const TrackOrder = () => {
   const { user } = useSelector((state) => state.user);
-  const { orders } = useSelector((state) => state.order);
+  const { orders, isLoading } = useSelector((state) => state.order);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -358,13 +335,7 @@ const TrackOrder = () => {
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-
-    {
-      field: "status",
-      headerName: "Status",
-      minWidth: 130,
-      flex: 0.7,
-    },
+    { field: "status", headerName: "Status", minWidth: 130, flex: 0.7 },
     {
       field: "itemsQty",
       headerName: "Items Qty",
@@ -372,7 +343,6 @@ const TrackOrder = () => {
       minWidth: 130,
       flex: 0.7,
     },
-
     {
       field: "total",
       headerName: "Total",
@@ -380,49 +350,44 @@ const TrackOrder = () => {
       minWidth: 130,
       flex: 0.8,
     },
-
     {
       field: " ",
       flex: 1,
       minWidth: 150,
       headerName: "",
-      type: "number",
       sortable: false,
-      renderCell: (params) => {
-        return (
-          <>
-            <Link to={`/user/track/order/${params.id}`}>
-              <Button>
-                <MdTrackChanges size={20} />
-              </Button>
-            </Link>
-          </>
-        );
-      },
+      renderCell: (params) => (
+        <Link to={`/user/track/order/${params.id}`}>
+          <Button>
+            <MdTrackChanges size={20} />
+          </Button>
+        </Link>
+      ),
     },
   ];
 
-  const row = [];
-
-  orders &&
-    orders.forEach((item) => {
-      row.push({
+  const rows = orders
+    ? orders.map((item) => ({
         id: item._id,
         itemsQty: item.cart.length,
         total: "₹" + item.totalPrice,
         status: item.status,
-      });
-    });
+      }))
+    : [];
 
   return (
     <div className="pl-8 pt-1">
-      <DataGrid
-        rows={row}
-        columns={columns}
-        pageSize={10}
-        disableSelectionOnClick
-        autoHeight
-      />
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={10}
+          disableSelectionOnClick
+          autoHeight
+        />
+      )}
     </div>
   );
 };
@@ -684,7 +649,7 @@ const Address = () => {
             className="w-full border h-min lg:h-[70px] rounded-[4px] flex flex-col lg:flex-row items-center px-3 shadow justify-between pr-10 mb-5"
             key={index}
           >
-            <div className="flex items-center">
+            <div className={`${styles.noramlFlex}`}>
               <h5 className="pl-5 font-[600]">{item.addressType}</h5>
             </div>
             <div className="pl-8 flex items-center">

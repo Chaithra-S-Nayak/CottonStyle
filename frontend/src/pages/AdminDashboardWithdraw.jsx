@@ -1,5 +1,6 @@
 import React from "react";
 import AdminHeader from "../components/Layout/AdminHeader";
+import Footer from "../components/Layout/Footer";
 import AllWithdraw from "../components/Admin/AllWithdraw";
 import styles from "../styles/styles";
 const AdminDashboardWithdraw = () => {
@@ -13,6 +14,7 @@ const AdminDashboardWithdraw = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

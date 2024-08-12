@@ -180,7 +180,7 @@ const CreateProduct = () => {
             </label>
             <div className="flex flex-wrap gap-2 mt-1">
               {adminOptions.sizeChart?.map((sizeObj) => (
-                <div key={sizeObj.size} className="flex items-center">
+                <div key={sizeObj.size} className={`${styles.noramlFlex}`}>
                   <input
                     type="checkbox"
                     id={`size-${sizeObj.size}`}

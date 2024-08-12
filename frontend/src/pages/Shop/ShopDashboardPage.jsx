@@ -1,5 +1,6 @@
 import React from "react";
 import DashboardHeader from "../../components/Shop/Layout/DashboardHeader";
+import Footer from "../../components/Layout/Footer";
 import DashboardHero from "../../components/Shop/DashboardHero";
 
 const ShopDashboardPage = () => {
@@ -11,6 +12,7 @@ const ShopDashboardPage = () => {
           <DashboardHero />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

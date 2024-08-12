@@ -83,13 +83,13 @@ const Header = ({ activeHeading }) => {
       {/* Desktop Header */}
       <div className={`${styles.section}`}>
         <div className="hidden 800px:h-[50px] 800px:my-[20px] 800px:flex items-center justify-between">
-          <div>
+          <div className="mr-2">
             <Link to="/">
               <img src={logo} alt="Logo" className="w-auto h-16" />
             </Link>
           </div>
           {/* search box */}
-          <div className="w-[50%] relative" ref={dropdownRef}>
+          <div className="w-[50%] relative mr-2" ref={dropdownRef}>
             <input
               type="text"
               placeholder="Search Product"
@@ -122,22 +122,16 @@ const Header = ({ activeHeading }) => {
             ) : null}
           </div>
 
-          <div className={`${styles.button}`}>
+          <button className={`${styles.simpleButton} mr-2`}>
             <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
-              <h1 className="text-[#fff] flex items-center">
-                {isSeller ? "Seller Dashboard" : "Become Seller"}
-                <IoIosArrowForward className="ml-1" />
-              </h1>
+              {isSeller ? "Seller Dashboard" : "Become Seller"}
             </Link>
-          </div>
-          <div className={`${styles.button}`}>
+          </button>
+          <button className={`${styles.simpleButton}`}>
             <Link to={`${isAdmin ? "/admin/dashboard" : "/admin-login"}`}>
-              <h1 className="text-[#fff] flex items-center">
-                {isAdmin ? "Admin Dashboard" : "Login as Admin"}
-                <IoIosArrowForward className="ml-1" />
-              </h1>
+              {isAdmin ? "Admin Dashboard" : "Login as Admin"}
             </Link>
-          </div>
+          </button>
         </div>
       </div>
       <div
@@ -318,7 +312,7 @@ const Header = ({ activeHeading }) => {
               </div>
               <Navbar active={activeHeading} />
               <div className="p-4">
-                <div className={`${styles.button} mb-4`}>
+                <div className={`${styles.simpleButton} mb-4`}>
                   <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
                     <h1 className="text-[#fff] flex items-center">
                       {isSeller ? "Seller Dashboard" : "Become Seller"}
@@ -326,7 +320,7 @@ const Header = ({ activeHeading }) => {
                     </h1>
                   </Link>
                 </div>
-                <div className={`${styles.button} mb-4`}>
+                <div className={`${styles.simpleButton} mb-4`}>
                   <Link to={`${isAdmin ? "/admin/dashboard" : "/admin-login"}`}>
                     <h1 className="text-[#fff] flex items-center">
                       {isAdmin ? "Admin Dashboard" : "Login as Admin"}

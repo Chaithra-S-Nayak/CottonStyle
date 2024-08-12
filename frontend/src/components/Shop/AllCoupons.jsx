@@ -125,12 +125,12 @@ const AllCoupons = () => {
       ) : (
         <div className="w-full px-4 sm:px-8 pt-1 mt-10">
           <div className="w-full flex justify-end mb-4">
-            <div
-              className={`${styles.button} !w-max !h-[45px] px-3 !rounded-[5px] mr-3`}
+            <button
+              className={`${styles.simpleButton}`}
               onClick={() => setOpen(true)}
             >
-              <span className="text-white">Create Coupon Code</span>
-            </div>
+              Create Coupon Code
+            </button>
           </div>
           <div className="w-full h-[400px] sm:h-[600px]">
             <DataGrid

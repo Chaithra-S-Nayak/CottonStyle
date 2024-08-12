@@ -1,5 +1,6 @@
 import React from "react";
 import AdminHeader from "../components/Layout/AdminHeader";
+import Footer from "../components/Layout/Footer";
 import AllUsers from "../components/Admin/AllUsers";
 import styles from "../styles/styles";
 const AdminDashboardUsers = () => {
@@ -13,6 +14,7 @@ const AdminDashboardUsers = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

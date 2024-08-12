@@ -100,18 +100,14 @@ const ShopInfo = ({ isOwner }) => {
           {isOwner && (
             <div className="py-3 px-4">
               <Link to="/update-shop">
-                <div
-                  className={`${styles.button} !w-full !h-[42px] !rounded-[5px]`}
-                >
-                  <span className="text-white">Edit Shop</span>
-                </div>
+                <button className={`${styles.wideButton}`}>Edit Shop</button>
               </Link>
-              <div
-                className={`${styles.button} !w-full !h-[42px] !rounded-[5px]`}
+              <button
+                className={`${styles.wideButton} !bg-red-400 mt-4`}
                 onClick={logoutHandler}
               >
-                <span className="text-white">Log Out</span>
-              </div>
+                Log Out
+              </button>
             </div>
           )}
         </div>

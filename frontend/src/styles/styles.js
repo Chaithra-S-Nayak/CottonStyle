@@ -10,8 +10,6 @@ const styles = {
   productDiscountPrice: "font-bold text-[18px] text-[#333] font-Roboto",
   price: "font-[500] text-[16px] text-[#d55b45] pl-3 mt-[-4px] line-through",
   shop_name: "pt-3 text-[15px] text-blue-400 pb-3",
-  button:
-    "w-[170px] bg-[#243450] h-[50px] my-3 flex items-center justify-center rounded-xl cursor-pointer",
   input: "w-full border p-1 rounded-[5px]",
   formInput:
     "mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500",

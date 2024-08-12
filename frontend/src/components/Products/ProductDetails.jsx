@@ -264,7 +264,7 @@ const ProductDetails = ({ data }) => {
 
               <div>
                 <h2 className="text-lg font-semibold">Seller Information</h2>
-                <div className="flex items-center">
+                <div className={`${styles.noramlFlex}`}>
                   <img
                     src={data.shop.avatar.url}
                     alt=""
