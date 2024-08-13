@@ -97,6 +97,7 @@ const AllOrders = () => {
       ) : (
         <div className="w-full rounded pt-1 mt-10">
           <DataGrid
+            className="bg-white"
             rows={row}
             columns={columns}
             pageSize={10}

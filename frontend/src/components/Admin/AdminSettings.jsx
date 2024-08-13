@@ -64,7 +64,7 @@ const AdminSettings = () => {
   };
 
   return (
-    <div className=" p-6 rounded-md border">
+    <div className="bg-white p-6 rounded-md border">
       <div className="flex justify-center mb-4">
         <div className="relative">
           <img

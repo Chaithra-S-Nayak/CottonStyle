@@ -155,12 +155,12 @@ const UserOrderDetails = () => {
                 </h5>
               </div>
               {!item.isReviewed && data?.status === "Delivered" && (
-                <div
-                  className={`${styles.simpleButton} text-white ml-auto`}
+                <button
+                  className={`${styles.simpleButton} ml-auto`}
                   onClick={() => setOpen(true) || setSelectedItem(item)}
                 >
                   Write a review
-                </div>
+                </button>
               )}
             </div>
           ))}
@@ -227,7 +227,7 @@ const UserOrderDetails = () => {
               ></textarea>
             </div>
             <button
-              className={`${styles.simpleButton} text-white py-2 px-4 rounded-md shadow focus:outline-none`}
+              className={`${styles.simpleButton}`}
               onClick={reviewHandler}
             >
               Submit Review
@@ -303,18 +303,14 @@ const UserOrderDetails = () => {
       <div className={`${styles.noramlFlex}`}>
         {data?.status === "Delivered" && (
           <div
-            className={`${styles.simpleButton} text-white py-2 px-4 rounded-md shadow focus:outline-none mr-4`}
+            className={`${styles.simpleButton} mr-4`}
             onClick={handleRefundConfirmation}
           >
             Initiate Refund
           </div>
         )}
         <Link to={`/user/order/invoice/${id}`}>
-          <div
-            className={`${styles.simpleButton} text-white py-2 px-4 rounded-md shadow focus:outline-none`}
-          >
-            View Invoice
-          </div>
+          <div className={`${styles.simpleButton}`}>View Invoice</div>
         </Link>
       </div>
     </div>

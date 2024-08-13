@@ -134,6 +134,7 @@ const AllCoupons = () => {
           </div>
           <div className="w-full h-[400px] sm:h-[600px]">
             <DataGrid
+              className="bg-white"
               rows={rows}
               columns={columns}
               pageSize={10}
@@ -206,10 +207,7 @@ const AllCoupons = () => {
                       placeholder="Enter your coupon code max amount"
                     />
                   </div>
-                  <button
-                    type="submit"
-                    className={`${styles.wideButton} w-full py-2 mt-4`}
-                  >
+                  <button type="submit" className={`${styles.wideButton}`}>
                     Create
                   </button>
                 </form>

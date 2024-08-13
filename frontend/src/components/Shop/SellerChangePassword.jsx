@@ -35,7 +35,7 @@ const SellerChangePassword = () => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto my-10 px-5 py-8 border rounded-md">
+    <div className="w-full max-w-md mx-auto my-10 px-5 py-8 border bg-white rounded-md">
       <h1 className={`${styles.formHeading}`}>Change Password</h1>
       <form
         onSubmit={passwordChangeHandler}

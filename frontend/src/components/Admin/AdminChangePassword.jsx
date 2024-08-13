@@ -31,7 +31,7 @@ const AdminChangePassword = () => {
   };
 
   return (
-    <div className=" p-6 rounded-md border">
+    <div className="bg-white p-6 rounded-md border">
       <h1 className={`${styles.formHeading}`}>Change Password</h1>
       <form onSubmit={passwordChangeHandler} className="space-y-4">
         <div>

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getOrderById } from "../redux/actions/order";
 import styles from "../styles/styles";
+import Loader from "./Layout/Loader";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
@@ -17,11 +18,7 @@ const Invoice = () => {
   }, [dispatch, id]);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Loading...
-      </div>
-    );
+    return <Loader />;
   }
 
   if (!order) {
@@ -101,9 +98,9 @@ const Invoice = () => {
           </p>
         </div>
 
-        <div className="bg-gray-100 px-14 py-6 text-sm text-neutral-600">
-          <div className="flex justify-between">
-            <div className="w-1/2">
+        <div className="bg-gray-100 px-6 md:px-14 py-6 text-sm text-neutral-600">
+          <div className="md:flex justify-between">
+            <div className="w-full md:w-1/2 mb-4 md:mb-0">
               <p className="font-bold">Sender:</p>
               <p>Tshirt Galaxy</p>
               <p>3rd Main Road, VP Nagar</p>
@@ -112,7 +109,7 @@ const Invoice = () => {
               <p>Phone: 8012345678</p>
               <p>Email: info@tshirtgalaxy.com</p>
             </div>
-            <div className="w-1/2">
+            <div className="w-full md:w-1/2">
               <p className="font-bold">Recipient:</p>
               <p>{order.user.name}</p>
               <p>{`${order.shippingAddress.address1}, ${order.shippingAddress.address2}, ${order.shippingAddress.city}, ${order.shippingAddress.country}`}</p>
@@ -123,7 +120,7 @@ const Invoice = () => {
           </div>
         </div>
 
-        <div className="px-14 py-10 text-sm text-neutral-700">
+        <div className="px-4 md:px-14 py-6 md:py-10 text-sm text-neutral-700 overflow-x-auto">
           <table className="w-full border-collapse border-spacing-0">
             <thead>
               <tr>
@@ -283,8 +280,8 @@ const Invoice = () => {
         </div>
 
         <div className="text-sm text-neutral-700">
-          <div className="flex justify-between">
-            <div className="w-2/3">
+          <div className="md:flex justify-between">
+            <div className="w-full md:w-2/3 mb-4 md:mb-0">
               <p className="font-bold" style={{ color: "#243450" }}>
                 Payment Details:
               </p>
@@ -296,7 +293,7 @@ const Invoice = () => {
               <p>Amount Paid: ₹{totalPrice.toFixed(2)}</p>
               <p>Payment Date: {String(order.paidAt).substring(0, 10)}</p>
             </div>
-            <div className="w-2/5">
+            <div className="w-full md:w-2/5">
               <p className="font-bold" style={{ color: "#243450" }}>
                 Shop Details:
               </p>

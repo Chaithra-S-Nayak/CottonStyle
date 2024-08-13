@@ -135,6 +135,7 @@ const AllSellers = () => {
       <div className="w-[97%]">
         <div className="w-full min-h-[45vh] rounded">
           <DataGrid
+            className="bg-white"
             rows={row}
             columns={columns}
             pageSize={10}

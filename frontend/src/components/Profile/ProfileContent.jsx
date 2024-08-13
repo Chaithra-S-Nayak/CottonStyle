@@ -242,6 +242,7 @@ const AllOrders = () => {
         <Loader />
       ) : (
         <DataGrid
+          className="bg-white"
           rows={rows}
           columns={columns}
           pageSize={8}
@@ -313,6 +314,7 @@ const AllRefundOrders = () => {
         <Loader />
       ) : (
         <DataGrid
+          className="bg-white"
           rows={rows}
           columns={columns}
           pageSize={10}
@@ -381,6 +383,7 @@ const TrackOrder = () => {
         <Loader />
       ) : (
         <DataGrid
+          className="bg-white"
           rows={rows}
           columns={columns}
           pageSize={10}
@@ -419,54 +422,52 @@ const ChangePassword = () => {
   };
 
   return (
-    <div className="w-full px-5">
+    <div className="w-full max-w-md mx-auto  px-5 py-8 border bg-white rounded-md">
       <h1 className={`${styles.formHeading}`}>Change Password</h1>
-      <div className="w-full">
-        <form
-          onSubmit={passwordChangeHandler}
-          className="flex flex-col items-center"
-        >
-          <div className=" w-[100%] 800px:w-[50%] mt-5">
-            <label className={`${styles.formLabel}`}>
-              Enter your old password
-            </label>
-            <input
-              type="password"
-              className={`${styles.formInput}`}
-              required
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-            />
-          </div>
-          <div className=" w-[100%] 800px:w-[50%] mt-2">
-            <label className={`${styles.formLabel}`}>
-              Enter your new password
-            </label>
-            <input
-              type="password"
-              className={`${styles.formInput}`}
-              required
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-          </div>
-          <div className=" w-[100%] 800px:w-[50%] mt-2">
-            <label className={`${styles.formLabel}`}>
-              Enter your confirm password
-            </label>
-            <input
-              type="password"
-              className={`${styles.formInput}`}
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <button className={`${styles.wideButton} mt-4`} type="submit">
-              Update
-            </button>
-          </div>
-        </form>
-      </div>
+      <form
+        onSubmit={passwordChangeHandler}
+        className="flex flex-col items-center"
+      >
+        <div className="w-full mb-4">
+          <label className={`${styles.formLabel}`}>
+            Enter your old password
+          </label>
+          <input
+            type="password"
+            className={`${styles.formInput}`}
+            required
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+          />
+        </div>
+        <div className="w-full mb-4">
+          <label className={`${styles.formLabel}`}>
+            Enter your new password
+          </label>
+          <input
+            type="password"
+            className={`${styles.formInput}`}
+            required
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+        </div>
+        <div className="w-full mb-4">
+          <label className={`${styles.formLabel}`}>
+            Enter your confirm password
+          </label>
+          <input
+            type="password"
+            className={`${styles.formInput}`}
+            required
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+          <button className={`${styles.wideButton} mt-4`} type="submit">
+            Update Password
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
@@ -630,7 +631,7 @@ const Address = () => {
           </div>
         </div>
       )}
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full items-center  justify-between">
         <h1 className="text-[20px] font-[600] text-[#000000ba] pb-2">
           My Address
         </h1>
@@ -646,7 +647,7 @@ const Address = () => {
       {user &&
         user.addresses.map((item, index) => (
           <div
-            className="w-full border h-min lg:h-[70px] rounded-[4px] flex flex-col lg:flex-row items-center px-3 shadow justify-between pr-10 mb-5"
+            className="w-full bg-white border h-min lg:h-[70px] rounded-[4px] flex flex-col lg:flex-row items-center px-3 shadow justify-between pr-10 mb-5"
             key={index}
           >
             <div className={`${styles.noramlFlex}`}>

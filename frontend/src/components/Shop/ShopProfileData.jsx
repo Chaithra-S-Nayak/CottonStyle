@@ -15,8 +15,8 @@ const ShopProfileData = () => {
   const [coupons, setCoupons] = useState([]);
   const [currentPageProducts, setCurrentPageProducts] = useState(1);
   const [currentPageCoupons, setCurrentPageCoupons] = useState(1);
-  const productsPerPage = 4;
-  const couponsPerPage = 2;
+  const productsPerPage = 8;
+  const couponsPerPage = 5;
 
   useEffect(() => {
     const fetchCoupons = async () => {

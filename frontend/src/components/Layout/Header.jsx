@@ -312,22 +312,22 @@ const Header = ({ activeHeading }) => {
               </div>
               <Navbar active={activeHeading} />
               <div className="p-4">
-                <div className={`${styles.simpleButton} mb-4`}>
+                <button className={`${styles.simpleButton} mb-4`}>
                   <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
                     <h1 className="text-[#fff] flex items-center">
                       {isSeller ? "Seller Dashboard" : "Become Seller"}
                       <IoIosArrowForward className="ml-1" />
                     </h1>
                   </Link>
-                </div>
-                <div className={`${styles.simpleButton} mb-4`}>
+                </button>
+                <button className={`${styles.simpleButton} mb-4`}>
                   <Link to={`${isAdmin ? "/admin/dashboard" : "/admin-login"}`}>
                     <h1 className="text-[#fff] flex items-center">
                       {isAdmin ? "Admin Dashboard" : "Login as Admin"}
                       <IoIosArrowForward className="ml-1" />
                     </h1>
                   </Link>
-                </div>
+                </button>
               </div>
             </div>
           </div>

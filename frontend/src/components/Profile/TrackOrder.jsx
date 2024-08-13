@@ -18,18 +18,18 @@ const TrackOrder = () => {
   return (
     <div className="w-full min-h-[80vh] flex flex-col items-center py-10 px-4 bg-gray-100">
       <div className="bg-white rounded-lg w-full max-w-3xl p-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Order Status</h1>
+        <h1 className="text-xl font-bold text-gray-800 mb-4">Order Status</h1>
         {data ? (
           <>
             <div className="mb-6">
-              <p className="text-lg text-gray-700">
+              <p className="text-gray-700">
                 <strong>Order ID:</strong> {data._id}
               </p>
-              <p className="text-lg text-gray-700">
+              <p className="text-gray-700">
                 <strong>Placed On:</strong>{" "}
                 {new Date(data.createdAt).toLocaleDateString()}
               </p>
-              <p className="text-lg text-gray-700">
+              <p className="text-gray-700">
                 <strong>Total Amount:</strong> ₹{data.totalPrice}
               </p>
             </div>

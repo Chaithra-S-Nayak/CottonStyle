@@ -93,11 +93,9 @@ const DashboardHero = () => {
   return (
     <div className={`${styles.section}`}>
       <div className="w-full block 800px:flex items-center justify-between mt-4">
-        <div className="w-full mb-4 800px:w-[30%] min-h-[10vh] shadow rounded px-2 py-5 flex flex-col items-center">
+        <div className="w-full bg-white mb-4 800px:w-[30%] min-h-[10vh] shadow rounded px-2 py-5 flex flex-col items-center">
           <div className={`${styles.noramlFlex}`}>
-            <h3
-              className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
-            >
+            <h3 className={`${styles.title}`}>
               Account Balance
               <span className="text-[16px]">(with 10% service charge)</span>
             </h3>
@@ -107,13 +105,9 @@ const DashboardHero = () => {
             <h5 className="pt-2 text-[#077f9c]">Withdraw Money</h5>
           </Link>
         </div>
-        <div className="w-full mb-4 800px:w-[30%] min-h-[10vh] shadow rounded px-2 py-5 flex flex-col items-center">
+        <div className="w-full bg-white mb-4 800px:w-[30%] min-h-[10vh] shadow rounded px-2 py-5 flex flex-col items-center">
           <div className={`${styles.noramlFlex}`}>
-            <h3
-              className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
-            >
-              All Orders
-            </h3>
+            <h3 className={`${styles.title}`}>All Orders</h3>
           </div>
           <h5 className="pt-2  text-[22px] font-[500]">
             {orders && orders.length}
@@ -122,13 +116,9 @@ const DashboardHero = () => {
             <h5 className="pt-2  text-[#077f9c]">View Orders</h5>
           </Link>
         </div>
-        <div className="w-full mb-4 800px:w-[30%] min-h-[10vh]  shadow rounded px-2 py-5 flex flex-col items-center">
+        <div className="w-full bg-white mb-4 800px:w-[30%] min-h-[10vh]  shadow rounded px-2 py-5 flex flex-col items-center">
           <div className={`${styles.noramlFlex}`}>
-            <h3
-              className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
-            >
-              All Products
-            </h3>
+            <h3 className={`${styles.title}`}>All Products</h3>
           </div>
           <h5 className="pt-2  text-[22px] font-[500]">
             {products && products.length}
@@ -138,9 +128,10 @@ const DashboardHero = () => {
           </Link>
         </div>
       </div>
-      <h3 className="text-[18px] font-Poppins pb-2">Latest Orders</h3>
+      <h3 className={`${styles.title} m-4`}>Latest Orders</h3>
       <div className="w-full min-h-[45vh]  rounded">
         <DataGrid
+          className="bg-white"
           rows={row}
           columns={columns}
           pageSize={10}

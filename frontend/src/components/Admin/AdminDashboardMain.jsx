@@ -100,24 +100,16 @@ const AdminDashboardMain = () => {
       ) : (
         <div className={`${styles.section}`}>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-            <div className=" rounded border px-2 py-5 flex flex-col items-center min-h-[10vh]">
+            <div className="bg-white rounded border px-2 py-5 flex flex-col items-center min-h-[10vh]">
               <div className={`${styles.noramlFlex}`}>
-                <h3
-                  className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
-                >
-                  Total Earning
-                </h3>
+                <h3 className={`${styles.title}`}>Total Earning</h3>
               </div>
               <h5 className="pt-2 text-[22px] font-[500]">₹{adminBalance}</h5>
             </div>
 
-            <div className="rounded border px-2 py-5 flex flex-col items-center min-h-[10vh]">
+            <div className="bg-white rounded border px-2 py-5 flex flex-col items-center min-h-[10vh]">
               <div className={`${styles.noramlFlex}`}>
-                <h3
-                  className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
-                >
-                  All Sellers
-                </h3>
+                <h3 className={`${styles.title}`}>All Sellers</h3>
               </div>
               <h5 className="pt-2 text-[22px] font-[500]">
                 {sellers && sellers.length}
@@ -127,13 +119,9 @@ const AdminDashboardMain = () => {
               </Link>
             </div>
 
-            <div className="rounded border px-2 py-5 flex flex-col items-center min-h-[10vh]">
+            <div className="bg-white rounded border px-2 py-5 flex flex-col items-center min-h-[10vh]">
               <div className="flex items-center">
-                <h3
-                  className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
-                >
-                  All Orders
-                </h3>
+                <h3 className={`${styles.title}`}>All Orders</h3>
               </div>
               <h5 className="pt-2 text-[22px] font-[500]">
                 {adminOrders && adminOrders.length}
@@ -144,9 +132,10 @@ const AdminDashboardMain = () => {
             </div>
           </div>
 
-          <h3 className="text-[18px] font-Poppins pb-2 mt-8">Latest Orders</h3>
+          <h3 className={`${styles.title} m-4`}>Latest Orders</h3>
           <div className="w-full min-h-[45vh] rounded">
             <DataGrid
+              className="bg-white"
               rows={rows}
               columns={columns}
               pageSize={10}
