@@ -102,7 +102,7 @@ const Header = ({ activeHeading }) => {
               className="absolute right-2 top-1.5 cursor-pointer"
             />
             {dropdownVisible && searchData && searchData.length !== 0 ? (
-              <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
+              <div className="absolute min-h-[30vh] max-h-[60vh] overflow-y-scroll border bg-slate-50 shadow-sm-2 z-[9] p-4">
                 {searchData &&
                   searchData.map((i, index) => {
                     return (
@@ -127,11 +127,11 @@ const Header = ({ activeHeading }) => {
               {isSeller ? "Seller Dashboard" : "Become Seller"}
             </Link>
           </button>
-          <button className={`${styles.simpleButton}`}>
+          {/* <button className={`${styles.simpleButton}`}>
             <Link to={`${isAdmin ? "/admin/dashboard" : "/admin-login"}`}>
               {isAdmin ? "Admin Dashboard" : "Login as Admin"}
             </Link>
-          </button>
+          </button> */}
         </div>
       </div>
       <div
@@ -219,47 +219,6 @@ const Header = ({ activeHeading }) => {
             </Link>
           </div>
 
-          {/* Wishlist Icon */}
-          <div
-            className="relative mr-[15px] cursor-pointer"
-            onClick={() => setOpenWishlist(true)}
-          >
-            <AiOutlineHeart size={30} />
-            <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white font-mono text-[12px] leading-tight text-center">
-              {wishlist && wishlist.orderItems && wishlist.orderItems.length}
-            </span>
-          </div>
-
-          {/* Wishlist Popup */}
-          {openWishlist && <Wishlist setOpenWishlist={setOpenWishlist} />}
-
-          {/* Cart Icon */}
-          <Link to="/cart">
-            <div className="relative mr-[20px]">
-              <AiOutlineShoppingCart size={30} />
-              <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white font-mono text-[12px] leading-tight text-center">
-                {cart && cart.length}
-              </span>
-            </div>
-          </Link>
-
-          {/* User Icon */}
-          <div className="relative mr-[10px]">
-            {isAuthenticated ? (
-              <Link to="/profile">
-                <img
-                  src={`${user?.avatar?.url}`}
-                  className="w-[35px] h-[35px] rounded-full"
-                  alt=""
-                />
-              </Link>
-            ) : (
-              <Link to="/login">
-                <CgProfile size={30} />
-              </Link>
-            )}
-          </div>
-
           {/* Menu Icon */}
           <div onClick={() => setOpen(!open)}>
             {open ? <RxCross1 size={30} /> : <BiMenuAltLeft size={30} />}
@@ -270,7 +229,7 @@ const Header = ({ activeHeading }) => {
         {open ? (
           <div className="fixed w-full bg-[#fff] z-10 top-0 left-0 min-h-full flex flex-col justify-between">
             <div>
-              <div className="relative flex justify-end items-center mr-[15px] cursor-pointer">
+              <div className="relative flex justify-end items-center mt-4 mr-4 cursor-pointer">
                 {open ? (
                   <RxCross1 size={30} onClick={() => setOpen(!open)} />
                 ) : (
@@ -278,7 +237,7 @@ const Header = ({ activeHeading }) => {
                 )}
               </div>
 
-              <div className="my-8 w-[92%] m-auto h-[40px] relative">
+              <div className="my-8 w-[92%] m-auto h-[40px] relative ">
                 <input
                   type="text"
                   placeholder="Search Product"
@@ -320,14 +279,61 @@ const Header = ({ activeHeading }) => {
                     </h1>
                   </Link>
                 </button>
-                <button className={`${styles.simpleButton} mb-4`}>
+                {/* <button className={`${styles.simpleButton} mb-4`}>
                   <Link to={`${isAdmin ? "/admin/dashboard" : "/admin-login"}`}>
                     <h1 className="text-[#fff] flex items-center">
                       {isAdmin ? "Admin Dashboard" : "Login as Admin"}
                       <IoIosArrowForward className="ml-1" />
                     </h1>
                   </Link>
-                </button>
+                </button> */}
+
+                <div className="flex gap-3">
+                  {/* Wishlist Icon */}
+                  <div
+                    className="relative mr-[15px] cursor-pointer"
+                    onClick={() => setOpenWishlist(true)}
+                  >
+                    <AiOutlineHeart size={30} />
+                    <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white font-mono text-[12px] leading-tight text-center">
+                      {wishlist &&
+                        wishlist.orderItems &&
+                        wishlist.orderItems.length}
+                    </span>
+                  </div>
+
+                  {/* Wishlist Popup */}
+                  {openWishlist && (
+                    <Wishlist setOpenWishlist={setOpenWishlist} />
+                  )}
+
+                  {/* Cart Icon */}
+                  <Link to="/cart">
+                    <div className="relative mr-[20px]">
+                      <AiOutlineShoppingCart size={30} />
+                      <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white font-mono text-[12px] leading-tight text-center">
+                        {cart && cart.length}
+                      </span>
+                    </div>
+                  </Link>
+
+                  {/* User Icon */}
+                  <div className="relative mr-[10px]">
+                    {isAuthenticated ? (
+                      <Link to="/profile">
+                        <img
+                          src={`${user?.avatar?.url}`}
+                          className="w-[35px] h-[35px] rounded-full"
+                          alt=""
+                        />
+                      </Link>
+                    ) : (
+                      <Link to="/login">
+                        <CgProfile size={30} />
+                      </Link>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

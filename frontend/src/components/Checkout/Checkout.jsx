@@ -177,17 +177,17 @@ const ShippingInfo = ({
       <h1 className={`${styles.formHeading}`}>Shipping Address</h1>
       <br />
       <form>
-        <div className="w-full flex pb-3">
-          <div className="w-[50%]">
+        <div className="w-full flex sm:flex-row gap-3 flex-col pb-3">
+          <div className="sm:w-[50%] w-full">
             <label className={`${styles.formLabel}`}>Full Name</label>
             <input
               type="text"
               value={user && user.name}
               required
-              className={`${styles.formInput} !w-[95%]`}
+              className={`${styles.formInput} `}
             />
           </div>
-          <div className="w-[50%]">
+          <div className="sm:w-[50%] w-full">
             <label className={`${styles.formLabel}`}>Email Address</label>
             <input
               type="email"
@@ -197,8 +197,8 @@ const ShippingInfo = ({
             />
           </div>
         </div>
-        <div className="w-full flex pb-3">
-          <div className="w-[50%]">
+        <div className="w-full flex pb-3 gap-3 sm:flex-row flex-col">
+          <div className="sm:w-[50%] w-full">
             <label className={`${styles.formLabel}`}>Phone Number</label>
             <input
               type="tel"
@@ -206,10 +206,10 @@ const ShippingInfo = ({
               maxLength={10}
               onChange={(e) => setPhoneNumber(e.target.value)}
               required
-              className={`${styles.formInput} !w-[95%]`}
+              className={`${styles.formInput} `}
             />
           </div>
-          <div className="w-[50%]">
+          <div className="sm:w-[50%] w-full">
             <label className={`${styles.formLabel}`}>Zip Code</label>
             <input
               type="number"
@@ -220,11 +220,11 @@ const ShippingInfo = ({
             />
           </div>
         </div>
-        <div className="w-full flex pb-3">
-          <div className="w-[50%]">
+        <div className="w-full flex pb-3 gap-3  sm:flex-row flex-col">
+          <div className="sm:w-[50%] w-full">
             <label className={`${styles.formLabel}`}>Country</label>
             <select
-              className={`${styles.formInput} !w-[95%]`}
+              className={`${styles.formInput} `}
               value={country}
               onChange={(e) => setCountry(e.target.value)}
             >
@@ -239,7 +239,7 @@ const ShippingInfo = ({
                 ))}
             </select>
           </div>
-          <div className="w-[50%]">
+          <div className="sm:w-[50%] w-full">
             <label className={`${styles.formLabel}`}>State</label>
             <select
               className={`${styles.formInput}`}
@@ -258,18 +258,18 @@ const ShippingInfo = ({
             </select>
           </div>
         </div>
-        <div className="w-full flex pb-3">
-          <div className="w-[50%]">
+        <div className="w-full flex pb-3 gap-3 sm:flex-row flex-col">
+          <div className="sm:w-[50%] w-full">
             <label className={`${styles.formLabel}`}>Address1</label>
             <textarea
               type="address"
               required
               value={address1}
               onChange={(e) => setAddress1(e.target.value)}
-              className={`${styles.formInput} !w-[95%]`}
+              className={`${styles.formInput} `}
             />
           </div>
-          <div className="w-[50%]">
+          <div className="sm:w-[50%] w-full">
             <label className={`${styles.formLabel}`}>Address2</label>
             <textarea
               type="address"

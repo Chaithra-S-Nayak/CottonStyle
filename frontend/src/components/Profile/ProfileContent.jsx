@@ -556,7 +556,7 @@ const Address = () => {
                 </div>
                 <div className="w-full pb-2">
                   <label className={`${styles.formLabel}`}>
-                    Choose your City
+                    Choose your State
                   </label>
                   <select
                     name=""

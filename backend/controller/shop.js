@@ -67,8 +67,8 @@ router.post(
       zipCode,
     };
     const activationToken = createActivationToken(seller);
-    // const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`;
-    const activationUrl = `https://cotton-style-c.vercel.app/seller/activation/${activationToken}`;
+    const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`;
+    // const activationUrl = `https://cotton-style-c.vercel.app/seller/activation/${activationToken}`;
 
     // Send activation email
     const bodyContent = getActivationEmailTemplate(activationUrl);

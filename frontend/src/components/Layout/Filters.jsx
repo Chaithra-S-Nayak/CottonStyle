@@ -71,10 +71,13 @@ const Filters = ({ onFilterChange }) => {
 
   return (
     <div className="w-full">
-      <FaFilter
-        size={30}
+      <button
+        className={`${styles.simpleButton} md:hidden`}
         onClick={() => setIsFilterModalVisible(!isFilterModalVisible)}
-      />
+        variant="outlined"
+      >
+        Filters
+      </button>
       {/* Filters Modal for Mobile */}
       {isFilterModalVisible && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 md:hidden">

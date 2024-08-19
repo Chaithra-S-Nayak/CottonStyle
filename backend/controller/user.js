@@ -47,8 +47,8 @@ router.post(
       avatar: userAvatar,
     };
     const activationToken = createActivationToken(user);
-    // const activationUrl = `http://localhost:3000/activation/${activationToken}`;
-    const activationUrl = `https://cotton-style-c.vercel.app/activation/${activationToken}`;
+    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
+    // const activationUrl = `https://cotton-style-c.vercel.app/activation/${activationToken}`;
     const bodyContent = getActivationEmailTemplate(activationUrl);
     const htmlContent = generateEmailTemplate({
       recipientName: name,
