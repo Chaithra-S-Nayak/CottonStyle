@@ -6,11 +6,13 @@ const returnRequestSchema = new mongoose.Schema({
     ref: "Order",
     required: true,
   },
-  productId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Product",
-    required: true,
-  },
+  productIds: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
+    },
+  ],
   shopId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Shop",

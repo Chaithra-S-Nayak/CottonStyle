@@ -7,9 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteWishlistItem } from "../../redux/actions/wishlist";
 import { addTocart } from "../../redux/actions/cart";
 import { Link } from "react-router-dom";
+import Loader from "../Layout/Loader";
 
 const Wishlist = ({ setOpenWishlist }) => {
-  const { wishlist } = useSelector((state) => state.wishlist);
+  const { wishlist, loading } = useSelector((state) => state.wishlist);
   const dispatch = useDispatch();
 
   const removeFromWishlistHandler = (productId) => {
@@ -25,53 +26,59 @@ const Wishlist = ({ setOpenWishlist }) => {
   return (
     <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
       <div className="fixed top-0 right-0 h-full w-[90%] overflow-y-scroll 800px:w-[30%] bg-white flex flex-col justify-between shadow-sm">
-        {wishlist && wishlist.orderItems && wishlist.orderItems.length === 0 ? (
-          <div className="w-full h-screen flex items-center justify-center">
-            <div className="flex w-full justify-end pt-5 pr-5 fixed top-3 right-3">
-              <RxCross1
-                size={25}
-                className="cursor-pointer"
-                onClick={() => setOpenWishlist(false)}
-              />
-            </div>
-            <h5>Wishlist Items is empty!</h5>
-          </div>
+        {loading ? (
+          <Loader />
         ) : (
           <>
-            <div>
-              <div className="flex w-full justify-end pt-5 pr-5">
-                <RxCross1
-                  size={25}
-                  className="cursor-pointer"
-                  onClick={() => setOpenWishlist(false)}
-                />
+            {wishlist || wishlist.orderItems || wishlist.orderItems === 0 ? (
+              <div className="w-full h-screen flex items-center justify-center">
+                <div className="flex w-full justify-end pt-5 pr-5 fixed top-3 right-3">
+                  <RxCross1
+                    size={25}
+                    className="cursor-pointer"
+                    onClick={() => setOpenWishlist(false)}
+                  />
+                </div>
+                <h5>Wishlist Items is empty!</h5>
               </div>
-              {/* Item length */}
-              <div className={`${styles.noramlFlex} p-4`}>
-                <AiOutlineHeart size={25} />
-                <h5 className="pl-2 text-[20px] font-[500]">
-                  {wishlist &&
-                    wishlist.orderItems &&
-                    wishlist.orderItems.length}{" "}
-                  items
-                </h5>
-              </div>
-
-              {/* Wishlist Single Items */}
-              <br />
-              <div className="w-full border-t">
-                {wishlist &&
-                  wishlist.orderItems &&
-                  wishlist.orderItems.map((item, index) => (
-                    <WishlistItem
-                      key={index}
-                      data={item}
-                      removeFromWishlistHandler={removeFromWishlistHandler}
-                      addToCartHandler={addToCartHandler}
+            ) : (
+              <>
+                <div>
+                  <div className="flex w-full justify-end pt-5 pr-5">
+                    <RxCross1
+                      size={25}
+                      className="cursor-pointer"
+                      onClick={() => setOpenWishlist(false)}
                     />
-                  ))}
-              </div>
-            </div>
+                  </div>
+                  {/* Item length */}
+                  <div className={`${styles.noramlFlex} p-4`}>
+                    <AiOutlineHeart size={25} />
+                    <h5 className="pl-2 text-[20px] font-[500]">
+                      {wishlist &&
+                        wishlist.orderItems &&
+                        wishlist.orderItems.length}{" "}
+                      items
+                    </h5>
+                  </div>
+
+                  {/* Wishlist Single Items */}
+                  <br />
+                  <div className="w-full border-t">
+                    {wishlist &&
+                      wishlist.orderItems &&
+                      wishlist.orderItems.map((item, index) => (
+                        <WishlistItem
+                          key={index}
+                          data={item}
+                          removeFromWishlistHandler={removeFromWishlistHandler}
+                          addToCartHandler={addToCartHandler}
+                        />
+                      ))}
+                  </div>
+                </div>
+              </>
+            )}
           </>
         )}
       </div>

@@ -19,35 +19,31 @@ router.post(
   "/create-return-request",
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
-    const { orderId, productId, shopId, reason, requestType, images } =
-      req.body;
-    if (
-      !orderId ||
-      !productId ||
-      !shopId ||
-      !reason ||
-      !requestType ||
-      !images
-    ) {
+    const { orderId, productIds, shopId, reason, requestType } = req.body;
+    if (!orderId || !productIds || !shopId || !reason || !requestType) {
       return next(new ErrorHandler("All fields are required", 400));
     }
+    let images = [];
+    if (typeof req.body.images === "string") {
+      images.push(req.body.images);
+    } else if (Array.isArray(req.body.images)) {
+      images = req.body.images;
+    }
+    const imagesLinks = [];
     // Upload images to Cloudinary
-    let imageFiles = Array.isArray(images) ? images : [images];
-    const imagesLinks = await Promise.all(
-      imageFiles.map(async (image) => {
-        const result = await cloudinary.v2.uploader.upload(image, {
-          folder: "return_requests",
-        });
-        return {
-          public_id: result.public_id,
-          url: result.secure_url,
-        };
-      })
-    );
+    for (let i = 0; i < images.length; i++) {
+      const result = await cloudinary.v2.uploader.upload(images[i], {
+        folder: "products",
+      });
+      imagesLinks.push({
+        public_id: result.public_id,
+        url: result.secure_url,
+      });
+    }
     // Create return request
     await ReturnRequest.create({
       orderId,
-      productId,
+      productIds,
       shopId,
       reason,
       requestType,
@@ -60,7 +56,7 @@ router.post(
     }
     const bodyContent = getReturnRequestEmailTemplate(
       orderId,
-      productId,
+      productIds.join(", "),
       reason,
       requestType
     );
@@ -86,7 +82,9 @@ router.post(
     });
     await sendNotification(
       "return_request",
-      `Return/exchange request for Order ID: ${orderId}, Product ID: ${productId}`,
+      `Return/exchange request for Order ID: ${orderId}, Product IDs: ${productIds.join(
+        ", "
+      )}`,
       admin._id,
       null
     );

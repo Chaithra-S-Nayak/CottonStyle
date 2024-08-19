@@ -81,17 +81,6 @@ const DashboardHeader = () => {
                 Coupon Codes
               </span>
             </Link>
-            <Link to="/dashboard-products">
-              <span
-                className={`text-md mx-3 cursor-pointer ${
-                  isActive("/dashboard-products")
-                    ? "text-[green]"
-                    : "text-[#555]"
-                }`}
-              >
-                All Products
-              </span>
-            </Link>
             <Link to="/dashboard-create-product">
               <span
                 className={`text-md mx-3 cursor-pointer ${
@@ -103,15 +92,6 @@ const DashboardHeader = () => {
                 Create Product
               </span>
             </Link>
-            <Link to="/dashboard-orders">
-              <span
-                className={`text-md mx-3 cursor-pointer ${
-                  isActive("/dashboard-orders") ? "text-[green]" : "text-[#555]"
-                }`}
-              >
-                All Orders
-              </span>
-            </Link>
             <Link to="/dashboard-refunds">
               <span
                 className={`text-md mx-3 cursor-pointer ${
@@ -121,15 +101,6 @@ const DashboardHeader = () => {
                 }`}
               >
                 Refunds
-              </span>
-            </Link>
-            <Link to="/update-shop">
-              <span
-                className={`text-md mx-3 cursor-pointer ${
-                  isActive("/update-shop") ? "text-[green]" : "text-[#555]"
-                }`}
-              >
-                Update Shop
               </span>
             </Link>
             <Link to="/seller-change-password">
@@ -200,21 +171,6 @@ const DashboardHeader = () => {
                 </span>
               </Link>
               <Link
-                to="/dashboard-products"
-                className="my-2"
-                onClick={toggleMenu}
-              >
-                <span
-                  className={`text-md cursor-pointer ${
-                    isActive("/dashboard-products")
-                      ? "text-[green]"
-                      : "text-[#555]"
-                  }`}
-                >
-                  All Products
-                </span>
-              </Link>
-              <Link
                 to="/dashboard-create-product"
                 className="my-2"
                 onClick={toggleMenu}
@@ -230,21 +186,6 @@ const DashboardHeader = () => {
                 </span>
               </Link>
               <Link
-                to="/dashboard-orders"
-                className="my-2"
-                onClick={toggleMenu}
-              >
-                <span
-                  className={`text-md cursor-pointer ${
-                    isActive("/dashboard-orders")
-                      ? "text-[green]"
-                      : "text-[#555]"
-                  }`}
-                >
-                  All Orders
-                </span>
-              </Link>
-              <Link
                 to="/dashboard-refunds"
                 className="my-2"
                 onClick={toggleMenu}
@@ -257,15 +198,6 @@ const DashboardHeader = () => {
                   }`}
                 >
                   Refunds
-                </span>
-              </Link>
-              <Link to="/update-shop" className="my-2" onClick={toggleMenu}>
-                <span
-                  className={`text-md cursor-pointer ${
-                    isActive("/update-shop") ? "text-[green]" : "text-[#555]"
-                  }`}
-                >
-                  Update Shop
                 </span>
               </Link>
               <Link

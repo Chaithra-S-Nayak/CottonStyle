@@ -89,24 +89,6 @@ const AdminHeader = () => {
                 All Products
               </span>
             </Link>
-            <Link to="/admin-orders">
-              <span
-                className={`text-md mx-3 cursor-pointer ${
-                  isActive("/admin-orders") ? "text-[green]" : "text-[#555]"
-                }`}
-              >
-                All Orders
-              </span>
-            </Link>
-            <Link to="/admin-sellers">
-              <span
-                className={`text-md mx-3 cursor-pointer ${
-                  isActive("/admin-sellers") ? "text-[green]" : "text-[#555]"
-                }`}
-              >
-                All Sellers
-              </span>
-            </Link>
             <Link to="/admin-users">
               <span
                 className={`text-md mx-3 cursor-pointer ${
@@ -193,24 +175,6 @@ const AdminHeader = () => {
                   }`}
                 >
                   All Products
-                </span>
-              </Link>
-              <Link to="/admin-orders" className="my-2" onClick={toggleMenu}>
-                <span
-                  className={`text-md cursor-pointer ${
-                    isActive("/admin-orders") ? "text-[green]" : "text-[#555]"
-                  }`}
-                >
-                  All Orders
-                </span>
-              </Link>
-              <Link to="/admin-sellers" className="my-2" onClick={toggleMenu}>
-                <span
-                  className={`text-md cursor-pointer ${
-                    isActive("/admin-sellers") ? "text-[green]" : "text-[#555]"
-                  }`}
-                >
-                  All Sellers
                 </span>
               </Link>
               <Link to="/admin-users" className="my-2" onClick={toggleMenu}>
