@@ -21,7 +21,6 @@ const Header = ({ activeHeading }) => {
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const { isSeller } = useSelector((state) => state.seller);
-  const { isAdmin } = useSelector((state) => state.admin);
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
   const { allProducts } = useSelector((state) => state.products);
@@ -127,11 +126,6 @@ const Header = ({ activeHeading }) => {
               {isSeller ? "Seller Dashboard" : "Become Seller"}
             </Link>
           </button>
-          {/* <button className={`${styles.simpleButton}`}>
-            <Link to={`${isAdmin ? "/admin/dashboard" : "/admin-login"}`}>
-              {isAdmin ? "Admin Dashboard" : "Login as Admin"}
-            </Link>
-          </button> */}
         </div>
       </div>
       <div
@@ -279,14 +273,6 @@ const Header = ({ activeHeading }) => {
                     </h1>
                   </Link>
                 </button>
-                {/* <button className={`${styles.simpleButton} mb-4`}>
-                  <Link to={`${isAdmin ? "/admin/dashboard" : "/admin-login"}`}>
-                    <h1 className="text-[#fff] flex items-center">
-                      {isAdmin ? "Admin Dashboard" : "Login as Admin"}
-                      <IoIosArrowForward className="ml-1" />
-                    </h1>
-                  </Link>
-                </button> */}
 
                 <div className="flex gap-3">
                   {/* Wishlist Icon */}

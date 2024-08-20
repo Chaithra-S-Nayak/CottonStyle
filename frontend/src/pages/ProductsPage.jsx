@@ -92,7 +92,7 @@ const ProductsPage = () => {
       setData(filteredProducts);
       setCurrentPage(1); // Reset to first page when filters change
     }
-  }, [allProducts, filters]);
+  }, [allProducts, filters, data]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);

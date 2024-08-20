@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAdminOptions } from "../../redux/actions/adminOptions";
 import styles from "../../styles/styles";
-import { FaFilter } from "react-icons/fa";
 import { RxCross1 } from "react-icons/rx";
 
 const Filters = ({ onFilterChange }) => {
