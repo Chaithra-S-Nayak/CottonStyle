@@ -2,48 +2,54 @@ const mongoose = require("mongoose");
 
 const returnRequestSchema = new mongoose.Schema({
   orderId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Order",
+    type: String,
     required: true,
   },
-  productIds: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      required: true,
-    },
-  ],
   shopId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Shop",
-    required: true,
-  },
-  reason: {
     type: String,
     required: true,
   },
-  requestType: {
-    type: String,
-    enum: ["Return", "Exchange"],
-    required: true,
-  },
-  images: [
+  product: [
     {
-      public_id: {
+      productId: {
         type: String,
         required: true,
       },
-      url: {
+      quantity: {
+        type: Number,
+        required: true,
+      },
+      discountPrice: {
+        type: Number,
+        required: true,
+      },
+      paidAmount: {
+        type: Number,
+        required: true,
+      },
+      reason: {
         type: String,
         required: true,
       },
+      requestType: {
+        type: String,
+        enum: ["Return", "Exchange"],
+        required: true,
+      },
+      images: [
+        {
+          public_id: {
+            type: String,
+            required: true,
+          },
+          url: {
+            type: String,
+            required: true,
+          },
+        },
+      ],
     },
   ],
-  status: {
-    type: String,
-    enum: ["Pending", "Approved", "Rejected", "Processed"],
-    default: "Pending",
-  },
   createdAt: {
     type: Date,
     default: Date.now,

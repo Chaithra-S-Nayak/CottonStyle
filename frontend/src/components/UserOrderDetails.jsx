@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
-import { AiOutlinePlusCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { RxCross1 } from "react-icons/rx";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,29 +7,32 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { getAllOrdersOfUser } from "../redux/actions/order";
 import { server } from "../server";
+import ReturnRequestModal from "../components/ReturnRequestModal";
 import styles from "../styles/styles";
+import { differenceInDays } from "date-fns";
 
 const UserOrderDetails = () => {
   const { orders } = useSelector((state) => state.order);
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [open, setOpen] = useState(false);
+
+  const [open, setOpen] = useState(false); // For review modal
   const [comment, setComment] = useState("");
-  const [selectedItem, setSelectedItem] = useState(null);
   const [rating, setRating] = useState(0);
-  const [showRefundModal, setShowRefundModal] = useState(false);
-  const [reason, setReason] = useState("");
-  const [requestType, setRequestType] = useState("return");
-  const [images, setImages] = useState([]);
-  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false); // For return/exchange modal
+  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
-    dispatch(getAllOrdersOfUser(user._id));
+    if (user._id) {
+      dispatch(getAllOrdersOfUser(user._id));
+    }
   }, [dispatch, user._id]);
 
   const data = orders && orders.find((item) => item._id === id);
-
+  const deliveryDate = new Date(data?.deliveredAt);
+  const currentDate = new Date();
+  const daysSinceDelivery = differenceInDays(currentDate, deliveryDate);
   const reviewHandler = async () => {
     if (rating === 0) {
       toast.error("Please rate the product to submit a review.");
@@ -57,88 +59,30 @@ const UserOrderDetails = () => {
       toast.error(error.response?.data?.message || "An error occurred");
     }
   };
+  const handleOpenReturnRequestModal = () => {
+    if (data) {
+      const selectedItem = {
+        orderId: data._id,
+        shopId: data?.cart[0]?.shopId,
+        products: data.cart.map((item) => {
+          const baseAmount = item.discountPrice * item.qty;
+          const paidAmount = item.coupon
+            ? baseAmount - baseAmount * (item.coupon.discountPercentage / 100)
+            : baseAmount;
 
-  const handleProductSelection = (productId) => {
-    if (selectedProducts.includes(productId)) {
-      setSelectedProducts(selectedProducts.filter((id) => id !== productId));
-    } else {
-      setSelectedProducts([...selectedProducts, productId]);
-    }
-  };
-
-  const handleRefundConfirmation = () => {
-    setShowRefundModal(true);
-  };
-
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.readyState === 2) {
-          setImages((old) => [...old, reader.result]);
-        }
+          return {
+            productId: item._id,
+            name: item.name,
+            qty: item.qty,
+            discountPrice: item.discountPrice,
+            paidAmount: paidAmount,
+          };
+        }),
       };
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const handleRemoveImage = (index) => {
-    setImages(images.filter((_, i) => i !== index));
-  };
-
-  const confirmRefund = async (e) => {
-    e.preventDefault();
-
-    if (selectedProducts.length === 0) {
-      toast.error("Please select at least one product to return.");
-      return;
-    }
-
-    if (images.length === 0) {
-      toast.error("Please upload at least one image.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("orderId", id);
-    formData.append("productIds", JSON.stringify(selectedProducts));
-    formData.append("shopId", data.cart[0]?.shopId);
-    formData.append("reason", reason);
-    formData.append("requestType", requestType);
-
-    images.forEach((image) => {
-      formData.append("images", image);
-    });
-
-    try {
-      const res = await axios.post(
-        `${server}/returnRequest/create-return-request`,
-        formData,
-        { withCredentials: true }
-      );
-
-      toast.success(res.data.message);
-
-      await axios
-        .put(`${server}/order/order-refund/${id}`, {
-          status: "Processing refund",
-        })
-        .then((res) => {
-          toast.success(res.data.message);
-          dispatch(getAllOrdersOfUser(user._id));
-        })
-        .catch((error) => {
-          toast.error(
-            error.response?.data?.message || "Failed to update order status"
-          );
-        });
-
-      setShowRefundModal(false);
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Failed to create return request"
-      );
+      setSelectedItem(selectedItem);
+      setIsModalOpen(true);
+    } else {
+      console.error("Order data is null or undefined");
     }
   };
 
@@ -164,7 +108,7 @@ const UserOrderDetails = () => {
           </div>
           <div>
             <h5>
-              Total Price:<span> ₹{totalPrice}</span>
+              Total Price: <span>₹{totalPrice}</span>
             </h5>
             <h5>
               {data?.coupon ? (
@@ -220,19 +164,31 @@ const UserOrderDetails = () => {
                   ₹{item.discountPrice} x {item.qty}
                 </h5>
               </div>
-              {!item.isReviewed && data?.status === "Delivered" && (
-                <button
-                  className={`${styles.simpleButton} ml-auto`}
-                  onClick={() => setOpen(true) || setSelectedItem(item)}
-                >
-                  Write a review
-                </button>
-              )}
+              <div className="ml-auto">
+                {!item.isReviewed && data?.status === "Delivered" && (
+                  <button
+                    className={`${styles.simpleButton} mr-2`}
+                    onClick={() => {
+                      setSelectedItem(item);
+                      setOpen(true);
+                    }}
+                  >
+                    Write a review
+                  </button>
+                )}
+              </div>
             </div>
           ))}
       </div>
 
-      {/* Review Popup */}
+      {/* Return Request Modal */}
+      <ReturnRequestModal
+        open={isModalOpen}
+        setOpen={setIsModalOpen}
+        selectedItem={selectedItem}
+      />
+
+      {/* Review Modal */}
       {open && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md">
@@ -247,7 +203,7 @@ const UserOrderDetails = () => {
             <div className="flex items-center mb-4">
               <img
                 src={`${selectedItem?.images[0]?.url}`}
-                alt=""
+                alt={selectedItem?.name}
                 className="w-16 h-16 object-cover rounded-lg mr-4"
               />
               <div>
@@ -258,7 +214,7 @@ const UserOrderDetails = () => {
               </div>
             </div>
             <div className="flex items-center mb-4">
-              <h5 className="mr-2">Give a Rating </h5>
+              <h5 className="mr-2">Give a Rating</h5>
               <div className="flex">
                 {[1, 2, 3, 4, 5].map((i) =>
                   rating >= i ? (
@@ -285,7 +241,7 @@ const UserOrderDetails = () => {
                 <span className="text-gray-400">(optional)</span>
               </label>
               <textarea
-                className="w-full border border-gray-300 rounded-md p-2 mb-4"
+                className={`${styles.formLabel}`}
                 rows="4"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
@@ -302,141 +258,18 @@ const UserOrderDetails = () => {
         </div>
       )}
 
-      {/* Refund Modal */}
-      {showRefundModal && (
-        <form onSubmit={confirmRefund}>
-          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
-            <div className="bg-white p-6 rounded-lg w-full max-w-md">
-              <div className="flex justify-end">
-                <RxCross1
-                  size={30}
-                  onClick={() => setShowRefundModal(false)}
-                  className="cursor-pointer"
-                />
-              </div>
-              <h1 className={`${styles.formHeading}`}>Initiate Refund</h1>
-
-              <label className={`${styles.formLabel}`}>
-                Request type<span className="text-red-500">*</span>
-              </label>
-              <select
-                className={`${styles.formInput}`}
-                onChange={(e) => setRequestType(e.target.value)}
-                value={requestType}
-                required
-              >
-                <option value="exchange">Exchange</option>
-                <option value="return">Return</option>
-              </select>
-
-              <label className={`${styles.formLabel}`}>
-                Products that you want to return{" "}
-                <span className="text-red-500">*</span>
-              </label>
-              <div className="flex flex-wrap gap-2 mt-1">
-                {data?.cart.map((item) => (
-                  <div key={item._id} className="flex items-center mb-4">
-                    <input
-                      type="checkbox"
-                      id={`product-${item._id}`}
-                      value={item._id}
-                      checked={selectedProducts.includes(item._id)}
-                      onChange={() => handleProductSelection(item._id)}
-                      className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                    />
-                    <img
-                      src={`${item.images[0]?.url}`}
-                      alt={item.name}
-                      className="w-16 h-16 object-cover rounded-lg mr-4"
-                    />
-                    <div>
-                      <h5>
-                        <Link
-                          to={`/product/${item._id}`}
-                          className="text-blue-500 hover:underline"
-                        >
-                          {item.name}
-                        </Link>
-                      </h5>
-                      <h5>
-                        ₹{item.discountPrice} x {item.qty}
-                      </h5>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <label className={`${styles.formLabel}`}>
-                Reason<span className="text-red-500">*</span>
-              </label>
-              <textarea
-                className={`${styles.formInput}`}
-                rows="3"
-                onChange={(e) => setReason(e.target.value)}
-                placeholder="Enter the reason"
-                required
-              />
-
-              <label className={`${styles.formLabel}`}>
-                Upload Images of the Product
-                <span className="text-red-500">*</span>
-              </label>
-              <p className="text-sm text-gray-600 mb-2">
-                Please upload clear images of the product you purchased.
-              </p>
-              <input
-                type="file"
-                id="upload"
-                className="hidden"
-                multiple
-                onChange={handleImageChange}
-              />
-              <div className="flex items-center flex-wrap mt-2">
-                <label htmlFor="upload" className="cursor-pointer">
-                  <AiOutlinePlusCircle
-                    className="mb-4"
-                    size={30}
-                    color="#555"
-                  />
-                </label>
-                {images.map((i, index) => (
-                  <div key={index} className="relative m-2">
-                    <img
-                      src={i}
-                      alt="Uploaded"
-                      className="h-[120px] w-[120px] object-cover"
-                    />
-                    <AiOutlineCloseCircle
-                      size={20}
-                      color="#555"
-                      className="absolute top-0 right-0 cursor-pointer"
-                      onClick={() => handleRemoveImage(index)}
-                    />
-                  </div>
-                ))}
-              </div>
-
-              <button type="submit" className={`${styles.wideButton}`}>
-                Submit
-              </button>
-            </div>
-          </div>
-        </form>
-      )}
-
       {/* Shipping Details and Payment Information */}
       <div className="grid grid-cols-2 gap-4 mb-4">
         {/* Shipping Details */}
         <div className="bg-white shadow rounded-lg p-4">
-          <h2 className="text-xl mb-2">Shipping Details</h2>
-          <h5>
-            Shipping Address:
-            <span>
-              {data?.shippingAddress.address1} {data?.shippingAddress.address2},
-              {data?.shippingAddress.city}, {data?.shippingAddress.country}
-            </span>
-          </h5>
-          <h5>Phone Number: {data?.user?.phoneNumber}</h5>
+          <h2 className="text-xl mb-2">Shipping Address</h2>
+          <h5>Name: {data?.shippingAddress?.name}</h5>
+          <h5>Email: {data?.user?.email}</h5>
+          <h5>Address: {data?.shippingAddress?.address1}</h5>
+          <h5>City: {data?.shippingAddress?.city}</h5>
+          <h5>Country: {data?.shippingAddress?.country}</h5>
+          <h5>Zip Code: {data?.shippingAddress?.zipCode}</h5>
+          <h5>Phone Number: {data?.shippingAddress?.phoneNumber}</h5>
         </div>
 
         {/* Payment Information */}
@@ -461,12 +294,24 @@ const UserOrderDetails = () => {
       {/* Actions */}
       <div className={`${styles.noramlFlex}`}>
         {(data?.status === "Delivered" ||
-          data?.status === "Processing refund") && (
+          data?.status === "Processing return request") &&
+          daysSinceDelivery <= 7 && (
+            <>
+              <button
+                className={`${styles.simpleButton}`}
+                onClick={handleOpenReturnRequestModal}
+              >
+                Return/Exchange
+              </button>
+            </>
+          )}
+
+        {data?.status === "Processing return request" && (
           <button
-            className={`${styles.simpleButton} mr-4`}
-            onClick={handleRefundConfirmation}
+            className={`${styles.simpleButton}`}
+            // onClick={handleOpenEditReturnRequestModal}
           >
-            Initiate Refund
+            Edit/Cancel Return Request
           </button>
         )}
         <Link to={`/user/order/invoice/${id}`}>

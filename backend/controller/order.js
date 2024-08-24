@@ -110,6 +110,7 @@ router.post(
         gstPercentage,
         paymentInfo,
         coupon: coupon && coupon.shopId === shopId ? coupon : null, // Only include coupon if it matches the shopId
+        shopId,
         sellerDeliveryFees: deliveryFee > 0 ? deliveryFee : null, // Only include delivery fee if greater than 0
       });
       orders.push(order);

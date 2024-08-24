@@ -38,6 +38,10 @@ const orderSchema = new mongoose.Schema({
       type: String,
     },
   },
+  shopId: {
+    type: String,
+    required: true,
+  },
   status: {
     type: String,
     default: "Processing",
@@ -66,6 +70,16 @@ const orderSchema = new mongoose.Schema({
     required: true,
     default: function () {
       return "INV" + Date.now();
+    },
+  },
+  returnOrExchange: {
+    returnRequestId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ReturnRequest", // Assuming you have a ReturnRequest model
+    },
+    requestType: {
+      type: String,
+      enum: ["Return", "Exchange"],
     },
   },
   createdAt: {
