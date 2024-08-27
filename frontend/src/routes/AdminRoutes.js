@@ -1,5 +1,6 @@
 import AdminDashboardPage from "../pages/AdminDashboardPage";
 import AdminDashboardUsers from "../pages/AdminDashboardUsers";
+import AdminOrderDetails from "../pages/AdminOrderDetails";
 import AdminDashboardSellers from "../pages/AdminDashboardSellers";
 import AdminDashboardOrders from "../pages/AdminDashboardOrders";
 import AdminDashboardProducts from "../pages/AdminDashboardProducts";
@@ -19,4 +20,5 @@ export {
   AdminLoginPage,
   AdminSettingsPage,
   AdminForgotPasswordPage,
+  AdminOrderDetails,
 };

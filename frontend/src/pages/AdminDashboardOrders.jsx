@@ -5,6 +5,9 @@ import { DataGrid } from "@material-ui/data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllOrdersForAdmin } from "../redux/actions/order";
 import styles from "../styles/styles";
+import { AiOutlineArrowRight } from "react-icons/ai";
+import { Link } from "react-router-dom";
+import { Button } from "@material-ui/core";
 
 const AdminDashboardOrders = () => {
   const dispatch = useDispatch();
@@ -58,6 +61,27 @@ const AdminDashboardOrders = () => {
       type: "number",
       minWidth: 130,
       flex: 0.8,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "orderDetails",
+      flex: 1,
+      minWidth: 150,
+      headerName: "Order Details",
+      type: "number",
+      sortable: false,
+      renderCell: (params) => {
+        return (
+          <>
+            <Link to={`/admin/order/${params.id}`}>
+              <Button>
+                <AiOutlineArrowRight size={20} />
+              </Button>
+            </Link>
+          </>
+        );
+      },
       align: "center",
       headerAlign: "center",
     },

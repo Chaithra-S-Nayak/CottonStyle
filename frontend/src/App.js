@@ -42,6 +42,7 @@ import {
 import {
   AdminDashboardPage,
   AdminDashboardUsers,
+  AdminOrderDetails,
   AdminDashboardSellers,
   AdminDashboardOrders,
   AdminDashboardProducts,
@@ -261,6 +262,14 @@ const App = () => {
           element={
             <ProtectedAdminRoute>
               <AdminDashboardUsers />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin/order/:id"
+          element={
+            <ProtectedAdminRoute>
+              <AdminOrderDetails />
             </ProtectedAdminRoute>
           }
         />
