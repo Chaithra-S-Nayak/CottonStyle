@@ -76,6 +76,7 @@ const UserOrderDetails = () => {
             qty: item.qty,
             discountPrice: item.discountPrice,
             paidAmount: paidAmount,
+            availableSizes: item.availableSizes,
           };
         }),
       };

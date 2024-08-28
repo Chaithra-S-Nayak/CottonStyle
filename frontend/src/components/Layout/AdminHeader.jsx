@@ -98,6 +98,15 @@ const AdminHeader = () => {
                 All Users
               </span>
             </Link>
+            <Link to="/admin-return-requests">
+              <span
+                className={`text-md mx-3 cursor-pointer ${
+                  isActive("/admin-users") ? "text-[green]" : "text-[#555]"
+                }`}
+              >
+                All Return Requests
+              </span>
+            </Link>
             <Link to="/admin-withdraw-request">
               <span
                 className={`text-md mx-3 cursor-pointer ${

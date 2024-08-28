@@ -9,6 +9,10 @@ const returnRequestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  userId: {
+    type: String,
+    required: true,
+  },
   product: [
     {
       productId: {
@@ -35,6 +39,9 @@ const returnRequestSchema = new mongoose.Schema({
         type: String,
         enum: ["Return", "Exchange"],
         required: true,
+      },
+      selectedSize: {
+        type: String,
       },
       images: [
         {

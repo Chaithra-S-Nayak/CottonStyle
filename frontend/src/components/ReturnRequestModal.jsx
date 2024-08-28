@@ -18,10 +18,13 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
           qty: product.qty,
           discountPrice: product.discountPrice,
           paidAmount: product.paidAmount,
+          availableSizes: product.availableSizes || [],
+          selectedSize: "",
           requestType: "Return",
           reason: "",
           images: [],
           selected: false,
+          isAvailable: null, // Track availability status
         }))
       );
     }
@@ -101,18 +104,56 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
     );
   };
 
+  const handleSizeSelection = (productId, value) => {
+    setReturnDetails((prevDetails) =>
+      prevDetails.map((item) =>
+        item.productId === productId ? { ...item, selectedSize: value } : item
+      )
+    );
+  };
+
+  const handleCheckAvailability = async (productId) => {
+    try {
+      const { data } = await axios.post(
+        `${server}/returnRequest/check-product-availability`,
+        { productId }
+      );
+
+      setReturnDetails((prevDetails) =>
+        prevDetails.map((item) =>
+          item.productId === productId
+            ? { ...item, isAvailable: data.success }
+            : item
+        )
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("An error occurred while checking product availability.");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const selectedProducts = returnDetails.filter((item) => item.selected);
 
-    // Check if no products are selected
     if (selectedProducts.length === 0) {
       toast.error("Please select at least one product to return or exchange.");
       return;
     }
 
-    // Check if any selected product has no images uploaded
     for (let product of selectedProducts) {
+      if (product.requestType === "Exchange" && product.isAvailable === null) {
+        toast.error(
+          `Please check the availability of the product: ${product.name} before submitting.`
+        );
+        return;
+      }
+
       if (product.images.length === 0) {
         toast.error(
           `Please upload at least one image for the product: ${product.name}`
@@ -135,8 +176,10 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
             requestType: item.requestType,
             discountPrice: item.discountPrice,
             paidAmount: item.paidAmount,
+            selectedSize: item.selectedSize,
           })),
-        }
+        },
+        { withCredentials: true }
       );
       toast.success("Return/Exchange request submitted successfully!");
       setOpen(false);
@@ -200,6 +243,48 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
                           <option value="Exchange">Exchange</option>
                         </select>
                       </div>
+                      {productDetail.requestType === "Exchange" && (
+                        <>
+                          <button
+                            type="button"
+                            className={`${styles.button}`}
+                            onClick={() =>
+                              handleCheckAvailability(product.productId)
+                            }
+                          >
+                            Check Availability
+                          </button>
+                          <div className="mt-2">
+                            <label
+                              htmlFor={`size-${product.productId}`}
+                              className={`${styles.formLabel}`}
+                            >
+                              Select New Size:
+                            </label>
+                            <select
+                              id={`size-${product.productId}`}
+                              value={productDetail?.selectedSize || ""}
+                              onChange={(e) =>
+                                handleSizeSelection(
+                                  product.productId,
+                                  e.target.value
+                                )
+                              }
+                              className={`${styles.formInput}`}
+                              required
+                            >
+                              <option value="" disabled>
+                                Select size
+                              </option>
+                              {productDetail.availableSizes.map((size) => (
+                                <option key={size} value={size}>
+                                  {size}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </>
+                      )}
                       <div className="mt-2">
                         <label
                           htmlFor={`quantity-${product.productId}`}

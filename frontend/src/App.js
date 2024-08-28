@@ -42,6 +42,8 @@ import {
 import {
   AdminDashboardPage,
   AdminDashboardUsers,
+  AdminDashboardReturnRequest,
+  AdminReturnRequestDetails,
   AdminOrderDetails,
   AdminDashboardSellers,
   AdminDashboardOrders,
@@ -262,6 +264,22 @@ const App = () => {
           element={
             <ProtectedAdminRoute>
               <AdminDashboardUsers />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/admin-return-requests"
+          element={
+            <ProtectedAdminRoute>
+              <AdminDashboardReturnRequest />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/return-request/:id"
+          element={
+            <ProtectedAdminRoute>
+              <AdminReturnRequestDetails />
             </ProtectedAdminRoute>
           }
         />
