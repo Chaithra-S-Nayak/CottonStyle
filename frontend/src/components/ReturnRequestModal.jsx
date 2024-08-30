@@ -17,7 +17,6 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
           name: product.name,
           qty: product.qty,
           discountPrice: product.discountPrice,
-          paidAmount: product.paidAmount,
           availableSizes: product.availableSizes || [],
           selectedSize: "",
           requestType: "Return",
@@ -168,16 +167,33 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
         {
           orderId: selectedItem.orderId,
           shopId: selectedItem.shopId,
-          products: selectedProducts.map((item) => ({
-            productId: item.productId,
-            quantity: item.quantity,
-            reason: item.reason,
-            images: item.images,
-            requestType: item.requestType,
-            discountPrice: item.discountPrice,
-            paidAmount: item.paidAmount,
-            selectedSize: item.selectedSize,
-          })),
+          products: selectedProducts.map((item) => {
+            // Calculate the paidAmount considering the coupon discount here
+            const baseAmount = item.discountPrice * item.quantity;
+            const paidAmount = selectedItem.coupon
+              ? baseAmount -
+                baseAmount *
+                  (selectedItem.coupon.couponDiscountPercentage / 100)
+              : baseAmount;
+
+            return {
+              productId: item.productId,
+              quantity: item.quantity,
+              reason: item.reason,
+              images: item.images,
+              requestType: item.requestType,
+              discountPrice: item.discountPrice,
+              paidAmount: paidAmount,
+              selectedSize: item.selectedSize,
+              coupon: selectedItem.coupon
+                ? {
+                    name: selectedItem.coupon.name,
+                    couponDiscountPercentage:
+                      selectedItem.coupon.couponDiscountPercentage,
+                  }
+                : null,
+            };
+          }),
         },
         { withCredentials: true }
       );

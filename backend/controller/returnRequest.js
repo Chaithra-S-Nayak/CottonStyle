@@ -34,6 +34,7 @@ router.post(
       productsWithImages.push({
         ...product,
         images: imagesLinks,
+        coupon: product.coupon || {},
       });
     }
 

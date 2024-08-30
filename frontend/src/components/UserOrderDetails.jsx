@@ -64,18 +64,18 @@ const UserOrderDetails = () => {
       const selectedItem = {
         orderId: data._id,
         shopId: data?.cart[0]?.shopId,
+        coupon: data?.coupon
+          ? {
+              name: data.coupon.name,
+              couponDiscountPercentage: data.coupon.couponDiscountPercentage,
+            }
+          : null,
         products: data.cart.map((item) => {
-          const baseAmount = item.discountPrice * item.qty;
-          const paidAmount = item.coupon
-            ? baseAmount - baseAmount * (item.coupon.discountPercentage / 100)
-            : baseAmount;
-
           return {
             productId: item._id,
             name: item.name,
             qty: item.qty,
             discountPrice: item.discountPrice,
-            paidAmount: paidAmount,
             availableSizes: item.availableSizes,
           };
         }),

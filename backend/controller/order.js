@@ -5,6 +5,7 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const { isSeller, isAdmin, isAuthenticated } = require("../middleware/auth");
 const Order = require("../model/order");
 const Shop = require("../model/shop");
+const Razorpay = require("razorpay");
 const Product = require("../model/product");
 const sendNotification = require("../utils/notification");
 const sendMail = require("../utils/sendMail");
@@ -14,7 +15,7 @@ const {
   getOutOfStockEmailTemplate,
   getOrderRefundEmailTemplate,
 } = require("../utils/emailTemplates");
-
+require("dotenv").config();
 // Function to calculate total price for items in a shop's cart
 const calculateTotalPrice = (items) =>
   items.reduce((total, item) => total + item.discountPrice * item.qty, 0);
@@ -200,62 +201,100 @@ router.put(
   })
 );
 
-// Give a refund --must be removed
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_SECRET,
+});
 router.put(
-  "/order-refund/:id",
+  "/order-refund-success/",
+  isAdmin,
   catchAsyncErrors(async (req, res, next) => {
-    const order = await Order.findById(req.params.id);
-    order.status = req.body.status;
-    await order.save({ validateBeforeSave: false });
-    res.status(200).json({
-      success: true,
-      order,
-      message: "Order Refund Request successfully!",
-    });
+    const { orderId, status, qty, productId, refundAmount, returnRequestId } =
+      req.body;
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
+    }
+
+    try {
+      const refund = await razorpay.payments.refund(order.paymentInfo.id, {
+        amount: refundAmount * 100,
+      });
+
+      if (refund.status === "processed") {
+        order.status = "Refund Sucessful";
+
+        // Update the product stock
+        const product = await Product.findById(productId);
+        if (product) {
+          product.stock += qty;
+          await product.save();
+        }
+
+        // Update the seller's available balance
+        const seller = await Shop.findById(order.seller);
+        if (seller) {
+          seller.availableBalance -= refundAmount;
+          await seller.save();
+        }
+
+        // Update the returnOrExchange field in the order
+        order.returnOrExchange = {
+          returnRequestId: returnRequestId,
+          requestType: "Return",
+        };
+
+        await order.save();
+        res.status(200).json({ success: true, message: "Refund Successful!" });
+      } else {
+        return res
+          .status(500)
+          .json({ success: false, message: "Razorpay refund failed" });
+      }
+    } catch (error) {
+      console.error("Razorpay refund error:", error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Razorpay refund error" });
+    }
   })
 );
 
-// Accept a refund (seller) --must be removed
 router.put(
-  "/order-refund-success/:id",
-  isSeller,
+  "/order-exchange-success/",
+  isAdmin,
   catchAsyncErrors(async (req, res, next) => {
-    const order = await Order.findById(req.params.id);
-    order.status = req.body.status;
-    await order.save();
-    res
-      .status(200)
-      .json({ success: true, message: "Order Refund successful!" });
-    if (req.body.status === "Refund Success") {
-      for (const o of order.cart) {
-        const product = await Product.findById(o._id);
-        product.stock += o.qty;
-        product.sold_out -= o.qty;
-        await product.save({ validateBeforeSave: false });
-      }
-      const seller = await Shop.findById(order.seller);
-      if (seller) {
-        seller.availableBalance -= seller.availableBalance * 0.1;
-        await seller.save();
-        const bodyContent = getOrderRefundEmailTemplate(
-          order._id,
-          order.status
-        );
-        const html = generateEmailTemplate({
-          recipientName: seller.name,
-          bodyContent,
-        });
-        try {
-          await sendMail({
-            email: seller.email,
-            subject: "Order Refund Successful",
-            html,
-          });
-        } catch (mailError) {
-          console.error("Error sending email:", mailError);
-        }
-      }
+    const { orderId, status, productId, newSize, returnRequestId } = req.body;
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
     }
+
+    // Update the product size for the exchanged product
+    const product = order.products.find((p) => p._id.toString() === productId);
+    if (product) {
+      product.size = newSize;
+    }
+
+    // Update the order status
+    order.status = status;
+
+    // Update the returnOrExchange field in the order
+    order.returnOrExchange = {
+      returnRequestId: returnRequestId,
+      requestType: "Exchange",
+    };
+
+    await order.save();
+    res.status(200).json({ success: true, message: "Exchange Successful!" });
   })
 );
 

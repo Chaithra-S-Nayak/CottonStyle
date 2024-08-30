@@ -55,6 +55,10 @@ const returnRequestSchema = new mongoose.Schema({
           },
         },
       ],
+      coupon: {
+        name: String,
+        couponDiscountPercentage: Number,
+      },
     },
   ],
   createdAt: {
