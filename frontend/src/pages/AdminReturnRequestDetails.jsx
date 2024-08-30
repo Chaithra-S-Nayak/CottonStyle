@@ -181,59 +181,21 @@ const AdminReturnRequestDetails = () => {
           ))}
         </div>
 
-        {/* Order Status for Return */}
         {returnProducts?.length > 0 && (
-          <div className="bg-white shadow rounded-lg p-4 mb-4">
-            <h2 className="text-xl mb-2">Return Status</h2>
-            <select
-              value={statusReturn}
-              onChange={(e) => setStatusReturn(e.target.value)}
-              className="mt-2 border border-gray-300 rounded-md p-2"
-            >
-              {["refund"].map((option, index) => (
-                <option value={option} key={index}>
-                  {option}
-                </option>
-              ))}
-            </select>
-            <button
-              onClick={() => handleUpdateStatus("Return")}
-              className={`${styles.simpleButton} m-4`}
-            >
-              Process Return
-            </button>
-          </div>
+          <button
+            onClick={() => handleUpdateStatus("Return")}
+            className={`${styles.simpleButton} m-4`}
+          >
+            Process Return
+          </button>
         )}
-
-        {/* Order Status for Exchange */}
         {exchangeProducts?.length > 0 && (
-          <div className="bg-white shadow rounded-lg p-4 mb-4">
-            <h2 className="text-xl mb-2">Exchange Status</h2>
-            <select
-              value={statusExchange}
-              onChange={(e) => setStatusExchange(e.target.value)}
-              className="mt-2 border border-gray-300 rounded-md p-2"
-            >
-              {[
-                "Processing Exchange",
-                "Transferred to delivery partner",
-                "Shipping",
-                "Received",
-                "On the way",
-                "Delivered",
-              ].map((option, index) => (
-                <option value={option} key={index}>
-                  {option}
-                </option>
-              ))}
-            </select>
-            <button
-              onClick={() => handleUpdateStatus("Exchange")}
-              className={`${styles.simpleButton} m-4`}
-            >
-              Process Exchange
-            </button>
-          </div>
+          <button
+            onClick={() => handleUpdateStatus("Exchange")}
+            className={`${styles.simpleButton} m-4`}
+          >
+            Process Exchange
+          </button>
         )}
       </div>
       <Footer />

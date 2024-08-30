@@ -152,7 +152,7 @@ const UserOrderDetails = () => {
                 alt={item.name}
                 className="w-16 h-16 object-cover rounded-lg mr-4"
               />
-              <div>
+              <div className="flex-1">
                 <h5>
                   <Link
                     to={`/product/${item._id}`}
@@ -164,6 +164,13 @@ const UserOrderDetails = () => {
                 <h5>
                   ₹{item.discountPrice} x {item.qty}
                 </h5>
+                {/* Display request status if it exists */}
+                {item.requestStatus && (
+                  <p className="text-sm text-gray-600 mt-1">
+                    Request Status:{" "}
+                    <span className="font-semibold">{item.requestStatus}</span>
+                  </p>
+                )}
               </div>
               <div className="ml-auto">
                 {!item.isReviewed && data?.status === "Delivered" && (

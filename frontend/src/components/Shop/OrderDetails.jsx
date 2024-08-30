@@ -47,21 +47,45 @@ const OrderDetails = () => {
     }
   };
 
-  const refundOrderUpdateHandler = async () => {
+  const exchangeUpdateHandler = async () => {
     if (status === data.status) {
       toast.info("The status is already set to this value.");
       return;
     }
+
+    const productsForExchange = data.cart
+      .filter((item) => item.requestStatus === "Approved Exchange")
+      .map((item) => ({
+        productId: item._id,
+        requestStatus: status,
+      }));
+
+    if (productsForExchange.length === 0) {
+      toast.info("No products need updating for exchange.");
+      return;
+    }
+
     try {
       await axios.put(
-        `${server}/order/order-refund-success/${id}`,
-        { status },
+        `${server}/order/update-exchange-request-status/`,
+        {
+          orderId: id,
+          products: productsForExchange,
+        },
         { withCredentials: true }
       );
-      toast.success("Order updated!");
+      toast.success("Exchange status updated!");
       dispatch(getAllOrdersOfShop(seller._id));
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred");
+    }
+  };
+
+  const handleStatusChange = () => {
+    if (data?.status === "Approved Exchange") {
+      exchangeUpdateHandler();
+    } else {
+      orderUpdateHandler();
     }
   };
 
@@ -70,7 +94,7 @@ const OrderDetails = () => {
       <h1 className="text-xl font-semibold mb-4">Order Details</h1>
 
       {/* Order Summary */}
-      <div className="shadow rounded-lg p-4 mb-4">
+      <div className="bg-white shadow rounded-lg p-4 mb-4">
         <h2 className="text-xl mb-2">Order Summary</h2>
         <div className="grid grid-cols-3 gap-4">
           <div>
@@ -116,7 +140,7 @@ const OrderDetails = () => {
       </div>
 
       {/* Order Items */}
-      <div className="shadow rounded-lg p-4 mb-4">
+      <div className="bg-white shadow rounded-lg p-4 mb-4">
         <h2 className="text-xl mb-2">Order Items</h2>
         {data &&
           data?.cart.map((item) => (
@@ -139,7 +163,7 @@ const OrderDetails = () => {
       {/* Shipping Details and Payment Information */}
       <div className="grid grid-cols-2 gap-4">
         {/* Shipping Details */}
-        <div className="shadow rounded-lg p-4 mb-4">
+        <div className="bg-white shadow rounded-lg p-4 mb-4">
           <h2 className="text-xl mb-2">Shipping Details</h2>
           <h5>
             Shipping Address:
@@ -152,7 +176,7 @@ const OrderDetails = () => {
         </div>
 
         {/* Payment Information */}
-        <div className="shadow rounded-lg p-4 mb-4">
+        <div className="bg-white shadow rounded-lg p-4 mb-4">
           <h2 className="text-xl mb-2">Payment Information</h2>
           <h5>
             Status:
@@ -165,65 +189,61 @@ const OrderDetails = () => {
       </div>
 
       {/* Order Status */}
-      <div className="shadow rounded-lg p-4 mb-4">
+      <div className="bg-white shadow rounded-lg p-4 mb-4">
         <h2 className="text-xl mb-2">Order Status</h2>
         {data?.status === "Delivered" && (
           <h5>
             Delivered At: <span>{data?.deliveredAt?.slice(0, 10)}</span>
           </h5>
         )}
-        {data?.status !== "Processing refund" &&
-          data?.status !== "Refund Success" && (
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="mt-2 border border-gray-300 rounded-md p-2"
-            >
-              {[
-                "Processing",
-                "Transferred to delivery partner",
-                "Shipping",
-                "Received",
-                "On the way",
-                "Delivered",
-              ]
-                .slice(
-                  [
-                    "Processing",
-                    "Transferred to delivery partner",
-                    "Shipping",
-                    "Received",
-                    "On the way",
-                    "Delivered",
-                  ].indexOf(data?.status)
-                )
-                .map((option, index) => (
-                  <option value={option} key={index}>
-                    {option}
-                  </option>
-                ))}
-            </select>
-          )}
-        {data?.status === "Processing refund" ||
-        data?.status === "Refund Success" ? (
+        {data?.status !== "Approved Exchange" && (
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
             className="mt-2 border border-gray-300 rounded-md p-2"
           >
-            {["Processing refund", "Refund Success"].map((option, index) => (
-              <option value={option} key={index}>
-                {option}
-              </option>
-            ))}
+            {[
+              "Processing",
+              "Transferred to delivery partner",
+              "Shipping",
+              "Received",
+              "On the way",
+              "Delivered",
+            ]
+              .slice(
+                [
+                  "Processing",
+                  "Transferred to delivery partner",
+                  "Shipping",
+                  "Received",
+                  "On the way",
+                  "Delivered",
+                ].indexOf(data?.status)
+              )
+              .map((option, index) => (
+                <option value={option} key={index}>
+                  {option}
+                </option>
+              ))}
+          </select>
+        )}
+        {data?.status === "Approved Exchange" ? (
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="mt-2 border border-gray-300 rounded-md p-2"
+          >
+            {["Processing Exchange", "Exchange Success"].map(
+              (option, index) => (
+                <option value={option} key={index}>
+                  {option}
+                </option>
+              )
+            )}
           </select>
         ) : null}
         <button
-          onClick={
-            data?.status !== "Processing refund"
-              ? orderUpdateHandler
-              : refundOrderUpdateHandler
-          }
+          onClick={handleStatusChange}
           className={`${styles.simpleButton} m-4`}
         >
           Update Status
