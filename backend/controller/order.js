@@ -58,11 +58,27 @@ const updateProductStock = async (id, qty) => {
   await product.save({ validateBeforeSave: false });
 };
 
-// Function to update seller's available balance after deducting service charge
-const updateSellerBalance = async (sellerId, amount) => {
-  const seller = await Shop.findById(sellerId);
-  seller.availableBalance += amount;
-  await seller.save();
+// Function to update seller's available balance only after 7 days of delivery
+const updateSellerBalance = async (sellerId, amount, deliveredAt) => {
+  const currentDate = new Date();
+  const deliveryDate = new Date(deliveredAt);
+  const daysDifference = Math.floor(
+    (currentDate - deliveryDate) / (1000 * 60 * 60 * 24)
+  );
+
+  if (daysDifference >= 7) {
+    const seller = await Shop.findById(sellerId);
+    seller.availableBalance += amount;
+    await seller.save();
+  } else {
+    // Schedule a check for the balance update after the remaining days
+    const remainingDays = 7 - daysDifference;
+    setTimeout(async () => {
+      const seller = await Shop.findById(sellerId);
+      seller.availableBalance += amount;
+      await seller.save();
+    }, remainingDays * 24 * 60 * 60 * 1000); // Convert days to milliseconds
+  }
 };
 
 // Create new order
@@ -193,51 +209,12 @@ router.put(
       const serviceCharge = order.totalPrice * 0.1; // service charge
       await updateSellerBalance(
         req.seller.id,
-        order.totalPrice - serviceCharge
+        order.totalPrice - serviceCharge,
+        order.deliveredAt
       );
     }
     await order.save({ validateBeforeSave: false });
     res.status(200).json({ success: true, order });
-  })
-);
-// Update request status for exchange products
-router.put(
-  "/update-exchange-request-status/",
-  isAdmin,
-  catchAsyncErrors(async (req, res, next) => {
-    const { orderId, products } = req.body;
-    const order = await Order.findById(orderId);
-
-    if (!order) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Order not found" });
-    }
-
-    // Update the request status for each product in the cart
-    const updatedCart = order.cart.map((item) => {
-      // Find the corresponding product in the products array
-      const productUpdate = products.find(
-        (p) => p.productId === item._id.toString()
-      );
-      if (productUpdate) {
-        return {
-          ...item,
-          requestStatus: productUpdate.requestStatus,
-        };
-      }
-      return item;
-    });
-
-    order.cart = updatedCart;
-
-    await order.save();
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Exchange request statuses updated successfully",
-      });
   })
 );
 
@@ -249,7 +226,7 @@ router.put(
   "/order-refund-success/",
   isAdmin,
   catchAsyncErrors(async (req, res, next) => {
-    const { orderId, qty, productId, refundAmount, returnRequestId } = req.body;
+    const { orderId, refundAmount, returnRequestId, products } = req.body;
 
     const order = await Order.findById(orderId);
 
@@ -265,30 +242,22 @@ router.put(
       });
 
       if (refund.status === "processed") {
-        order.status = "Approved Refund";
-
-        // Update the product stock
-        const product = await Product.findById(productId);
-        if (product) {
-          product.stock += qty;
-          await product.save();
-        }
-
-        // Update the seller's available balance
-        const seller = await Shop.findById(order.shopId);
-        if (seller) {
-          seller.availableBalance -= refundAmount;
-          await seller.save();
-        }
-
-        // Update each product in the cart with the "Return Request" status
-        order.cart = order.cart.map((item) => {
-          if (item._id.toString() === productId) {
-            return { ...item, returnRequest: "Approved Refund" };
+        const updatedCart = order.cart.map((item) => {
+          // Find the product in the products array to be updated
+          const productUpdate = products.find(
+            (p) => p.productId === item._id.toString()
+          );
+          if (productUpdate) {
+            return {
+              ...item,
+              returnRequestType: "Refund",
+              returnRequestStatus: "Approved Refund",
+            };
           }
           return item;
         });
-
+        order.cart = updatedCart;
+        order.status = "Approved Refund";
         // Update returnOrExchange field in the order
         order.returnOrExchange = {
           returnRequestId: returnRequestId,
@@ -317,7 +286,6 @@ router.put(
   catchAsyncErrors(async (req, res, next) => {
     const { orderId, returnRequestId, products } = req.body;
 
-    // Find the order by ID
     const order = await Order.findById(orderId);
 
     if (!order) {
@@ -336,7 +304,8 @@ router.put(
         return {
           ...item,
           size: productUpdate.newSize,
-          requestStatus: "Approved Exchange", // Add the requestStatus field
+          returnRequestType: "Exchange",
+          returnRequestStatus: "Approved Exchange",
         };
       }
       return item;
@@ -351,13 +320,46 @@ router.put(
     };
 
     await order.save();
-    console.log("updatedcart", updatedCart);
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Exchange approved and updated successfully",
+    res.status(200).json({
+      success: true,
+      message: "Exchange approved and updated successfully",
+    });
+  })
+);
+
+router.put(
+  "/update-exchange-status",
+  isSeller,
+  catchAsyncErrors(async (req, res, next) => {
+    const { orderId, status } = req.body;
+    console.log(status);
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
       });
+    }
+
+    // Update the exchange status for each product that has returnRequestType "Exchange"
+    const updatedCart = order.cart.map((item) => {
+      if (item.returnRequestType === "Exchange") {
+        return {
+          ...item,
+          returnRequestStatus: status,
+        };
+      }
+      return item;
+    });
+    order.cart = updatedCart;
+    await order.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Exchange status updated successfully",
+      updatedCart,
+    });
   })
 );
 

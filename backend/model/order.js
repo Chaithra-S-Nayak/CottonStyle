@@ -75,11 +75,10 @@ const orderSchema = new mongoose.Schema({
   returnOrExchange: {
     returnRequestId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "ReturnRequest", // Assuming you have a ReturnRequest model
+      ref: "ReturnRequest",
     },
     requestType: {
       type: String,
-      enum: ["Return", "Exchange"],
     },
   },
   createdAt: {

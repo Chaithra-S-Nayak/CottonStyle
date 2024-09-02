@@ -301,25 +301,12 @@ const UserOrderDetails = () => {
 
       {/* Actions */}
       <div className={`${styles.noramlFlex}`}>
-        {(data?.status === "Delivered" ||
-          data?.status === "Processing return request") &&
-          daysSinceDelivery <= 7 && (
-            <>
-              <button
-                className={`${styles.simpleButton}`}
-                onClick={handleOpenReturnRequestModal}
-              >
-                Return/Exchange
-              </button>
-            </>
-          )}
-
-        {data?.status === "Processing return request" && (
+        {data?.status === "Delivered" && daysSinceDelivery <= 7 && (
           <button
             className={`${styles.simpleButton}`}
-            // onClick={handleOpenEditReturnRequestModal}
+            onClick={handleOpenReturnRequestModal}
           >
-            Edit/Cancel Return Request
+            Return/Exchange
           </button>
         )}
         <Link to={`/user/order/invoice/${id}`}>

@@ -5,7 +5,7 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const cloudinary = require("cloudinary");
 const Order = require("../model/order");
 const Product = require("../model/product");
-const { isAdmin, isAuthenticated } = require("../middleware/auth");
+const { isAdmin, isAuthenticated, isSeller } = require("../middleware/auth");
 const ReturnRequest = require("../model/returnRequest");
 
 router.post(
@@ -121,6 +121,22 @@ router.get(
     res.status(200).json({
       success: true,
       returnRequest,
+    });
+  })
+);
+
+router.get(
+  "/get-all-exchange-requests",
+  isSeller,
+  catchAsyncErrors(async (req, res, next) => {
+    const shopId = req.seller._id;
+    const returnRequests = await ReturnRequest.find({ shopId });
+    const exchangeRequests = returnRequests.filter((request) =>
+      request.product.some((product) => product.requestType === "Exchange")
+    );
+    res.status(200).json({
+      success: true,
+      exchangeRequests,
     });
   })
 );

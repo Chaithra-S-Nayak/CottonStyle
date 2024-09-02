@@ -26,6 +26,7 @@ import {
 } from "./routes/Routes.js";
 import {
   ShopDashboardPage,
+  ShopExchangeDetails,
   ShopCreateProduct,
   ShopUpdateProduct,
   ShopAllProducts,
@@ -170,6 +171,14 @@ const App = () => {
           element={
             <SellerProtectedRoute>
               <ShopDashboardPage />
+            </SellerProtectedRoute>
+          }
+        />
+        <Route
+          path="/shop-exchange-details/:id"
+          element={
+            <SellerProtectedRoute>
+              <ShopExchangeDetails />
             </SellerProtectedRoute>
           }
         />
