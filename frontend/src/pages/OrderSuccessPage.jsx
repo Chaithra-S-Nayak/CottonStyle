@@ -8,9 +8,11 @@ import styles from "../styles/styles";
 
 const OrderSuccessPage = () => {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      <Success />
+      <main className="flex-grow flex items-center justify-center py-8">
+        <Success />
+      </main>
       <Footer />
     </div>
   );
@@ -25,23 +27,20 @@ const Success = () => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
+    <div className="w-full max-w-lg mx-auto text-center p-4">
       <Lottie options={defaultOptions} width={300} height={300} />
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">
-          Thank you! Your order has been placed successfully.
-        </h2>
-        <p className="text-gray-600 mb-6 p-4">
-          We appreciate your purchase and are working to get your items to you
-          as soon as possible.
-        </p>
-        <Link to="/">
-          <button className={`${styles.simpleButton}`}>
-            Continue Shopping
-          </button>
-        </Link>
-      </div>
+      <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
+        Thank you! Your order has been placed successfully.
+      </h2>
+      <p className="text-gray-600 mb-6">
+        We appreciate your purchase and are working to get your items to you as
+        soon as possible.
+      </p>
+      <Link to="/">
+        <button className={`${styles.simpleButton}`}>Continue Shopping</button>
+      </Link>
     </div>
   );
 };

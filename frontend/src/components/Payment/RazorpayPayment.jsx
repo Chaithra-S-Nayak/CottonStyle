@@ -6,14 +6,16 @@ import { useSelector } from "react-redux";
 import logo from "../../Assets/TshirtGalaxy.png";
 import styles from "../../styles/styles";
 
-const RazorpayPayment = ({ orderData, onSuccess }) => {
+const RazorpayPayment = ({ orderData, onSuccess, setLoading }) => {
   const { user } = useSelector((state) => state.user);
 
   const handlePayment = async () => {
     try {
+      setLoading(true);
       const { data } = await axios.post(`${server}/payment/create/orderId`, {
         amount: Math.round(orderData?.totalPrice * 100),
       });
+
       const options = {
         key: process.env.RAZORPAY_KEY_ID,
         amount: data.amount,
@@ -39,6 +41,7 @@ const RazorpayPayment = ({ orderData, onSuccess }) => {
             await razorpayPaymentHandler(paymentInfo);
           } else {
             toast.error("Payment verification failed. Please try again.");
+            setLoading(false);
           }
         },
         prefill: {
@@ -53,10 +56,12 @@ const RazorpayPayment = ({ orderData, onSuccess }) => {
           color: "#243450",
         },
       };
+
       const rzp1 = new window.Razorpay(options);
       rzp1.open();
     } catch (error) {
       toast.error("Error occurred during payment process");
+      setLoading(false);
     }
   };
 
@@ -67,6 +72,7 @@ const RazorpayPayment = ({ orderData, onSuccess }) => {
       },
       withCredentials: true,
     };
+
     const order = {
       cart: orderData?.cart,
       shippingAddress: orderData?.shippingAddress,
@@ -81,10 +87,13 @@ const RazorpayPayment = ({ orderData, onSuccess }) => {
       coupon: orderData?.coupon,
       sellerDeliveryFees: orderData?.sellerDeliveryFees,
     };
+
     try {
       await axios.post(`${server}/order/create-order`, order, config);
+      setLoading(false);
       onSuccess();
     } catch (error) {
+      setLoading(false);
       toast.error(error.response?.data?.message || "Order creation failed");
     }
   };

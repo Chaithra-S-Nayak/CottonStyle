@@ -5,11 +5,12 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import styles from "../../styles/styles";
 
-const CashOnDelivery = ({ orderData, onSuccess }) => {
+const CashOnDelivery = ({ orderData, onSuccess, setLoading }) => {
   const { user } = useSelector((state) => state.user);
 
   const cashOnDeliveryHandler = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -31,8 +32,10 @@ const CashOnDelivery = ({ orderData, onSuccess }) => {
     };
     try {
       await axios.post(`${server}/order/create-order`, order, config);
+      setLoading(false);
       onSuccess();
     } catch (error) {
+      setLoading(false);
       toast.error(error.response?.data?.message || "Order creation failed");
     }
   };
