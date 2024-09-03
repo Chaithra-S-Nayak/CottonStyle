@@ -7,7 +7,7 @@ const AdminDashboardReturnRequest = () => {
   return (
     <div>
       <AdminHeader />
-      <div className={`${styles.section}`}>
+      <div className={`${styles.section} min-h-screen`}>
         <div className="w-full flex">
           <div className="flex items-start justify-between w-full">
             <AllReturnRequests />

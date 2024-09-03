@@ -26,7 +26,7 @@ const NotFound = () => {
             </p>
             <p className="mb-8 text-lg font-light text-gray-700">
               Sorry, the page you’re looking for doesn’t exist. But don’t worry,
-              you can explore our t-shirts on the homepage.
+              you can explore our Tshirts on the homepage.
             </p>
             <button
               onClick={handleBackToHome}

@@ -155,11 +155,11 @@ const ProfileContent = ({ active }) => {
       )}
 
       {/* Refund */}
-      {active === 3 && (
+      {/* {active === 3 && (
         <div>
           <AllRefundOrders />
         </div>
-      )}
+      )} */}
 
       {/* Track order */}
       {active === 4 && (
@@ -254,77 +254,77 @@ const AllOrders = () => {
   );
 };
 
-const AllRefundOrders = () => {
-  const { user } = useSelector((state) => state.user);
-  const { orders, isLoading } = useSelector((state) => state.order);
-  const dispatch = useDispatch();
+// const AllRefundOrders = () => {
+//   const { user } = useSelector((state) => state.user);
+//   const { orders, isLoading } = useSelector((state) => state.order);
+//   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getAllOrdersOfUser(user._id));
-  }, [dispatch, user._id]);
+//   useEffect(() => {
+//     dispatch(getAllOrdersOfUser(user._id));
+//   }, [dispatch, user._id]);
 
-  const eligibleOrders =
-    orders && orders.filter((item) => item.status === "Processing refund");
+//   const eligibleOrders =
+//     orders && orders.filter((item) => item.status === "Processing refund");
 
-  const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-    { field: "status", headerName: "Status", minWidth: 130, flex: 0.7 },
-    {
-      field: "itemsQty",
-      headerName: "Items Qty",
-      type: "number",
-      minWidth: 130,
-      flex: 0.7,
-    },
-    {
-      field: "total",
-      headerName: "Total",
-      type: "number",
-      minWidth: 130,
-      flex: 0.8,
-    },
-    {
-      field: " ",
-      flex: 1,
-      minWidth: 150,
-      headerName: "",
-      sortable: false,
-      renderCell: (params) => (
-        <Link to={`/user/order/${params.id}`}>
-          <Button>
-            <AiOutlineArrowRight size={20} />
-          </Button>
-        </Link>
-      ),
-    },
-  ];
+//   const columns = [
+//     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+//     { field: "status", headerName: "Status", minWidth: 130, flex: 0.7 },
+//     {
+//       field: "itemsQty",
+//       headerName: "Items Qty",
+//       type: "number",
+//       minWidth: 130,
+//       flex: 0.7,
+//     },
+//     {
+//       field: "total",
+//       headerName: "Total",
+//       type: "number",
+//       minWidth: 130,
+//       flex: 0.8,
+//     },
+//     {
+//       field: " ",
+//       flex: 1,
+//       minWidth: 150,
+//       headerName: "",
+//       sortable: false,
+//       renderCell: (params) => (
+//         <Link to={`/user/order/${params.id}`}>
+//           <Button>
+//             <AiOutlineArrowRight size={20} />
+//           </Button>
+//         </Link>
+//       ),
+//     },
+//   ];
 
-  const rows = eligibleOrders
-    ? eligibleOrders.map((item) => ({
-        id: item._id,
-        itemsQty: item.cart.length,
-        total: "₹" + item.totalPrice,
-        status: item.status,
-      }))
-    : [];
+//   const rows = eligibleOrders
+//     ? eligibleOrders.map((item) => ({
+//         id: item._id,
+//         itemsQty: item.cart.length,
+//         total: "₹" + item.totalPrice,
+//         status: item.status,
+//       }))
+//     : [];
 
-  return (
-    <div className="pl-8 pt-1">
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <DataGrid
-          className="bg-white"
-          rows={rows}
-          columns={columns}
-          pageSize={10}
-          autoHeight
-          disableSelectionOnClick
-        />
-      )}
-    </div>
-  );
-};
+//   return (
+//     <div className="pl-8 pt-1">
+//       {isLoading ? (
+//         <Loader />
+//       ) : (
+//         <DataGrid
+//           className="bg-white"
+//           rows={rows}
+//           columns={columns}
+//           pageSize={10}
+//           autoHeight
+//           disableSelectionOnClick
+//         />
+//       )}
+//     </div>
+//   );
+// };
 
 const TrackOrder = () => {
   const { user } = useSelector((state) => state.user);

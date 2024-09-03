@@ -280,7 +280,7 @@ const ShippingInfo = ({
             />
           </div>
         </div>
-        <div className="w-full flex justify-between items-center mt-4">
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           <button
             className={`${styles.simpleButton}`}
             onClick={() => setUserInfo(!userInfo)}
@@ -290,11 +290,12 @@ const ShippingInfo = ({
           <button
             type="button"
             onClick={clearForm}
-            className={`${styles.simpleButton} !bg-red-500 ml-1`}
+            className={`${styles.simpleButton} !bg-red-500 ml-1 md:ml-0`}
           >
             Clear Form
           </button>
         </div>
+
         {userInfo && (
           <div className="mt-4">
             {user &&

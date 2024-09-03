@@ -61,6 +61,14 @@ const returnRequestSchema = new mongoose.Schema({
       },
     },
   ],
+  refundInit: {
+    type: Boolean,
+    default: false,
+  },
+  exchangeInit: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

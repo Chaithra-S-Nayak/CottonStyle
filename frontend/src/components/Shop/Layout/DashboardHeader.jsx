@@ -58,7 +58,7 @@ const DashboardHeader = () => {
         </Link>
 
         <div className={`${styles.noramlFlex}`}>
-          <div className="hidden 800px:flex items-center mr-4">
+          <div className="hidden 1000px:flex items-center mr-4">
             {/* Links for larger screens */}
             <Link to="/dashboard">
               <span
@@ -124,7 +124,7 @@ const DashboardHeader = () => {
             />
           </Link>
           {/* BiMenuAltLeft icon for mobile screens */}
-          <div className="800px:hidden ml-4" onClick={toggleMenu}>
+          <div className="1000px:hidden ml-4" onClick={toggleMenu}>
             <BiMenuAltLeft size={30} />
           </div>
         </div>
@@ -197,7 +197,7 @@ const DashboardHeader = () => {
                       : "text-[#555]"
                   }`}
                 >
-                  Exchange
+                  Exchange Requests
                 </span>
               </Link>
               <Link

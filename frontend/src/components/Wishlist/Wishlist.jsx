@@ -30,7 +30,9 @@ const Wishlist = ({ setOpenWishlist }) => {
           <Loader />
         ) : (
           <>
-            {wishlist || wishlist.orderItems || wishlist.orderItems === 0 ? (
+            {wishlist &&
+            wishlist.orderItems &&
+            wishlist.orderItems.length === 0 ? (
               <div className="w-full h-screen flex items-center justify-center">
                 <div className="flex w-full justify-end pt-5 pr-5 fixed top-3 right-3">
                   <RxCross1
@@ -55,9 +57,7 @@ const Wishlist = ({ setOpenWishlist }) => {
                   <div className={`${styles.noramlFlex} p-4`}>
                     <AiOutlineHeart size={25} />
                     <h5 className="pl-2 text-[20px] font-[500]">
-                      {wishlist &&
-                        wishlist.orderItems &&
-                        wishlist.orderItems.length}{" "}
+                      {wishlist.orderItems ? wishlist.orderItems.length : 0}{" "}
                       items
                     </h5>
                   </div>
@@ -65,8 +65,7 @@ const Wishlist = ({ setOpenWishlist }) => {
                   {/* Wishlist Single Items */}
                   <br />
                   <div className="w-full border-t">
-                    {wishlist &&
-                      wishlist.orderItems &&
+                    {wishlist.orderItems &&
                       wishlist.orderItems.map((item, index) => (
                         <WishlistItem
                           key={index}

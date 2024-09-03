@@ -69,8 +69,10 @@ const AdminHeader = () => {
         <Link to="/">
           <img src={logo} alt="Logo" className="w-auto h-16" />
         </Link>
+
         <div className={`${styles.noramlFlex}`}>
-          <div className="hidden 800px:flex items-center mr-4">
+          {/* Navigation Links for larger screens */}
+          <div className="hidden 1000px:flex items-center mr-4">
             <Link to="/admin/dashboard">
               <span
                 className={`text-md mx-3 cursor-pointer ${
@@ -101,7 +103,9 @@ const AdminHeader = () => {
             <Link to="/admin-return-requests">
               <span
                 className={`text-md mx-3 cursor-pointer ${
-                  isActive("/admin-users") ? "text-[green]" : "text-[#555]"
+                  isActive("/admin-return-requests")
+                    ? "text-[green]"
+                    : "text-[#555]"
                 }`}
               >
                 All Return Requests
@@ -136,18 +140,18 @@ const AdminHeader = () => {
               className="w-[50px] h-[50px] rounded-full object-cover"
             />
           </Link>
-          <div className="hidden 800px:flex items-center mr-4">
-            {/* Logout Button for Desktop View */}
+          {/* Mobile Menu Icon */}
+          <div className="1000px:hidden ml-4" onClick={toggleMenu}>
+            <BiMenuAltLeft size={30} />
+          </div>
+          {/* Logout Button for larger screens */}
+          <div className="hidden 1000px:flex items-center ml-4">
             <button
               onClick={handleLogout}
-              className="flex items-center ml-4 text-red-500"
+              className="flex items-center text-red-500"
             >
               <FiLogOut size={30} />
             </button>
-          </div>
-          {/* Mobile Menu Icon */}
-          <div className="800px:hidden ml-2" onClick={toggleMenu}>
-            <BiMenuAltLeft size={30} />
           </div>
         </div>
       </div>
@@ -196,6 +200,21 @@ const AdminHeader = () => {
                 </span>
               </Link>
               <Link
+                to="/admin-return-requests"
+                className="my-2"
+                onClick={toggleMenu}
+              >
+                <span
+                  className={`text-md cursor-pointer ${
+                    isActive("/admin-return-requests")
+                      ? "text-[green]"
+                      : "text-[#555]"
+                  }`}
+                >
+                  All Return Requests
+                </span>
+              </Link>
+              <Link
                 to="/admin-withdraw-request"
                 className="my-2"
                 onClick={toggleMenu}
@@ -219,7 +238,6 @@ const AdminHeader = () => {
                   Platform Configuration
                 </span>
               </Link>
-              {/* Logout Button for Mobile View */}
               <button
                 onClick={() => {
                   handleLogout();

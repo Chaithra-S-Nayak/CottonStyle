@@ -98,7 +98,7 @@ const UserOrderDetails = () => {
       {/* Order Summary */}
       <div className="bg-white shadow rounded-lg p-4 mb-4">
         <h2 className="text-xl mb-2">Order Summary</h2>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <h5>
               Order ID: <span>{data?._id}</span>
@@ -267,7 +267,7 @@ const UserOrderDetails = () => {
       )}
 
       {/* Shipping Details and Payment Information */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         {/* Shipping Details */}
         <div className="bg-white shadow rounded-lg p-4">
           <h2 className="text-xl mb-2">Shipping Address</h2>
@@ -303,7 +303,7 @@ const UserOrderDetails = () => {
       <div className={`${styles.noramlFlex}`}>
         {data?.status === "Delivered" && daysSinceDelivery <= 7 && (
           <button
-            className={`${styles.simpleButton}`}
+            className={`${styles.simpleButton} mr-4`}
             onClick={handleOpenReturnRequestModal}
           >
             Return/Exchange

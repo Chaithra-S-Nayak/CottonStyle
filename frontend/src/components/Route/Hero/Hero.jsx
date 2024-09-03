@@ -15,10 +15,10 @@ const Hero = () => {
         <p
           className={`text-[35px] leading-[1.2] 800px:text-[50px] text-white font-[600] capitalize`}
         >
-          Best Collection for <br /> Comfortable T-shirts
+          Best Collection for <br /> Comfortable Tshirts
         </p>
         <p className="pt-5 text-[18px] font-[Poppins] font-[400] text-white">
-          Discover our premium, stylish, and comfortable t-shirts. <br />
+          Discover our premium, stylish, and comfortable Tshirts. <br />
           Perfect fit, all-day comfort.
         </p>
       </div>

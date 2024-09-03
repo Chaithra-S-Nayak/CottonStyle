@@ -40,7 +40,6 @@ const AdminReturnRequestDetails = () => {
 
     fetchReturnRequestDetails();
   }, [id]);
-
   const handleUpdateStatus = async (requestType) => {
     // Filter products by request type
     const products = returnRequest?.product.filter(
@@ -72,6 +71,7 @@ const AdminReturnRequestDetails = () => {
     try {
       await axios.put(apiEndpoint, payload, { withCredentials: true });
       toast.success(`${requestType} status updated!`);
+      window.location.reload(true);
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred");
     }
@@ -156,7 +156,7 @@ const AdminReturnRequestDetails = () => {
                       <img
                         key={index}
                         src={image.url}
-                        alt={`Image ${index + 1}`}
+                        alt=""
                         className="w-16 h-16 object-cover rounded-lg"
                       />
                     ))}
@@ -182,20 +182,32 @@ const AdminReturnRequestDetails = () => {
         </div>
 
         {returnProducts?.length > 0 && (
-          <button
-            onClick={() => handleUpdateStatus("Return")}
-            className={`${styles.simpleButton} m-4`}
-          >
-            Process Return
-          </button>
+          <>
+            {returnRequest?.refundInit ? (
+              <p className=" m-4">You have already processed the refund.</p>
+            ) : (
+              <button
+                onClick={() => handleUpdateStatus("Return")}
+                className={`${styles.simpleButton} m-4`}
+              >
+                Process Return
+              </button>
+            )}
+          </>
         )}
         {exchangeProducts?.length > 0 && (
-          <button
-            onClick={() => handleUpdateStatus("Exchange")}
-            className={`${styles.simpleButton} m-4`}
-          >
-            Process Exchange
-          </button>
+          <>
+            {returnRequest?.exchangeInit ? (
+              <p className=" m-4">You have already processed the exchange.</p>
+            ) : (
+              <button
+                onClick={() => handleUpdateStatus("Exchange")}
+                className={`${styles.simpleButton} m-4`}
+              >
+                Process Exchange
+              </button>
+            )}
+          </>
         )}
       </div>
       <Footer />

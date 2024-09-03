@@ -5,6 +5,7 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const { isSeller, isAdmin, isAuthenticated } = require("../middleware/auth");
 const Order = require("../model/order");
 const Shop = require("../model/shop");
+const ReturnRequest = require("../model/returnRequest");
 const Razorpay = require("razorpay");
 const Product = require("../model/product");
 const sendNotification = require("../utils/notification");
@@ -263,7 +264,9 @@ router.put(
           returnRequestId: returnRequestId,
           requestType: "Return",
         };
-
+        const returnRequest = await ReturnRequest.findById(returnRequestId);
+        returnRequest.refundInit = true;
+        await returnRequest.save();
         await order.save();
         res.status(200).json({ success: true, message: "Refund Successful!" });
       } else {
@@ -319,6 +322,9 @@ router.put(
       requestType: "Exchange",
     };
 
+    const returnRequest = await ReturnRequest.findById(returnRequestId);
+    returnRequest.exchangeInit = true;
+    await returnRequest.save();
     await order.save();
     res.status(200).json({
       success: true,

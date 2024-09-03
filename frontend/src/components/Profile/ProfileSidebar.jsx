@@ -1,7 +1,7 @@
 import React from "react";
 import { AiOutlineLogin } from "react-icons/ai";
 import { RiLockPasswordLine } from "react-icons/ri";
-import { HiOutlineReceiptRefund, HiOutlineShoppingBag } from "react-icons/hi";
+import { HiOutlineShoppingBag } from "react-icons/hi";
 import { MdOutlineTrackChanges } from "react-icons/md";
 import { TbAddressBook } from "react-icons/tb";
 import { RxPerson } from "react-icons/rx";
@@ -52,7 +52,7 @@ const ProfileSidebar = ({ setActive, active }) => {
           Orders
         </span>
       </div>
-      <div
+      {/* <div
         className="flex items-center cursor-pointer w-full mb-8"
         onClick={() => setActive(3)}
       >
@@ -64,7 +64,7 @@ const ProfileSidebar = ({ setActive, active }) => {
         >
           Refunds
         </span>
-      </div>
+      </div> */}
       <div
         className="flex items-center cursor-pointer w-full mb-8"
         onClick={() => setActive(4)}
