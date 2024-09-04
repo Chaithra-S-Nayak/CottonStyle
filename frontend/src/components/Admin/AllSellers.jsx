@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 const AllSellers = () => {
   const dispatch = useDispatch();
   const { sellers } = useSelector((state) => state.seller);
+  const [rows, setRows] = useState([]);
   const [open, setOpen] = useState(false);
   const [userId, setUserId] = useState("");
 
@@ -21,31 +22,45 @@ const AllSellers = () => {
     dispatch(getAllSellers());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (sellers) {
+      const formattedRows = sellers.map((item) => ({
+        id: item._id,
+        name: item?.name,
+        email: item?.email,
+        phoneNumber: item?.phoneNumber,
+        joinedAt: item.createdAt.slice(0, 10),
+      }));
+      setRows(formattedRows);
+    }
+  }, [sellers]);
+
   const handleDelete = async (id) => {
     await axios
       .delete(`${server}/shop/delete-seller/${id}`, { withCredentials: true })
       .then((res) => {
         toast.success(res.data.message);
+        dispatch(getAllSellers()); // Refresh the seller list after deletion
+      })
+      .catch((error) => {
+        toast.error("Failed to delete seller");
       });
-
-    dispatch(getAllSellers());
   };
 
   const columns = [
     {
       field: "id",
       headerName: "Seller ID",
-      minWidth: 150,
-      flex: 0.9,
+      minWidth: 220,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
-
     {
       field: "name",
-      headerName: "name",
-      minWidth: 130,
-      flex: 0.7,
+      headerName: "Name",
+      minWidth: 220,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
@@ -53,7 +68,7 @@ const AllSellers = () => {
       field: "email",
       headerName: "Email",
       type: "text",
-      minWidth: 130,
+      minWidth: 250,
       flex: 1,
       align: "center",
       headerAlign: "center",
@@ -62,86 +77,71 @@ const AllSellers = () => {
       field: "phoneNumber",
       headerName: "Phone Number",
       type: "text",
-      minWidth: 130,
-      flex: 0.8,
+      minWidth: 150,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
       field: "joinedAt",
       headerName: "Joined on",
-      type: "text",
-      minWidth: 130,
-      flex: 0.5,
+      type: "date",
+      minWidth: 150,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
-      field: "  ",
-      flex: 0.5,
-      minWidth: 150,
+      field: "preview",
       headerName: "Preview Shop",
-      type: "number",
+      minWidth: 150,
+      flex: 1,
       sortable: false,
-      renderCell: (params) => {
-        return (
-          <>
-            <Link to={`/shop/preview/${params.id}`}>
-              <Button>
-                <AiOutlineEye size={20} />
-              </Button>
-            </Link>
-          </>
-        );
-      },
+      renderCell: (params) => (
+        <Link to={`/shop/preview/${params.id}`}>
+          <Button>
+            <AiOutlineEye size={20} />
+          </Button>
+        </Link>
+      ),
       align: "center",
       headerAlign: "center",
     },
     {
-      field: " ",
-      flex: 0.5,
-      minWidth: 150,
+      field: "actions",
       headerName: "Delete Seller",
-      type: "number",
+      minWidth: 150,
+      flex: 1,
       sortable: false,
-      renderCell: (params) => {
-        return (
-          <>
-            <Button onClick={() => setUserId(params.id) || setOpen(true)}>
-              <AiOutlineDelete size={20} />
-            </Button>
-          </>
-        );
-      },
+      renderCell: (params) => (
+        <Button
+          onClick={() => {
+            setUserId(params.id);
+            setOpen(true);
+          }}
+        >
+          <AiOutlineDelete size={20} />
+        </Button>
+      ),
       align: "center",
       headerAlign: "center",
     },
   ];
 
-  const row = [];
-  sellers &&
-    sellers.forEach((item) => {
-      row.push({
-        id: item._id,
-        name: item?.name,
-        email: item?.email,
-        phoneNumber: item?.phoneNumber,
-        joinedAt: item.createdAt.slice(0, 10),
-      });
-    });
-
   return (
     <div className="w-full flex justify-center pt-5 mt-5">
       <div className="w-[97%]">
         <div className="w-full min-h-[45vh] rounded">
-          <DataGrid
-            className="bg-white"
-            rows={row}
-            columns={columns}
-            pageSize={10}
-            disableSelectionOnClick
-            autoHeight
-          />
+          {rows.length > 0 && (
+            <DataGrid
+              className="bg-white"
+              rows={rows}
+              columns={columns}
+              pageSize={10}
+              disableSelectionOnClick
+              autoHeight
+            />
+          )}
         </div>
         {open && (
           <div className="w-full fixed top-0 left-0 z-[999] bg-[#00000039] flex items-center justify-center h-screen">
@@ -167,7 +167,10 @@ const AllSellers = () => {
                 </button>
                 <button
                   className={`${styles.simpleButton} !bg-red-500`}
-                  onClick={() => setOpen(false) || handleDelete(userId)}
+                  onClick={() => {
+                    setOpen(false);
+                    handleDelete(userId);
+                  }}
                 >
                   Confirm
                 </button>

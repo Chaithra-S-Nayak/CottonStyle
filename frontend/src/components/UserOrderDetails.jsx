@@ -146,11 +146,14 @@ const UserOrderDetails = () => {
         <h2 className="text-xl mb-2">Order Items</h2>
         {data &&
           data?.cart.map((item) => (
-            <div key={item._id} className="flex items-center mb-4">
+            <div
+              key={item._id}
+              className="flex flex-col md:flex-row items-center mb-4"
+            >
               <img
                 src={`${item.images[0]?.url}`}
                 alt={item.name}
-                className="w-16 h-16 object-cover rounded-lg mr-4"
+                className="w-16 h-16 object-cover rounded-lg mb-4 md:mb-0 md:mr-4"
               />
               <div className="flex-1">
                 <h5>
@@ -172,10 +175,10 @@ const UserOrderDetails = () => {
                   </p>
                 )}
               </div>
-              <div className="ml-auto">
+              <div className="mt-4 md:mt-0 md:ml-auto">
                 {!item.isReviewed && data?.status === "Delivered" && (
                   <button
-                    className={`${styles.simpleButton} mr-2`}
+                    className={`${styles.simpleButton}`}
                     onClick={() => {
                       setSelectedItem(item);
                       setOpen(true);
@@ -243,13 +246,10 @@ const UserOrderDetails = () => {
                 )}
               </div>
             </div>
-            <div>
-              <label className="block mb-1">
-                Write a comment
-                <span className="text-gray-400">(optional)</span>
-              </label>
+            <div className="w-full">
+              <label className="block mb-1">Write a comment</label>
               <textarea
-                className={`${styles.formLabel}`}
+                className={`${styles.formLabel} w-full`}
                 rows="4"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
@@ -257,7 +257,7 @@ const UserOrderDetails = () => {
               ></textarea>
             </div>
             <button
-              className={`${styles.simpleButton}`}
+              className={`${styles.simpleButton} mt-4`}
               onClick={reviewHandler}
             >
               Submit Review
@@ -271,7 +271,7 @@ const UserOrderDetails = () => {
         {/* Shipping Details */}
         <div className="bg-white shadow rounded-lg p-4">
           <h2 className="text-xl mb-2">Shipping Address</h2>
-          <h5>Name: {data?.shippingAddress?.name}</h5>
+          <h5>Name: {data?.user?.name}</h5>
           <h5>Email: {data?.user?.email}</h5>
           <h5>Address: {data?.shippingAddress?.address1}</h5>
           <h5>City: {data?.shippingAddress?.city}</h5>

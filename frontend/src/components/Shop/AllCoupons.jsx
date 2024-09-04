@@ -72,31 +72,31 @@ const AllCoupons = () => {
     {
       field: "id",
       headerName: "Id",
-      minWidth: 150,
-      flex: 0.7,
+      minWidth: 220,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
       field: "name",
       headerName: "Coupon Code",
-      minWidth: 180,
-      flex: 1.4,
+      minWidth: 220,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
       field: "price",
       headerName: "Value",
-      minWidth: 100,
-      flex: 0.6,
+      minWidth: 150,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
       field: "Delete",
-      flex: 0.8,
-      minWidth: 120,
+      flex: 1,
+      minWidth: 150,
       headerName: "",
       type: "number",
       sortable: false,
@@ -132,7 +132,7 @@ const AllCoupons = () => {
               Create Coupon Code
             </button>
           </div>
-          <div className="w-full h-[400px] sm:h-[600px]">
+          <div className="w-full overflow-x-auto">
             <DataGrid
               className="bg-white"
               rows={rows}

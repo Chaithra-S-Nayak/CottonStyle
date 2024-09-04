@@ -9,7 +9,7 @@ const AdminDashboardSellers = () => {
     <div>
       <AdminHeader />
       <div className={`${styles.section}`}>
-        <div className="w-full flex">
+        <div className="w-full flex min-h-screen">
           <div className="flex items-start justify-between w-full">
             <AllSellers />
           </div>

@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { server } from "../../server";
 import { useState } from "react";
-import styles from "../../styles/styles";
 const AllProducts = () => {
   const [data, setData] = useState([]);
 
@@ -22,24 +21,24 @@ const AllProducts = () => {
     {
       field: "id",
       headerName: "Product Id",
-      minWidth: 150,
-      flex: 0.8,
+      minWidth: 220,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
       field: "name",
       headerName: "Name",
-      minWidth: 180,
-      flex: 0.6,
+      minWidth: 220,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
       field: "price",
       headerName: "Price",
-      minWidth: 100,
-      flex: 0.5,
+      minWidth: 150,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
@@ -47,8 +46,8 @@ const AllProducts = () => {
       field: "Stock",
       headerName: "Stock",
       type: "number",
-      minWidth: 80,
-      flex: 0.5,
+      minWidth: 150,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
@@ -57,15 +56,15 @@ const AllProducts = () => {
       field: "sold",
       headerName: "Sold out",
       type: "number",
-      minWidth: 130,
-      flex: 0.5,
+      minWidth: 150,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
       field: "Preview",
-      flex: 0.3,
-      minWidth: 100,
+      flex: 1,
+      minWidth: 150,
       headerName: "",
       type: "number",
       sortable: false,
@@ -99,8 +98,8 @@ const AllProducts = () => {
     });
 
   return (
-    <div className={`${styles.section}`}>
-      <div className="w-full mx-8 pt-1 mt-10 ">
+    <div className="w-full flex items-center pt-5 mt-5 justify-center">
+      <div className="w-[95%] ">
         <DataGrid
           className="bg-white"
           rows={row}

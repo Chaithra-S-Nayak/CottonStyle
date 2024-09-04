@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 const AllUsers = () => {
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.user);
+  const [rows, setRows] = useState([]);
   const [open, setOpen] = useState(false);
   const [userId, setUserId] = useState("");
 
@@ -20,31 +21,46 @@ const AllUsers = () => {
     dispatch(getAllUsers());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (users) {
+      const formattedRows = users.map((item) => ({
+        id: item._id,
+        name: item.name,
+        email: item.email,
+        phoneNumber: item.phoneNumber,
+        role: item.role,
+        joinedAt: item.createdAt.slice(0, 10),
+      }));
+      setRows(formattedRows);
+    }
+  }, [users]);
+
   const handleDelete = async (id) => {
     await axios
       .delete(`${server}/user/delete-user/${id}`, { withCredentials: true })
       .then((res) => {
         toast.success(res.data.message);
+        dispatch(getAllUsers()); // Refresh the user list after deletion
+      })
+      .catch((error) => {
+        toast.error("Failed to delete user");
       });
-
-    dispatch(getAllUsers());
   };
 
   const columns = [
     {
       field: "id",
       headerName: "User ID",
-      minWidth: 150,
-      flex: 0.9,
+      minWidth: 220,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
-
     {
       field: "name",
-      headerName: "name",
-      minWidth: 130,
-      flex: 0.7,
+      headerName: "Name",
+      minWidth: 220,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
@@ -52,7 +68,7 @@ const AllUsers = () => {
       field: "email",
       headerName: "Email",
       type: "text",
-      minWidth: 130,
+      minWidth: 250,
       flex: 1,
       align: "center",
       headerAlign: "center",
@@ -61,8 +77,8 @@ const AllUsers = () => {
       field: "phoneNumber",
       headerName: "Phone Number",
       type: "text",
-      minWidth: 130,
-      flex: 0.8,
+      minWidth: 150,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
@@ -70,68 +86,55 @@ const AllUsers = () => {
       field: "role",
       headerName: "User Role",
       type: "text",
-      minWidth: 130,
-      flex: 0.5,
+      minWidth: 150,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
-
     {
       field: "joinedAt",
       headerName: "Joined on",
-      type: "text",
-      minWidth: 130,
-      flex: 0.5,
+      type: "date",
+      minWidth: 150,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
-
     {
-      field: " ",
-      flex: 0.5,
-      minWidth: 150,
+      field: "actions",
       headerName: "Delete User",
-      type: "number",
+      minWidth: 150,
+      flex: 1,
       sortable: false,
-      renderCell: (params) => {
-        return (
-          <>
-            <Button onClick={() => setUserId(params.id) || setOpen(true)}>
-              <AiOutlineDelete size={20} />
-            </Button>
-          </>
-        );
-      },
+      renderCell: (params) => (
+        <Button
+          onClick={() => {
+            setUserId(params.id);
+            setOpen(true);
+          }}
+        >
+          <AiOutlineDelete size={20} />
+        </Button>
+      ),
       align: "center",
       headerAlign: "center",
     },
   ];
 
-  const row = [];
-  users &&
-    users.forEach((item) => {
-      row.push({
-        id: item._id,
-        name: item.name,
-        email: item.email,
-        phoneNumber: item.phoneNumber,
-        role: item.role,
-        joinedAt: item.createdAt.slice(0, 10),
-      });
-    });
-
   return (
     <div className="w-full flex justify-center pt-5 mt-5">
       <div className="w-[97%]">
-        <div className="w-full min-h-[45vh]  rounded">
-          <DataGrid
-            className="bg-white"
-            rows={row}
-            columns={columns}
-            pageSize={10}
-            disableSelectionOnClick
-            autoHeight
-          />
+        <div className="w-full min-h-[45vh] rounded">
+          {rows.length > 0 && (
+            <DataGrid
+              className="bg-white"
+              rows={rows}
+              columns={columns}
+              pageSize={10}
+              disableSelectionOnClick
+              autoHeight
+            />
+          )}
         </div>
         {open && (
           <div className="w-full fixed top-0 left-0 z-[999] bg-[#00000039] flex items-center justify-center h-screen">
@@ -157,7 +160,10 @@ const AllUsers = () => {
                 </button>
                 <button
                   className={`${styles.simpleButton} !bg-red-500`}
-                  onClick={() => setOpen(false) || handleDelete(userId)}
+                  onClick={() => {
+                    setOpen(false);
+                    handleDelete(userId);
+                  }}
                 >
                   Confirm
                 </button>

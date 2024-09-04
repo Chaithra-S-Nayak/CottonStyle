@@ -118,7 +118,7 @@ const WithdrawMoney = () => {
             Withdraw
           </button>
 
-          <p className="text-red-500 text-[14px] mt-4">
+          <p className="text-red-500 text-center text-[14px] mt-4">
             Minimum balance of ₹50 required to withdraw.
           </p>
         </div>

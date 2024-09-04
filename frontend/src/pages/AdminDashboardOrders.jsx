@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AdminHeader from "../components/Layout/AdminHeader";
 import Footer from "../components/Layout/Footer";
 import { DataGrid } from "@material-ui/data-grid";
@@ -11,6 +11,7 @@ import { Button } from "@material-ui/core";
 
 const AdminDashboardOrders = () => {
   const dispatch = useDispatch();
+  const [rows, setRows] = useState([]);
 
   const { adminOrders } = useSelector((state) => state.order);
 
@@ -18,21 +19,33 @@ const AdminDashboardOrders = () => {
     dispatch(getAllOrdersForAdmin());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (adminOrders) {
+      const formattedRows = adminOrders.map((item) => ({
+        id: item._id,
+        itemsQty: item.cart.reduce((acc, item) => acc + item.qty, 0),
+        total: "₹" + item.totalPrice,
+        status: item.status,
+        createdAt: item.createdAt.slice(0, 10),
+      }));
+      setRows(formattedRows);
+    }
+  }, [adminOrders]);
+
   const columns = [
     {
       field: "id",
       headerName: "Order ID",
-      minWidth: 150,
-      flex: 0.7,
+      minWidth: 220,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
-
     {
       field: "status",
       headerName: "Status",
-      minWidth: 130,
-      flex: 0.7,
+      minWidth: 220,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
@@ -40,27 +53,26 @@ const AdminDashboardOrders = () => {
       field: "itemsQty",
       headerName: "Items Qty",
       type: "number",
-      minWidth: 130,
-      flex: 0.7,
+      minWidth: 150,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
-
     {
       field: "total",
       headerName: "Total",
       type: "number",
-      minWidth: 130,
-      flex: 0.8,
+      minWidth: 150,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
       field: "createdAt",
       headerName: "Order Date",
-      type: "number",
-      minWidth: 130,
-      flex: 0.8,
+      type: "date",
+      minWidth: 150,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
@@ -69,36 +81,20 @@ const AdminDashboardOrders = () => {
       flex: 1,
       minWidth: 150,
       headerName: "Order Details",
-      type: "number",
       sortable: false,
       renderCell: (params) => {
         return (
-          <>
-            <Link to={`/admin/order/${params.id}`}>
-              <Button>
-                <AiOutlineArrowRight size={20} />
-              </Button>
-            </Link>
-          </>
+          <Link to={`/admin/order/${params.id}`}>
+            <Button>
+              <AiOutlineArrowRight size={20} />
+            </Button>
+          </Link>
         );
       },
       align: "center",
       headerAlign: "center",
     },
   ];
-
-  const row = [];
-
-  adminOrders &&
-    adminOrders.forEach((item) => {
-      row.push({
-        id: item._id,
-        itemsQty: item?.cart?.reduce((acc, item) => acc + item.qty, 0),
-        total: "₹" + item?.totalPrice,
-        status: item?.status,
-        createdAt: item?.createdAt.slice(0, 10),
-      });
-    });
 
   return (
     <div>
@@ -108,14 +104,16 @@ const AdminDashboardOrders = () => {
           <div className="flex items-start justify-between w-full">
             <div className="w-full min-h-[45vh] pt-5 rounded flex justify-center">
               <div className="w-[97%] flex justify-center">
-                <DataGrid
-                  className="bg-white"
-                  rows={row}
-                  columns={columns}
-                  pageSize={10}
-                  disableSelectionOnClick
-                  autoHeight
-                />
+                {rows.length > 0 && (
+                  <DataGrid
+                    className="bg-white"
+                    rows={rows}
+                    columns={columns}
+                    pageSize={10}
+                    disableSelectionOnClick
+                    autoHeight
+                  />
+                )}
               </div>
             </div>
           </div>

@@ -25,16 +25,16 @@ const DashboardHero = () => {
     {
       field: "id",
       headerName: "Order ID",
-      minWidth: 150,
-      flex: 0.7,
+      minWidth: 220,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
       field: "status",
       headerName: "Status",
-      minWidth: 130,
-      flex: 0.8,
+      minWidth: 220,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
@@ -42,8 +42,8 @@ const DashboardHero = () => {
       field: "itemsQty",
       headerName: "Items Qty",
       type: "number",
-      minWidth: 130,
-      flex: 0.7,
+      minWidth: 150,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
@@ -51,27 +51,25 @@ const DashboardHero = () => {
       field: "total",
       headerName: "Total",
       type: "number",
-      minWidth: 130,
-      flex: 0.8,
+      minWidth: 150,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
       field: "orderDetails",
-      flex: 0.5,
+      flex: 1,
       minWidth: 150,
       headerName: "Order Details",
       type: "number",
       sortable: false,
       renderCell: (params) => {
         return (
-          <>
-            <Link to={`/order/${params.id}`}>
-              <Button>
-                <AiOutlineArrowRight size={20} />
-              </Button>
-            </Link>
-          </>
+          <Link to={`/order/${params.id}`}>
+            <Button>
+              <AiOutlineArrowRight size={20} />
+            </Button>
+          </Link>
         );
       },
       align: "center",
@@ -79,26 +77,24 @@ const DashboardHero = () => {
     },
   ];
 
-  const row = [];
+  const rows = [];
 
   orders &&
     orders.forEach((item) => {
-      row.push({
+      rows.push({
         id: item._id,
         itemsQty: item.cart.reduce((acc, item) => acc + item.qty, 0),
         total: "₹" + item.totalPrice,
         status: item.status,
       });
     });
+
   return (
     <div className={`${styles.section}`}>
       <div className="w-full block 800px:flex items-center justify-between mt-4">
         <div className="w-full bg-white mb-4 800px:w-[30%] min-h-[10vh] shadow rounded px-2 py-5 flex flex-col items-center">
-          <div className={`${styles.noramlFlex}`}>
-            <h3 className={`${styles.title}`}>
-              Account Balance
-              <span className="text-[16px]">(with 10% service charge)</span>
-            </h3>
+          <div className={`${styles.normalFlex}`}>
+            <h3 className={`${styles.title}`}>Account Balance</h3>
           </div>
           <h5 className="pt-2 text-[22px] font-[500]">₹{availableBalance}</h5>
           <Link to="/dashboard-withdraw-money">
@@ -106,38 +102,40 @@ const DashboardHero = () => {
           </Link>
         </div>
         <div className="w-full bg-white mb-4 800px:w-[30%] min-h-[10vh] shadow rounded px-2 py-5 flex flex-col items-center">
-          <div className={`${styles.noramlFlex}`}>
+          <div className={`${styles.normalFlex}`}>
             <h3 className={`${styles.title}`}>All Orders</h3>
           </div>
-          <h5 className="pt-2  text-[22px] font-[500]">
+          <h5 className="pt-2 text-[22px] font-[500]">
             {orders && orders.length}
           </h5>
           <Link to="/dashboard-orders">
-            <h5 className="pt-2  text-[#077f9c]">View Orders</h5>
+            <h5 className="pt-2 text-[#077f9c]">View Orders</h5>
           </Link>
         </div>
-        <div className="w-full bg-white mb-4 800px:w-[30%] min-h-[10vh]  shadow rounded px-2 py-5 flex flex-col items-center">
-          <div className={`${styles.noramlFlex}`}>
+        <div className="w-full bg-white mb-4 800px:w-[30%] min-h-[10vh] shadow rounded px-2 py-5 flex flex-col items-center">
+          <div className={`${styles.normalFlex}`}>
             <h3 className={`${styles.title}`}>All Products</h3>
           </div>
-          <h5 className="pt-2  text-[22px] font-[500]">
+          <h5 className="pt-2 text-[22px] font-[500]">
             {products && products.length}
           </h5>
           <Link to="/dashboard-products">
-            <h5 className="pt-2  text-[#077f9c]">View Products</h5>
+            <h5 className="pt-2 text-[#077f9c]">View Products</h5>
           </Link>
         </div>
       </div>
       <h3 className={`${styles.title} m-4`}>Latest Orders</h3>
-      <div className="w-full min-h-[45vh]  rounded">
-        <DataGrid
-          className="bg-white"
-          rows={row}
-          columns={columns}
-          pageSize={10}
-          disableSelectionOnClick
-          autoHeight
-        />
+      <div className="w-full min-h-[45vh] rounded">
+        {rows.length > 0 && (
+          <DataGrid
+            className="bg-white"
+            rows={rows}
+            columns={columns}
+            pageSize={10}
+            disableSelectionOnClick
+            autoHeight
+          />
+        )}
       </div>
     </div>
   );

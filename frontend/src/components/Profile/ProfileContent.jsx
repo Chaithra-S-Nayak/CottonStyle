@@ -191,31 +191,52 @@ const AllOrders = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllOrdersOfUser(user._id));
-  }, [dispatch, user._id]);
+    if (user?._id) {
+      dispatch(getAllOrdersOfUser(user._id));
+    }
+  }, [dispatch, user?._id]);
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-    { field: "status", headerName: "Status", minWidth: 130, flex: 0.7 },
+    {
+      field: "id",
+      headerName: "Order ID",
+      minWidth: 220,
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      minWidth: 220,
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+    },
     {
       field: "itemsQty",
       headerName: "Items Qty",
       type: "number",
-      minWidth: 130,
-      flex: 0.7,
+      minWidth: 150,
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "total",
       headerName: "Total",
       type: "number",
-      minWidth: 130,
-      flex: 0.8,
+      minWidth: 150,
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
     },
     {
-      field: " ",
-      flex: 1,
+      field: "Action",
       minWidth: 150,
-      headerName: "",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
       sortable: false,
       renderCell: (params) => (
         <Link to={`/user/order/${params.id}`}>
@@ -231,7 +252,7 @@ const AllOrders = () => {
     ? orders.map((item) => ({
         id: item._id,
         itemsQty: item.cart.length,
-        total: "₹" + item.totalPrice,
+        total: `₹${item.totalPrice}`,
         status: item.status,
       }))
     : [];
@@ -267,21 +288,21 @@ const AllOrders = () => {
 //     orders && orders.filter((item) => item.status === "Processing refund");
 
 //   const columns = [
-//     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-//     { field: "status", headerName: "Status", minWidth: 130, flex: 0.7 },
+//     { field: "id", headerName: "Order ID", minWidth: 150, flex: 1 },
+//     { field: "status", headerName: "Status", minWidth: 130, flex: 1 },
 //     {
 //       field: "itemsQty",
 //       headerName: "Items Qty",
 //       type: "number",
 //       minWidth: 130,
-//       flex: 0.7,
+//       flex: 1,
 //     },
 //     {
 //       field: "total",
 //       headerName: "Total",
 //       type: "number",
 //       minWidth: 130,
-//       flex: 0.8,
+//       flex: 1,
 //     },
 //     {
 //       field: " ",
@@ -336,27 +357,46 @@ const TrackOrder = () => {
   }, [dispatch, user._id]);
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-    { field: "status", headerName: "Status", minWidth: 130, flex: 0.7 },
+    {
+      field: "id",
+      headerName: "Order ID",
+      minWidth: 220,
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      minWidth: 220,
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+    },
     {
       field: "itemsQty",
       headerName: "Items Qty",
       type: "number",
-      minWidth: 130,
-      flex: 0.7,
+      minWidth: 150,
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "total",
       headerName: "Total",
       type: "number",
-      minWidth: 130,
-      flex: 0.8,
+      minWidth: 150,
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
     },
     {
-      field: " ",
+      field: "Track Order",
       flex: 1,
+      align: "center",
+      headerAlign: "center",
       minWidth: 150,
-      headerName: "",
       sortable: false,
       renderCell: (params) => (
         <Link to={`/user/track/order/${params.id}`}>
@@ -522,8 +562,8 @@ const Address = () => {
   return (
     <div className="w-full px-5">
       {open && (
-        <div className="fixed w-full h-screen bg-[#0000004b] top-0 left-0 flex items-center justify-center">
-          <div className="w-[90%] md:w-[60%] lg:w-[35%] h-[80vh] bg-white rounded shadow relative overflow-y-scroll">
+        <div className="fixed w-full h-screen bg-[#0000004b] top-0 left-0 flex items-center justify-center overflow-y-scroll">
+          <div className="bg-white rounded shadow relative">
             <div className="w-full flex justify-end p-3">
               <RxCross1
                 size={30}
@@ -565,7 +605,7 @@ const Address = () => {
                     onChange={(e) => setCity(e.target.value)}
                     className={`${styles.formInput}`}
                   >
-                    <option value="">Select your city</option>
+                    <option value="">Select your State</option>
                     {State &&
                       State.getStatesOfCountry(country).map((item) => (
                         <option key={item.isoCode} value={item.isoCode}>
