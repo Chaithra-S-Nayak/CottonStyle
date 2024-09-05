@@ -21,7 +21,6 @@ export const NotificationProvider = ({ children, context }) => {
             withCredentials: true,
           }
         );
-        // console.log("Fetched Notifications:", data.notifications);
         setNotifications(data.notifications);
         setUnreadCount(data.notifications.filter((n) => !n.isRead).length);
       } catch (error) {

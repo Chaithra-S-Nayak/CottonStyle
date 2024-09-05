@@ -54,10 +54,10 @@ const Wishlist = ({ setOpenWishlist }) => {
                     />
                   </div>
                   {/* Item length */}
-                  <div className={`${styles.noramlFlex} p-4`}>
+                  <div className={`${styles.normalFlex} p-4`}>
                     <AiOutlineHeart size={25} />
                     <h5 className="pl-2 text-[20px] font-[500]">
-                      {wishlist.orderItems ? wishlist.orderItems.length : 0}{" "}
+                      {wishlist.orderItems ? wishlist.orderItems.length : 0}
                       items
                     </h5>
                   </div>
@@ -93,7 +93,7 @@ const WishlistItem = ({
   return (
     <div className="border-b p-4">
       <div className="w-full flex items-center justify-between">
-        <div className={`${styles.noramlFlex}`}>
+        <div className={`${styles.normalFlex}`}>
           <RxCross1
             className="cursor-pointer mb-2 ml-2"
             onClick={() => removeFromWishlistHandler(data.product._id)}

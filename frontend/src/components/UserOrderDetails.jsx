@@ -167,11 +167,24 @@ const UserOrderDetails = () => {
                 <h5>
                   ₹{item.discountPrice} x {item.qty}
                 </h5>
-                {/* Display request status if it exists */}
-                {item.requestStatus && (
+
+                {/* Display returnRequestType if it exists */}
+                {item.returnRequestType && (
                   <p className="text-sm text-gray-600 mt-1">
-                    Request Status:{" "}
-                    <span className="font-semibold">{item.requestStatus}</span>
+                    Return Request Type:
+                    <span className="font-semibold">
+                      {item.returnRequestType}
+                    </span>
+                  </p>
+                )}
+
+                {/* Display returnRequestStatus if it exists */}
+                {item.returnRequestStatus && (
+                  <p className="text-sm text-gray-600 mt-1">
+                    Return Request Status:
+                    <span className="font-semibold">
+                      {item.returnRequestStatus}
+                    </span>
                   </p>
                 )}
               </div>
@@ -300,13 +313,13 @@ const UserOrderDetails = () => {
       </div>
 
       {/* Actions */}
-      <div className={`${styles.noramlFlex}`}>
+      <div className={`${styles.normalFlex}`}>
         {data?.status === "Delivered" && daysSinceDelivery <= 7 && (
           <button
             className={`${styles.simpleButton} mr-4`}
             onClick={handleOpenReturnRequestModal}
           >
-            Return/Exchange
+            Refund/Exchange
           </button>
         )}
         <Link to={`/user/order/invoice/${id}`}>

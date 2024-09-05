@@ -100,7 +100,7 @@ const AdminReturnRequestDetails = () => {
                 Request ID: <span>{returnRequest?._id}</span>
               </h5>
               <h5>
-                Requested on:{" "}
+                Requested on:
                 <span>{returnRequest?.createdAt?.slice(0, 10)}</span>
               </h5>
             </div>

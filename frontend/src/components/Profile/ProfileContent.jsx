@@ -562,7 +562,7 @@ const Address = () => {
   return (
     <div className="w-full px-5">
       {open && (
-        <div className="fixed w-full h-screen bg-[#0000004b] top-0 left-0 flex items-center justify-center overflow-y-scroll">
+        <div className="fixed w-full h-screen bg-black bg-opacity-70 top-0 left-0 flex items-center justify-center overflow-y-scroll z-50">
           <div className="bg-white rounded shadow relative">
             <div className="w-full flex justify-end p-3">
               <RxCross1
@@ -690,7 +690,7 @@ const Address = () => {
             className="w-full bg-white border h-min lg:h-[70px] rounded-[4px] flex flex-col lg:flex-row items-center px-3 shadow justify-between pr-10 mb-5"
             key={index}
           >
-            <div className={`${styles.noramlFlex}`}>
+            <div className={`${styles.normalFlex}`}>
               <h5 className="pl-5 font-[600]">{item.addressType}</h5>
             </div>
             <div className="pl-8 flex items-center">

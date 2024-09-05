@@ -164,7 +164,7 @@ const ProductDetails = ({ data }) => {
                   </span>
                 </div>
                 <span className="ml-2 text-sm text-gray-500">
-                  {data.reviews.length} Reviews | {data.sold_out} sold |{" "}
+                  {data.reviews.length} Reviews | {data.sold_out} sold |
                   {data.stock} stock
                 </span>
               </div>
@@ -264,7 +264,7 @@ const ProductDetails = ({ data }) => {
 
               <div>
                 <h2 className="text-lg font-semibold">Seller Information</h2>
-                <div className={`${styles.noramlFlex}`}>
+                <div className={`${styles.normalFlex}`}>
                   <img
                     src={data.shop.avatar.url}
                     alt=""

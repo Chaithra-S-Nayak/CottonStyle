@@ -147,31 +147,33 @@ const ShopExchangeDetails = () => {
         <div className="bg-white shadow rounded-lg p-4 mb-4">
           <h2 className="text-xl mb-2">Exchange Status</h2>
           {returnRequest?.status !== "Approved Exchange" && (
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="mt-2 border border-gray-300 rounded-md p-2"
-            >
-              {[
-                "Processing Exchange",
-                "Exchange Transferred to delivery partner",
-                "Exchange Shipping",
-                "Exchange Received",
-                "Exchange On the way",
-                "Exchange Delivered",
-              ].map((option, index) => (
-                <option value={option} key={index}>
-                  {option}
-                </option>
-              ))}
-            </select>
+            <div className="flex flex-col sm:flex-row items-start">
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className=" border border-gray-300 rounded-md p-2 w-full sm:w-auto"
+              >
+                {[
+                  "Processing Exchange",
+                  "Exchange Transferred to delivery partner",
+                  "Exchange Shipping",
+                  "Exchange Received",
+                  "Exchange On the way",
+                  "Exchange Delivered",
+                ].map((option, index) => (
+                  <option value={option} key={index}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={handleStatusChange}
+                className={`${styles.simpleButton} mt-4 sm:mt-0 sm:ml-4`}
+              >
+                Update Status
+              </button>
+            </div>
           )}
-          <button
-            onClick={handleStatusChange}
-            className={`${styles.simpleButton} m-4`}
-          >
-            Update Status
-          </button>
         </div>
       </div>
       <Footer />

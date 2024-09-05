@@ -209,7 +209,7 @@ const ShopCreate = () => {
                   Submit
                 </button>
               </div>
-              <div className={`${styles.noramlFlex} w-full`}>
+              <div className={`${styles.normalFlex} w-full`}>
                 <h4>Already have a seller account?</h4>
                 <Link to="/shop-login" className="text-blue-600 pl-2">
                   Sign in

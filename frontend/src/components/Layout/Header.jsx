@@ -136,15 +136,15 @@ const Header = ({ activeHeading }) => {
         } transition hidden 800px:flex items-center justify-between w-full h-[70px]`}
       >
         <div
-          className={`${styles.section} relative ${styles.noramlFlex} justify-between`}
+          className={`${styles.section} relative ${styles.normalFlex} justify-between`}
         >
           {/* navitems */}
-          <div className={`${styles.noramlFlex}`}>
+          <div className={`${styles.normalFlex}`}>
             <Navbar active={activeHeading} />
           </div>
 
           <div className="flex">
-            <div className={`${styles.noramlFlex}`}>
+            <div className={`${styles.normalFlex}`}>
               <div
                 className="relative cursor-pointer mr-[15px]"
                 onClick={() => setOpenWishlist(true)}
@@ -158,7 +158,7 @@ const Header = ({ activeHeading }) => {
               </div>
             </div>
 
-            <div className={`${styles.noramlFlex}`}>
+            <div className={`${styles.normalFlex}`}>
               <Link to="/cart">
                 <div className="relative cursor-pointer mr-[15px]">
                   <AiOutlineShoppingCart
@@ -172,7 +172,7 @@ const Header = ({ activeHeading }) => {
               </Link>
             </div>
 
-            <div className={`${styles.noramlFlex}`}>
+            <div className={`${styles.normalFlex}`}>
               <div className="relative cursor-pointer mr-[15px]">
                 {isAuthenticated ? (
                   <Link to="/profile">
@@ -231,7 +231,7 @@ const Header = ({ activeHeading }) => {
                 )}
               </div>
 
-              <div className="my-8 w-[92%] m-auto h-[40px] relative ">
+              <div className="my-8 w-[92%] m-auto h-[40px] relative">
                 <input
                   type="text"
                   placeholder="Search Product"
@@ -244,7 +244,7 @@ const Header = ({ activeHeading }) => {
                   className="absolute right-2 top-1.5 cursor-pointer"
                 />
                 {dropdownVisible && searchData && searchData.length !== 0 ? (
-                  <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
+                  <div className="absolute min-h-[30vh] max-h-[60vh] overflow-y-scroll bg-slate-50 shadow-sm-2 z-[9] p-4">
                     {searchData &&
                       searchData.map((i, index) => {
                         return (
@@ -264,7 +264,7 @@ const Header = ({ activeHeading }) => {
                 ) : null}
               </div>
               <Navbar active={activeHeading} />
-              <div className="p-4">
+              <div className="px-4">
                 <button className={`${styles.simpleButton} mb-4`}>
                   <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
                     <h1 className="text-[#fff] flex items-center">

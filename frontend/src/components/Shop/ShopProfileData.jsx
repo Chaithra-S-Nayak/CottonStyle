@@ -50,7 +50,7 @@ const ShopProfileData = () => {
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
         <div className="w-full flex">
-          <div className={`${styles.noramlFlex}`} onClick={() => setActive(1)}>
+          <div className={`${styles.normalFlex}`} onClick={() => setActive(1)}>
             <h5
               className={`font-[500] text-[18px] ${
                 active === 1 ? "text-green-500" : "text-[#333]"
@@ -59,7 +59,7 @@ const ShopProfileData = () => {
               Shop Products
             </h5>
           </div>
-          <div className={`${styles.noramlFlex}`} onClick={() => setActive(2)}>
+          <div className={`${styles.normalFlex}`} onClick={() => setActive(2)}>
             <h5
               className={`font-[500] text-[18px] ${
                 active === 2 ? "text-green-500" : "text-[#333]"

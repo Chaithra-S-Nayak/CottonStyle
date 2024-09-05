@@ -338,7 +338,6 @@ router.put(
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
     const { orderId, status } = req.body;
-    console.log(status);
     const order = await Order.findById(orderId);
 
     if (!order) {

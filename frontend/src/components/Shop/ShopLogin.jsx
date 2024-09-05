@@ -90,7 +90,7 @@ const ShopLogin = () => {
                   )}
                 </div>
               </div>
-              <div className={`${styles.noramlFlex} justify-between`}>
+              <div className={`${styles.normalFlex} justify-between`}>
                 <div className="text-sm">
                   <a
                     href="/seller-forgot-password"
@@ -105,7 +105,7 @@ const ShopLogin = () => {
                   Submit
                 </button>
               </div>
-              <div className={`${styles.noramlFlex} w-full`}>
+              <div className={`${styles.normalFlex} w-full`}>
                 <h4>Don't have a seller account?</h4>
                 <Link to="/shop-create" className="text-blue-600 pl-2">
                   Sign Up

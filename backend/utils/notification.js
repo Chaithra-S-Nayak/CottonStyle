@@ -9,8 +9,6 @@ const sendNotification = async (type, message, adminId, shopId) => {
       message,
       type,
     });
-
-    // console.log(`Notification sent: Type - ${type}, Message - ${message}`);
   } catch (error) {
     console.error("Error sending notification:", error);
   }

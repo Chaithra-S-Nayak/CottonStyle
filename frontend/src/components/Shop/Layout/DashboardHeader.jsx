@@ -57,7 +57,7 @@ const DashboardHeader = () => {
           <img src={logo} alt="Logo" className="w-auto h-16" />
         </Link>
 
-        <div className={`${styles.noramlFlex}`}>
+        <div className={`${styles.normalFlex}`}>
           <div className="hidden 1000px:flex items-center mr-4">
             {/* Links for larger screens */}
             <Link to="/dashboard">
@@ -116,7 +116,7 @@ const DashboardHeader = () => {
             </Link>
           </div>
           <NotificationIcon />
-          <Link to={`/shop/${seller._id}`} className={`${styles.noramlFlex}`}>
+          <Link to={`/shop/${seller._id}`} className={`${styles.normalFlex}`}>
             <img
               src={seller.avatar?.url}
               alt=""

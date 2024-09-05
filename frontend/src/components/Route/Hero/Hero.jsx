@@ -5,7 +5,7 @@ import backgroundImage from "../../../Assets/c.png";
 const Hero = () => {
   return (
     <div
-      className={`relative min-h-[70vh] 800px:min-h-[80vh] w-full bg-no-repeat bg-cover bg-center ${styles.noramlFlex}`}
+      className={`relative min-h-[70vh] 800px:min-h-[80vh] w-full bg-no-repeat bg-cover bg-center ${styles.normalFlex}`}
       style={{
         backgroundImage: `url(${backgroundImage})`,
       }}

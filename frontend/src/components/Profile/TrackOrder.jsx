@@ -26,7 +26,7 @@ const TrackOrder = () => {
                 <strong>Order ID:</strong> {data._id}
               </p>
               <p className="text-gray-700">
-                <strong>Placed On:</strong>{" "}
+                <strong>Placed On:</strong>
                 {new Date(data.createdAt).toLocaleDateString()}
               </p>
               <p className="text-gray-700">

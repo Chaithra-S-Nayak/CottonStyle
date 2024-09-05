@@ -145,7 +145,7 @@ const Filters = ({ onFilterChange }) => {
                     .map((sizeObj) => (
                       <div
                         key={sizeObj.size}
-                        className={`${styles.noramlFlex}`}
+                        className={`${styles.normalFlex}`}
                       >
                         <input
                           type="checkbox"
@@ -175,7 +175,7 @@ const Filters = ({ onFilterChange }) => {
                   {adminOptions.color
                     ?.slice(0, visibleColorCount)
                     .map((color, index) => (
-                      <div key={index} className={`${styles.noramlFlex}`}>
+                      <div key={index} className={`${styles.normalFlex}`}>
                         <input
                           type="checkbox"
                           checked={colors.includes(color)}
@@ -204,7 +204,7 @@ const Filters = ({ onFilterChange }) => {
                   {adminOptions.fabric
                     ?.slice(0, visibleFabricCount)
                     .map((fabric, index) => (
-                      <div key={index} className={`${styles.noramlFlex}`}>
+                      <div key={index} className={`${styles.normalFlex}`}>
                         <input
                           type="checkbox"
                           checked={fabrics.includes(fabric)}
@@ -227,7 +227,7 @@ const Filters = ({ onFilterChange }) => {
                 </div>
               </div>
               {/* Most Sold Filter */}
-              <div className={`${styles.noramlFlex}`}>
+              <div className={`${styles.normalFlex}`}>
                 <label className="font-semibold mr-2">Most Sold</label>
                 <input
                   type="checkbox"
@@ -237,7 +237,7 @@ const Filters = ({ onFilterChange }) => {
                 />
               </div>
               {/* In Stock Filter */}
-              <div className={`${styles.noramlFlex}`}>
+              <div className={`${styles.normalFlex}`}>
                 <label className="font-semibold mr-2">In Stock</label>
                 <input
                   type="checkbox"
@@ -297,7 +297,7 @@ const Filters = ({ onFilterChange }) => {
             {adminOptions.sizeChart
               ?.slice(0, visibleSizeCount)
               .map((sizeObj) => (
-                <div key={sizeObj.size} className={`${styles.noramlFlex}`}>
+                <div key={sizeObj.size} className={`${styles.normalFlex}`}>
                   <input
                     type="checkbox"
                     checked={sizes.includes(sizeObj.size)}
@@ -322,7 +322,7 @@ const Filters = ({ onFilterChange }) => {
             {adminOptions.color
               ?.slice(0, visibleColorCount)
               .map((color, index) => (
-                <div key={index} className={`${styles.noramlFlex}`}>
+                <div key={index} className={`${styles.normalFlex}`}>
                   <input
                     type="checkbox"
                     checked={colors.includes(color)}
@@ -345,7 +345,7 @@ const Filters = ({ onFilterChange }) => {
             {adminOptions.fabric
               ?.slice(0, visibleFabricCount)
               .map((fabric, index) => (
-                <div key={index} className={`${styles.noramlFlex}`}>
+                <div key={index} className={`${styles.normalFlex}`}>
                   <input
                     type="checkbox"
                     checked={fabrics.includes(fabric)}

@@ -149,7 +149,7 @@ const Singup = () => {
               <button type="submit" className={`${styles.wideButton}`}>
                 Submit
               </button>
-              <div className={`${styles.noramlFlex} w-full`}>
+              <div className={`${styles.normalFlex} w-full`}>
                 <h4>Already have an account?</h4>
                 <Link to="/login" className="text-blue-600 pl-2">
                   Sign In

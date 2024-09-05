@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
@@ -14,10 +14,24 @@ const DashboardHero = () => {
   const { seller } = useSelector((state) => state.seller);
   const { products } = useSelector((state) => state.products);
 
+  const [rows, setRows] = useState([]);
+
   useEffect(() => {
     dispatch(getAllOrdersOfShop(seller._id));
     dispatch(getAllProductsShop(seller._id));
   }, [dispatch, seller._id]);
+
+  useEffect(() => {
+    if (orders) {
+      const newRows = orders.map((item) => ({
+        id: item._id,
+        itemsQty: item.cart.reduce((acc, item) => acc + item.qty, 0),
+        total: "₹" + item.totalPrice,
+        status: item.status,
+      }));
+      setRows(newRows);
+    }
+  }, [orders]);
 
   const availableBalance = seller?.availableBalance.toFixed(2);
 
@@ -61,7 +75,6 @@ const DashboardHero = () => {
       flex: 1,
       minWidth: 150,
       headerName: "Order Details",
-      type: "number",
       sortable: false,
       renderCell: (params) => {
         return (
@@ -76,18 +89,6 @@ const DashboardHero = () => {
       headerAlign: "center",
     },
   ];
-
-  const rows = [];
-
-  orders &&
-    orders.forEach((item) => {
-      rows.push({
-        id: item._id,
-        itemsQty: item.cart.reduce((acc, item) => acc + item.qty, 0),
-        total: "₹" + item.totalPrice,
-        status: item.status,
-      });
-    });
 
   return (
     <div className={`${styles.section}`}>

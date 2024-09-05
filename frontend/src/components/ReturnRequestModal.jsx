@@ -208,7 +208,7 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
     open &&
     selectedItem && (
       <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
-        <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div className="m-4  bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
           <div className="flex justify-end">
             <RxCross1
               size={30}
@@ -216,7 +216,7 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
               className="cursor-pointer"
             />
           </div>
-          <h2 className={`${styles.formHeading}`}>Return/Exchange Request</h2>
+          <h2 className={`${styles.formHeading}`}>Refund/Exchange Request</h2>
           <form onSubmit={handleSubmit}>
             {selectedItem.products.map((product) => {
               const productDetail = returnDetails.find(
@@ -241,7 +241,7 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
                           htmlFor={`requestType-${product.productId}`}
                           className={`${styles.formLabel}`}
                         >
-                          Select Return or Exchange:
+                          Select Refund or Exchange:
                         </label>
                         <select
                           id={`requestType-${product.productId}`}
@@ -255,7 +255,7 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
                           className={`${styles.formInput}`}
                           required
                         >
-                          <option value="Return">Return</option>
+                          <option value="Return">Refund</option>
                           <option value="Exchange">Exchange</option>
                         </select>
                       </div>

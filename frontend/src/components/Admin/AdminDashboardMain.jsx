@@ -31,16 +31,16 @@ const AdminDashboardMain = () => {
     {
       field: "id",
       headerName: "Order ID",
-      minWidth: 150,
-      flex: 0.7,
+      minWidth: 220,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
       field: "status",
       headerName: "Status",
-      minWidth: 130,
-      flex: 0.8,
+      minWidth: 220,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
@@ -48,8 +48,8 @@ const AdminDashboardMain = () => {
       field: "itemsQty",
       headerName: "Items Qty",
       type: "number",
-      minWidth: 130,
-      flex: 0.7,
+      minWidth: 150,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
@@ -57,14 +57,14 @@ const AdminDashboardMain = () => {
       field: "total",
       headerName: "Total",
       type: "number",
-      minWidth: 130,
-      flex: 0.8,
+      minWidth: 150,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
       field: "orderDetails",
-      flex: 0.5,
+      flex: 1,
       minWidth: 150,
       headerName: "Order Details",
       type: "number",
@@ -101,14 +101,14 @@ const AdminDashboardMain = () => {
         <div className={`${styles.section}`}>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
             <div className="bg-white rounded border px-2 py-5 flex flex-col items-center min-h-[10vh]">
-              <div className={`${styles.noramlFlex}`}>
+              <div className={`${styles.normalFlex}`}>
                 <h3 className={`${styles.title}`}>Total Earning</h3>
               </div>
               <h5 className="pt-2 text-[22px] font-[500]">₹{adminBalance}</h5>
             </div>
 
             <div className="bg-white rounded border px-2 py-5 flex flex-col items-center min-h-[10vh]">
-              <div className={`${styles.noramlFlex}`}>
+              <div className={`${styles.normalFlex}`}>
                 <h3 className={`${styles.title}`}>All Sellers</h3>
               </div>
               <h5 className="pt-2 text-[22px] font-[500]">

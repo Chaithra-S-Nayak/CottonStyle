@@ -70,7 +70,7 @@ const AdminHeader = () => {
           <img src={logo} alt="Logo" className="w-auto h-16" />
         </Link>
 
-        <div className={`${styles.noramlFlex}`}>
+        <div className={`${styles.normalFlex}`}>
           {/* Navigation Links for larger screens */}
           <div className="hidden 1000px:flex items-center mr-4">
             <Link to="/admin/dashboard">
@@ -133,7 +133,7 @@ const AdminHeader = () => {
             </Link>
           </div>
           <NotificationIcon />
-          <Link to="/admin-profile" className={`${styles.noramlFlex}`}>
+          <Link to="/admin-profile" className={`${styles.normalFlex}`}>
             <img
               src={admin?.avatar?.url}
               alt="avatar"
@@ -243,10 +243,9 @@ const AdminHeader = () => {
                   handleLogout();
                   toggleMenu();
                 }}
-                className="flex items-center mt-4 text-red-500"
+                className="flex my-2 items-center text-red-500"
               >
-                <FiLogOut size={30} />
-                <span className="ml-2 text-md">Logout</span>
+                <span>Logout</span>
               </button>
             </div>
           </div>

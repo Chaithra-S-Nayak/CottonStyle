@@ -172,7 +172,7 @@ const AllCoupons = () => {
                   </div>
                   <div className="mb-4">
                     <label className="block mb-2">
-                      Discount Percentage{" "}
+                      Discount Percentage
                       <span className="text-red-500">*</span>
                     </label>
                     <input
