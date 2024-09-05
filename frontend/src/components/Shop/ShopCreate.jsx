@@ -59,7 +59,7 @@ const ShopCreate = () => {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 m-4">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h1 className={`${styles.formHeading}`}>Register as a seller</h1>
         </div>

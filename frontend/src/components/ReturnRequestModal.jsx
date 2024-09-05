@@ -8,6 +8,7 @@ import { AiOutlinePlusCircle, AiOutlineCloseCircle } from "react-icons/ai";
 
 const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
   const [returnDetails, setReturnDetails] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (selectedItem && selectedItem.products) {
@@ -19,7 +20,7 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
           discountPrice: product.discountPrice,
           availableSizes: product.availableSizes || [],
           selectedSize: "",
-          requestType: "Return",
+          requestType: "Refund",
           reason: "",
           images: [],
           selected: false,
@@ -138,10 +139,13 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     const selectedProducts = returnDetails.filter((item) => item.selected);
 
     if (selectedProducts.length === 0) {
       toast.error("Please select at least one product to return or exchange.");
+      setLoading(false);
       return;
     }
 
@@ -150,6 +154,7 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
         toast.error(
           `Please check the availability of the product: ${product.name} before submitting.`
         );
+        setLoading(false);
         return;
       }
 
@@ -157,6 +162,7 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
         toast.error(
           `Please upload at least one image for the product: ${product.name}`
         );
+        setLoading(false);
         return;
       }
     }
@@ -197,10 +203,12 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
         },
         { withCredentials: true }
       );
-      toast.success("Return/Exchange request submitted successfully!");
+      toast.success("Refund/Exchange request submitted successfully!");
       setOpen(false);
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -208,7 +216,7 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
     open &&
     selectedItem && (
       <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75 z-50">
-        <div className="m-4  bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div className="m-4 bg-white p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
           <div className="flex justify-end">
             <RxCross1
               size={30}
@@ -245,7 +253,7 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
                         </label>
                         <select
                           id={`requestType-${product.productId}`}
-                          value={productDetail?.requestType || "Return"}
+                          value={productDetail?.requestType || "Refund"}
                           onChange={(e) =>
                             handleRequestTypeChange(
                               product.productId,
@@ -255,7 +263,7 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
                           className={`${styles.formInput}`}
                           required
                         >
-                          <option value="Return">Refund</option>
+                          <option value="Refund">Refund</option>
                           <option value="Exchange">Exchange</option>
                         </select>
                       </div>
@@ -306,7 +314,7 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
                           htmlFor={`quantity-${product.productId}`}
                           className={`${styles.formLabel}`}
                         >
-                          Select Quantity to Return/Exchange:
+                          Select Quantity to Refund/Exchange:
                         </label>
                         <input
                           type="number"
@@ -326,7 +334,7 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
                           htmlFor={`reason-${product.productId}`}
                           className={`${styles.formLabel}`}
                         >
-                          Reason for Return/Exchange:
+                          Reason for Refund/Exchange:
                         </label>
                         <textarea
                           className={`${styles.formInput}`}
@@ -388,9 +396,18 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
                 </div>
               );
             })}
-            <button type="submit" className={`${styles.wideButton}`}>
-              Submit Request
-            </button>
+            <div className="flex justify-end mt-4">
+              <button
+                type="button"
+                className={`${styles.wideButton} ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                onClick={handleSubmit}
+                disabled={loading}
+              >
+                {loading ? "Submitting..." : "Submit Request"}
+              </button>
+            </div>
           </form>
         </div>
       </div>

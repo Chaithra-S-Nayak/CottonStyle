@@ -32,6 +32,7 @@ const UserOrderDetails = () => {
   const data = orders && orders.find((item) => item._id === id);
   const deliveryDate = new Date(data?.deliveredAt);
   const currentDate = new Date();
+  console.log(currentDate);
   const daysSinceDelivery = differenceInDays(currentDate, deliveryDate);
   const reviewHandler = async () => {
     if (rating === 0) {
@@ -310,6 +311,11 @@ const UserOrderDetails = () => {
       <div className="bg-white shadow rounded-lg p-4 mb-4">
         <h2 className="text-xl mb-2">Order Status</h2>
         <h5>Current Status: {data?.status}</h5>
+        {data?.status === "Delivered" && data?.deliveredAt && (
+          <h5>
+            Delivered At: {new Date(data.deliveredAt).toLocaleDateString()}
+          </h5>
+        )}
       </div>
 
       {/* Actions */}

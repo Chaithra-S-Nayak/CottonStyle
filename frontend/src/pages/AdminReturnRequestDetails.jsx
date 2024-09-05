@@ -24,7 +24,7 @@ const AdminReturnRequestDetails = () => {
         );
         setReturnRequest(data.returnRequest);
         setStatusReturn(
-          data.returnRequest.product[0]?.requestType === "Return"
+          data.returnRequest.product[0]?.requestType === "Refund"
             ? data.returnRequest.status
             : ""
         );
@@ -48,14 +48,14 @@ const AdminReturnRequestDetails = () => {
 
     // Calculate the total refund amount (if applicable)
     const totalRefundAmount = products
-      .filter((item) => item.requestType === "Return")
+      .filter((item) => item.requestType === "Refund")
       .reduce((acc, item) => acc + item.paidAmount, 0);
 
     const payload = {
-      status: requestType === "Return" ? statusReturn : statusExchange,
+      status: requestType === "Refund" ? statusReturn : statusExchange,
       returnRequestId: returnRequest._id,
       orderId: returnRequest?.orderId,
-      refundAmount: requestType === "Return" ? totalRefundAmount : 0,
+      refundAmount: requestType === "Refund" ? totalRefundAmount : 0,
       products: products.map((item) => ({
         qty: item.quantity,
         productId: item.productId,
@@ -64,7 +64,7 @@ const AdminReturnRequestDetails = () => {
     };
 
     const apiEndpoint =
-      requestType === "Return"
+      requestType === "Refund"
         ? `${server}/order/order-refund-success`
         : `${server}/order/order-exchange-success`;
 
@@ -79,7 +79,7 @@ const AdminReturnRequestDetails = () => {
 
   // Separate products by request type
   const returnProducts = returnRequest?.product.filter(
-    (item) => item.requestType === "Return"
+    (item) => item.requestType === "Refund"
   );
   const exchangeProducts = returnRequest?.product.filter(
     (item) => item.requestType === "Exchange"
@@ -187,10 +187,10 @@ const AdminReturnRequestDetails = () => {
               <p className=" m-4">You have already processed the refund.</p>
             ) : (
               <button
-                onClick={() => handleUpdateStatus("Return")}
+                onClick={() => handleUpdateStatus("Refund")}
                 className={`${styles.simpleButton} m-4`}
               >
-                Process Return
+                Process Refund
               </button>
             )}
           </>

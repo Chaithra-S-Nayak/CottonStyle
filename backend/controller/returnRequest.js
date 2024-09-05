@@ -7,7 +7,16 @@ const Order = require("../model/order");
 const Product = require("../model/product");
 const { isAdmin, isAuthenticated, isSeller } = require("../middleware/auth");
 const ReturnRequest = require("../model/returnRequest");
+const Admin = require("../model/admin");
+const Shop = require("../model/shop");
+const {
+  getReturnRequestEmailTemplate,
+  generateEmailTemplate,
+} = require("../utils/emailTemplates");
+const sendNotification = require("../utils/notification");
+const sendMail = require("../utils/sendMail");
 
+// Route to create a return request
 router.post(
   "/create-return-request",
   isAuthenticated,
@@ -62,6 +71,61 @@ router.post(
 
     await order.save();
 
+    // Send notification and email to the admin
+    const admin = await Admin.findOne();
+    const adminEmailTemplate = getReturnRequestEmailTemplate(
+      req.body.orderId,
+      req.body.shopId,
+      req.user._id
+    );
+
+    const adminHtmlContent = generateEmailTemplate({
+      recipientName: "Admin",
+      bodyContent: adminEmailTemplate,
+    });
+
+    try {
+      await sendNotification(
+        "return-request",
+        `New return request created for Order ID: ${req.body.orderId}`,
+        admin._id,
+        null
+      );
+
+      await sendMail({
+        email: admin.email,
+        subject: "New Return Request",
+        html: adminHtmlContent,
+      });
+    } catch (mailError) {
+      console.error("Error notifying admin:", mailError);
+    }
+
+    // Send notification and email to the corresponding seller
+    const shop = await Shop.findById(req.body.shopId);
+    const sellerNotificationContent = `New return request created for Order ID: ${req.body.orderId}`;
+    const sellerHtmlContent = generateEmailTemplate({
+      recipientName: shop.name,
+      bodyContent: adminEmailTemplate,
+    });
+
+    try {
+      await sendNotification(
+        "return-request",
+        sellerNotificationContent,
+        null,
+        shop._id
+      );
+
+      await sendMail({
+        email: shop.email,
+        subject: "New Return Request",
+        html: sellerHtmlContent,
+      });
+    } catch (mailError) {
+      console.error("Error notifying seller:", mailError);
+    }
+
     res.status(201).json({
       success: true,
       returnRequest,
@@ -110,33 +174,44 @@ router.get(
 
 router.get(
   "/get-return-request/:id",
-  isAdmin,
   catchAsyncErrors(async (req, res, next) => {
-    const returnRequest = await ReturnRequest.findById(req.params.id);
+    const returnRequestId = req.params.id;
+    const returnRequest = await ReturnRequest.findById(returnRequestId);
 
     if (!returnRequest) {
-      return next(new ErrorHandler("Return Request not found", 404));
+      return res.status(404).json({
+        success: false,
+        message: "Return request not found",
+      });
     }
 
+    const order = await Order.findById(returnRequest.orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    // Send both the return request and order status
     res.status(200).json({
       success: true,
       returnRequest,
+      orderStatus: order.status,
     });
   })
 );
 
 router.get(
-  "/get-all-exchange-requests",
+  "/get-all-return-requests-of-shop",
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
     const shopId = req.seller._id;
     const returnRequests = await ReturnRequest.find({ shopId });
-    const exchangeRequests = returnRequests.filter((request) =>
-      request.product.some((product) => product.requestType === "Exchange")
-    );
     res.status(200).json({
       success: true,
-      exchangeRequests,
+      returnRequests,
     });
   })
 );

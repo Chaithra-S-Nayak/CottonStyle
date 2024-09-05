@@ -127,17 +127,11 @@ const getShopDeletionEmailTemplate = (adminEmail) => `
     <p>Thank you for your understanding.</p>
 `;
 
-const getReturnRequestEmailTemplate = (
-  orderId,
-  productId,
-  reason,
-  requestType
-) => `
+const getReturnRequestEmailTemplate = (orderId, shopId, userId) => `
     <p>A return/exchange request has been made for the following order:</p>
     <p>Order ID: ${orderId}</p>
-    <p>Product ID: ${productId}</p>
-    <p>Reason: ${reason}</p>
-    <p>Request Type: ${requestType}</p>
+    <p>Shop ID: ${shopId}</p>
+    <p>User ID: ${userId}</p>
     <p>Please review the request and take the necessary action.</p>
 `;
 
@@ -171,15 +165,6 @@ const getOutOfStockEmailTemplate = (productName, productId) => `
     <p>Thank you for your attention.</p>
 `;
 
-const getOrderRefundEmailTemplate = (orderId, status) => `
-    <p>
-      Your order refund has been processed successfully.Please find the details
-      below:
-    </p>
-    <p>Order ID: ${orderId}</p>
-    <p>Refund Status: ${status}</p>
-`;
-
 module.exports = {
   getAdminLoginOtpEmailTemplate,
   getOtpEmailTemplate,
@@ -193,5 +178,4 @@ module.exports = {
   getWithdrawConfirmationEmailTemplate,
   getOrderCreationEmailTemplate,
   getOutOfStockEmailTemplate,
-  getOrderRefundEmailTemplate,
 };

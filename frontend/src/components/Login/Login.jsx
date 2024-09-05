@@ -39,7 +39,7 @@ const Login = () => {
   return (
     <>
       <Header />
-      <div className=" m-10 flex flex-col min-h-screen justify-center  sm:px-6 lg:px-8">
+      <div className=" m-4 flex flex-col min-h-screen justify-center  sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h1 className={`${styles.formHeading}`}>Login to your account</h1>
         </div>

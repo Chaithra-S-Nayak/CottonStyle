@@ -10,6 +10,7 @@ import styles from "../../styles/styles";
 const ShopExchangeDetails = () => {
   const { id } = useParams();
   const [returnRequest, setReturnRequest] = useState(null);
+  const [orderStatus, setOrderStatus] = useState("");
   const [status, setStatus] = useState("");
 
   useEffect(() => {
@@ -20,6 +21,7 @@ const ShopExchangeDetails = () => {
           { withCredentials: true }
         );
         setReturnRequest(response.data.returnRequest);
+        setOrderStatus(response.data.orderStatus);
         setStatus(response.data.returnRequest.status);
       } catch (error) {
         toast.error(error.response?.data?.message || "Failed to fetch details");
@@ -144,9 +146,9 @@ const ShopExchangeDetails = () => {
         </div>
 
         {/* Status Update Dropdown */}
-        <div className="bg-white shadow rounded-lg p-4 mb-4">
-          <h2 className="text-xl mb-2">Exchange Status</h2>
-          {returnRequest?.status !== "Approved Exchange" && (
+        {orderStatus === "Approved Exchange" && (
+          <div className="bg-white shadow rounded-lg p-4 mb-4">
+            <h2 className="text-xl mb-2">Exchange Status</h2>
             <div className="flex flex-col sm:flex-row items-start">
               <select
                 value={status}
@@ -173,8 +175,8 @@ const ShopExchangeDetails = () => {
                 Update Status
               </button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
       <Footer />
     </>

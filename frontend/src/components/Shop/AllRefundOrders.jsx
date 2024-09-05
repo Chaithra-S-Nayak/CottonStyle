@@ -14,10 +14,10 @@ const AllRefundOrders = () => {
     const fetchReturnRequests = async () => {
       try {
         const response = await axios.get(
-          `${server}/returnRequest/get-all-exchange-requests`,
+          `${server}/returnRequest/get-all-return-requests-of-shop`,
           { withCredentials: true }
         );
-        setData(response.data.exchangeRequests || []);
+        setData(response.data.returnRequests || []);
       } catch (error) {
         toast.error(error.response?.data?.message || "An error occurred");
         setData([]);

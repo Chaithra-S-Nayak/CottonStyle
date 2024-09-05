@@ -14,7 +14,6 @@ const {
   generateEmailTemplate,
   getOrderCreationEmailTemplate,
   getOutOfStockEmailTemplate,
-  getOrderRefundEmailTemplate,
 } = require("../utils/emailTemplates");
 require("dotenv").config();
 // Function to calculate total price for items in a shop's cart
@@ -60,25 +59,41 @@ const updateProductStock = async (id, qty) => {
 };
 
 // Function to update seller's available balance only after 7 days of delivery
-const updateSellerBalance = async (sellerId, amount, deliveredAt) => {
+const updateSellerBalance = async (sellerId, amount, deliveredAt, order) => {
   const currentDate = new Date();
   const deliveryDate = new Date(deliveredAt);
   const daysDifference = Math.floor(
     (currentDate - deliveryDate) / (1000 * 60 * 60 * 24)
   );
 
+  // Check if the customer initiated an exchange and if the exchange is delivered
+  const exchangeOngoing = order.cart.some(
+    (item) =>
+      item.returnRequestType === "Exchange" &&
+      item.returnRequestStatus !== "Exchange Delivered"
+  );
+
+  // If exchange is ongoing, do not update balance
+  if (exchangeOngoing) {
+    console.log(
+      "Exchange is ongoing. Balance will be updated after exchange is delivered."
+    );
+    return;
+  }
+
+  // Check if 7 days have passed since delivery and update the balance
   if (daysDifference >= 7) {
     const seller = await Shop.findById(sellerId);
     seller.availableBalance += amount;
     await seller.save();
   } else {
-    // Schedule a check for the balance update after the remaining days
+    // Schedule a balance update for after the remaining days
     const remainingDays = 7 - daysDifference;
     setTimeout(async () => {
       const seller = await Shop.findById(sellerId);
       seller.availableBalance += amount;
       await seller.save();
-    }, remainingDays * 24 * 60 * 60 * 1000); // Convert days to milliseconds
+    }, remainingDays * 24 * 60 * 60 * 1000);
   }
 };
 
@@ -204,16 +219,20 @@ router.put(
   catchAsyncErrors(async (req, res, next) => {
     const order = await Order.findById(req.params.id);
     order.status = req.body.status;
+
     if (req.body.status === "Delivered") {
       order.deliveredAt = Date.now();
       order.paymentInfo.status = "Succeeded";
+
       const serviceCharge = order.totalPrice * 0.1; // service charge
       await updateSellerBalance(
         req.seller.id,
         order.totalPrice - serviceCharge,
-        order.deliveredAt
+        order.deliveredAt,
+        order
       );
     }
+
     await order.save({ validateBeforeSave: false });
     res.status(200).json({ success: true, order });
   })
@@ -223,6 +242,7 @@ const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_SECRET,
 });
+
 router.put(
   "/order-refund-success/",
   isAdmin,
@@ -243,6 +263,17 @@ router.put(
       });
 
       if (refund.status === "processed") {
+        // Loop over each product to update the stock in the Product model
+        for (let product of products) {
+          const productInDb = await Product.findById(product.productId);
+          if (productInDb) {
+            productInDb.stock = productInDb.stock + product.qty;
+            productInDb.sold_out += product.qty;
+            await productInDb.save();
+          }
+        }
+
+        // Update the cart items in the order
         const updatedCart = order.cart.map((item) => {
           // Find the product in the products array to be updated
           const productUpdate = products.find(
@@ -257,12 +288,13 @@ router.put(
           }
           return item;
         });
+
         order.cart = updatedCart;
         order.status = "Approved Refund";
         // Update returnOrExchange field in the order
         order.returnOrExchange = {
           returnRequestId: returnRequestId,
-          requestType: "Return",
+          requestType: "Refund",
         };
         const returnRequest = await ReturnRequest.findById(returnRequestId);
         returnRequest.refundInit = true;
