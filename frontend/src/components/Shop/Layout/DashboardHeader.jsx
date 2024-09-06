@@ -100,7 +100,7 @@ const DashboardHeader = () => {
                     : "text-[#555]"
                 }`}
               >
-                Exchange Requests
+                Return Requests
               </span>
             </Link>
             <Link to="/seller-change-password">
@@ -197,7 +197,7 @@ const DashboardHeader = () => {
                       : "text-[#555]"
                   }`}
                 >
-                  Exchange Requests
+                  Return Requests
                 </span>
               </Link>
               <Link

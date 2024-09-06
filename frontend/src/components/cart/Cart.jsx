@@ -274,7 +274,7 @@ const Cart = () => {
           {suggestions.map((suggestion) => (
             <div key={suggestion.shopId} className="mb-4">
               <p className="text-gray-800">
-                Add products worth ₹{suggestion.remainingAmount} more from
+                Add products worth ₹{suggestion.remainingAmount} more from{" "}
                 {suggestion.shopName} to avoid the delivery fee.
               </p>
             </div>

@@ -313,7 +313,7 @@ const WithdrawMoney = () => {
                         className={`${styles.formInput}`}
                       />
                       <button
-                        className={`${styles.simpleButton} ml-4`}
+                        className={`${styles.simpleButton} md:ml-4 md:mt-0 mt-4`}
                         onClick={withdrawHandler}
                       >
                         Withdraw

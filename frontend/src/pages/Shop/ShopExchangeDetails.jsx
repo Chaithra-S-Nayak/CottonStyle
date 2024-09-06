@@ -117,12 +117,18 @@ const ShopExchangeDetails = () => {
                 {item.images?.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {item.images.map((image, index) => (
-                      <img
+                      <a
                         key={index}
-                        src={image.url}
-                        alt=""
-                        className="w-16 h-16 object-cover rounded-lg"
-                      />
+                        href={image.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <img
+                          src={image.url}
+                          alt=""
+                          className="w-16 h-16 object-cover rounded-lg"
+                        />
+                      </a>
                     ))}
                   </div>
                 )}

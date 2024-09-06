@@ -37,7 +37,7 @@ const returnRequestSchema = new mongoose.Schema({
       },
       requestType: {
         type: String,
-        enum: ["Return", "Exchange"],
+        enum: ["Refund", "Exchange"],
         required: true,
       },
       selectedSize: {

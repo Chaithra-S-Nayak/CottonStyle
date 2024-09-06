@@ -153,12 +153,18 @@ const AdminReturnRequestDetails = () => {
                 {item.images?.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {item.images.map((image, index) => (
-                      <img
+                      <a
                         key={index}
-                        src={image.url}
-                        alt=""
-                        className="w-16 h-16 object-cover rounded-lg"
-                      />
+                        href={image.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <img
+                          src={image.url}
+                          alt=""
+                          className="w-16 h-16 object-cover rounded-lg"
+                        />
+                      </a>
                     ))}
                   </div>
                 )}
@@ -184,7 +190,7 @@ const AdminReturnRequestDetails = () => {
         {returnProducts?.length > 0 && (
           <>
             {returnRequest?.refundInit ? (
-              <p className=" m-4">You have already processed the refund.</p>
+              <p className=" m-4">You have already approved the refund.</p>
             ) : (
               <button
                 onClick={() => handleUpdateStatus("Refund")}
@@ -198,7 +204,7 @@ const AdminReturnRequestDetails = () => {
         {exchangeProducts?.length > 0 && (
           <>
             {returnRequest?.exchangeInit ? (
-              <p className=" m-4">You have already processed the exchange.</p>
+              <p className=" m-4">You have already approved the exchange.</p>
             ) : (
               <button
                 onClick={() => handleUpdateStatus("Exchange")}

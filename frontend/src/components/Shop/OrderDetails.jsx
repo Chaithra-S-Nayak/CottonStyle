@@ -165,14 +165,13 @@ const OrderDetails = () => {
         {/* Shipping Details */}
         <div className="bg-white shadow rounded-lg p-4 mb-4">
           <h2 className="text-xl mb-2">Shipping Details</h2>
-          <h5>
-            Shipping Address:
-            <span>
-              {data?.shippingAddress.address1} {data?.shippingAddress.address2},
-              {data?.shippingAddress.city}, {data?.shippingAddress.country}
-            </span>
-          </h5>
-          <h5>Phone Number: {data?.user?.phoneNumber}</h5>
+          <h5>Name: {data?.user?.name}</h5>
+          <h5>Email: {data?.user?.email}</h5>
+          <h5>Address: {data?.shippingAddress?.address1}</h5>
+          <h5>City: {data?.shippingAddress?.city}</h5>
+          <h5>Country: {data?.shippingAddress?.country}</h5>
+          <h5>Zip Code: {data?.shippingAddress?.zipCode}</h5>
+          <h5>Phone Number: {data?.shippingAddress?.phoneNumber}</h5>
         </div>
 
         {/* Payment Information */}

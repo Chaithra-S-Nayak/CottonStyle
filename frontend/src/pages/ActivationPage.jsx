@@ -42,7 +42,7 @@ const ActivationPage = () => {
     <>
       <Header />
       <div className="m-20 flex flex-col justify-center items-center bg-gray-100">
-        <div className="bg-white p-20  rounded-md shadow-md text-center">
+        <div className="bg-white p-10 md:p-20 rounded-md shadow-md text-center">
           {error ? (
             <>
               <p className=" text-lg mb-10">Your token is expired!</p>

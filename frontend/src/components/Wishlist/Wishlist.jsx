@@ -57,8 +57,7 @@ const Wishlist = ({ setOpenWishlist }) => {
                   <div className={`${styles.normalFlex} p-4`}>
                     <AiOutlineHeart size={25} />
                     <h5 className="pl-2 text-[20px] font-[500]">
-                      {wishlist.orderItems ? wishlist.orderItems.length : 0}
-                      items
+                      {wishlist.orderItems?.length || 0} items
                     </h5>
                   </div>
 
