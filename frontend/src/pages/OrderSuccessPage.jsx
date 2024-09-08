@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Footer from "../components/Layout/Footer";
 import Header from "../components/Layout/Header";
-import Lottie from "react-lottie";
+import Lottie from "lottie-react";
 import animationData from "../Assets/animations/success.json";
 import styles from "../styles/styles";
 
@@ -19,18 +19,16 @@ const OrderSuccessPage = () => {
 };
 
 const Success = () => {
-  const defaultOptions = {
-    loop: false,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
-
   return (
     <div className="w-full max-w-lg mx-auto text-center p-4">
-      <Lottie options={defaultOptions} width={300} height={300} />
+      <div className="flex justify-center">
+        <Lottie
+          animationData={animationData}
+          loop={false}
+          autoplay={true}
+          style={{ width: 300, height: 300 }}
+        />
+      </div>
       <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
         Thank you! Your order has been placed successfully.
       </h2>

@@ -168,7 +168,7 @@ const ReturnRequestModal = ({ open, setOpen, selectedItem }) => {
     }
 
     try {
-      const { data } = await axios.post(
+      await axios.post(
         `${server}/returnRequest/create-return-request`,
         {
           orderId: selectedItem.orderId,
