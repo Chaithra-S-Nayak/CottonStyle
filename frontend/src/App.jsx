@@ -39,6 +39,7 @@ import {
   ShopWithDrawMoneyPage,
   SellerForgotPasswordPage,
   ShopChangePasswordPage,
+  ShopHomePage,
 } from "./routes/ShopRoutes";
 import {
   AdminDashboardPage,
@@ -62,7 +63,6 @@ import { loadSeller, loadUser } from "./redux/actions/user";
 import { loadAdmin } from "./redux/actions/admin";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import ProtectedAdminRoute from "./routes/ProtectedAdminRoute";
-import { ShopHomePage } from "./ShopRoutes.js";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute";
 import { getAllProducts } from "./redux/actions/product";
 
