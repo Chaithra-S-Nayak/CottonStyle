@@ -4,8 +4,7 @@ import { useParams } from "react-router-dom";
 import { getOrderById } from "../redux/actions/order";
 import styles from "../styles/styles";
 import Loader from "./Layout/Loader";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+import html2pdf from "html2pdf.js";
 
 const Invoice = () => {
   const { id } = useParams();
@@ -23,7 +22,7 @@ const Invoice = () => {
 
   if (!order) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen min-h-screen">
         Order not found
       </div>
     );
@@ -60,21 +59,26 @@ const Invoice = () => {
     const capture = document.querySelector(".pdf");
     setLoading(true);
 
-    html2canvas(capture).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const width = pdf.internal.pageSize.getWidth();
-      const height = pdf.internal.pageSize.getHeight();
+    const opt = {
+      margin: 1,
+      filename: "Invoice.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    };
 
-      pdf.addImage(imgData, "PNG", 0, 0, width, height);
-      pdf.save("Invoice.pdf");
-      setLoading(false);
-    });
+    html2pdf()
+      .set(opt)
+      .from(capture)
+      .save()
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
     <>
-      <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg pdf">
+      <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg pdf ">
         <h2
           className="text-3xl font-bold mb-4 py-4 text-center"
           style={{ color: "#243450" }}
@@ -176,6 +180,25 @@ const Invoice = () => {
                     style={{ borderColor: "#243450" }}
                   >
                     {item.name}
+                    {/* Display returnRequestType if it exists */}
+                    {item.returnRequestType && (
+                      <p className="text-sm text-gray-600 mt-1">
+                        Return Request Type:
+                        <span className="font-semibold">
+                          {item.returnRequestType}
+                        </span>
+                      </p>
+                    )}
+
+                    {/* Display returnRequestStatus if it exists */}
+                    {item.returnRequestStatus && (
+                      <p className="text-sm text-gray-600 mt-1">
+                        Return Request Status:
+                        <span className="font-semibold">
+                          {item.returnRequestStatus}
+                        </span>
+                      </p>
+                    )}
                   </td>
                   <td
                     className="border-b py-3 pl-2 text-right"
