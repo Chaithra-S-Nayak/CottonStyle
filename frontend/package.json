@@ -10,8 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@material-ui/core": "^4.12.4",
-    "@material-ui/data-grid": "^4.0.0-alpha.37",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.1.0",
+    "@mui/system": "^6.1.0",
+    "@mui/x-data-grid": "^7.17.0",
     "@reduxjs/toolkit": "^2.2.5",
     "ajv": "^8.16.0",
     "axios": "^1.7.2",

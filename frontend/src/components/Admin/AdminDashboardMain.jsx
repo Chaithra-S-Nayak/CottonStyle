@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllOrdersForAdmin } from "../../redux/actions/order";
 import { getAllSellers } from "../../redux/actions/sellers";
 import styles from "../../styles/styles";
 import Loader from "../Layout/Loader";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 
 const AdminDashboardMain = () => {
   const dispatch = useDispatch();

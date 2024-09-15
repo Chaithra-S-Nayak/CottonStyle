@@ -1,5 +1,5 @@
-import { Button } from "@material-ui/core";
-import { DataGrid } from "@material-ui/data-grid";
+import { Button } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -26,7 +26,6 @@ const AllOrders = () => {
       align: "center",
       headerAlign: "center",
     },
-
     {
       field: "status",
       headerName: "Status",
@@ -44,7 +43,6 @@ const AllOrders = () => {
       align: "center",
       headerAlign: "center",
     },
-
     {
       field: "total",
       headerName: "Total",
@@ -54,7 +52,6 @@ const AllOrders = () => {
       align: "center",
       headerAlign: "center",
     },
-
     {
       field: "orderDetails",
       flex: 1,
@@ -64,13 +61,11 @@ const AllOrders = () => {
       sortable: false,
       renderCell: (params) => {
         return (
-          <>
-            <Link to={`/order/${params.id}`}>
-              <Button>
-                <AiOutlineArrowRight size={20} />
-              </Button>
-            </Link>
-          </>
+          <Link to={`/order/${params.id}`}>
+            <Button>
+              <AiOutlineArrowRight size={20} />
+            </Button>
+          </Link>
         );
       },
       align: "center",
