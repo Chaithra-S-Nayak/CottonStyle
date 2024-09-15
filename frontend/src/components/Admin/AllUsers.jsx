@@ -122,7 +122,7 @@ const AllUsers = () => {
   ];
 
   return (
-    <div className="w-full flex justify-center pt-5 mt-5">
+    <div className="w-full flex justify-center pt-5 mt-5 min-h-screen">
       <div className="w-[97%]">
         <div className="w-full min-h-[45vh] rounded">
           {rows.length > 0 && (

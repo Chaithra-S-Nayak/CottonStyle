@@ -14,7 +14,7 @@ const AdminForgotPasswordPage = () => {
   return (
     <>
       <Header />
-      <div className="m-20 flex flex-col justify-center items-center sm:px-6 lg:px-8">
+      <div className="m-20 flex flex-col justify-center items-center sm:px-6 lg:px-8 min-h-screen">
         {!otpSent && !showPasswordReset && (
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
             <h1 className={`${styles.formHeading}`}>Forgot Your Password?</h1>

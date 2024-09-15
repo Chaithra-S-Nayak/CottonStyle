@@ -7,7 +7,7 @@ const ShopChangePasswordPage = () => {
   return (
     <div>
       <DashboardHeader />
-      <div className="flex items-start justify-between w-full">
+      <div className="flex items-start justify-between w-full min-h-screen">
         <SellerChangePassword />
       </div>
       <Footer />

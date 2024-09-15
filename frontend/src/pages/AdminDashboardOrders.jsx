@@ -99,7 +99,7 @@ const AdminDashboardOrders = () => {
   return (
     <div>
       <AdminHeader />
-      <div className={`${styles.section}`}>
+      <div className={`${styles.section} min-h-screen`}>
         <div className="w-full flex mt-5">
           <div className="flex items-start justify-between w-full">
             <div className="w-full min-h-[45vh] pt-5 rounded flex justify-center">

@@ -41,7 +41,7 @@ const SellerActivationPage = () => {
   return (
     <>
       <Header />
-      <div className="m-20 flex flex-col justify-center items-center bg-gray-100">
+      <div className="m-20 flex flex-col justify-center items-center bg-gray-100 min-h-screen">
         <div className="bg-white p-10 md:p-20 rounded-md shadow-md text-center">
           {error ? (
             <>

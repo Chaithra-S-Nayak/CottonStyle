@@ -7,7 +7,9 @@ const InvoicePage = () => {
   return (
     <div>
       <Header />
-      <Invoice />
+      <div className="min-h-screen">
+        <Invoice />
+      </div>
       <Footer />
     </div>
   );

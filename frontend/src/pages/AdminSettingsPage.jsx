@@ -8,7 +8,7 @@ const AdminSettingsPage = () => {
   return (
     <div>
       <AdminHeader />
-      <div className="container mx-auto mt-10 px-4 max-w-xl">
+      <div className="container mx-auto mt-10 px-4 max-w-xl min-h-screen">
         <div className="space-y-8">
           <AdminSettings />
           <AdminChangePassword />

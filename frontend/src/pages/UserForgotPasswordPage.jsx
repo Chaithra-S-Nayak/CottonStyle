@@ -35,7 +35,7 @@ const UserForgotPasswordPage = () => {
   return (
     <>
       <Header />
-      <div className="m-20 flex flex-col justify-center items-center sm:px-6 lg:px-8">
+      <div className="m-20 flex flex-col justify-center items-center sm:px-6 lg:px-8 min-h-screen">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           {!showOtpInput && !showPasswordReset && (
             <>

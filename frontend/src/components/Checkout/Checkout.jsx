@@ -103,7 +103,7 @@ const Checkout = () => {
   const totalPrice = (OverallProductPrice - couponDiscount).toFixed(2);
 
   return (
-    <div className="w-full flex flex-col items-center py-8">
+    <div className="w-full flex flex-col items-center py-8 min-h-screen">
       <div className="w-[90%] 1000px:w-[70%] block 800px:flex">
         <div className="w-full 800px:w-[65%]">
           <ShippingInfo

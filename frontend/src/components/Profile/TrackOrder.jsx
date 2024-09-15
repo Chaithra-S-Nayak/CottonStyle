@@ -16,7 +16,7 @@ const TrackOrder = () => {
   const data = orders && orders.find((item) => item._id === id);
 
   return (
-    <div className="w-full min-h-[80vh] flex flex-col items-center py-10 px-4 bg-gray-100">
+    <div className="w-full flex flex-col items-center py-10 px-4 bg-gray-100 min-h-screen">
       <div className="bg-white rounded-lg w-full max-w-3xl p-6">
         <h1 className="text-xl font-bold text-gray-800 mb-4">Order Status</h1>
         {data ? (

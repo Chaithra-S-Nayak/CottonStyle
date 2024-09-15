@@ -7,7 +7,7 @@ const ShopDashboardPage = () => {
   return (
     <div>
       <DashboardHeader />
-      <div className="flex items-start justify-between w-full">
+      <div className="flex items-start justify-between w-full min-h-screen">
         <div className="flex-1">
           <DashboardHero />
         </div>

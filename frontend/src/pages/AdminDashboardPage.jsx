@@ -8,7 +8,7 @@ const AdminDashboardPage = () => {
     <div>
       <AdminHeader />
       <div className="w-full flex">
-        <div className="flex items-start justify-between w-full">
+        <div className="flex items-start justify-between w-full min-h-screen">
           <AdminDashboardMain />
         </div>
       </div>

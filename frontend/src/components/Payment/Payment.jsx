@@ -21,7 +21,7 @@ const Payment = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center py-8">
+    <div className="w-full flex flex-col items-center py-8 min-h-screen">
       {loading ? (
         <Loader />
       ) : (

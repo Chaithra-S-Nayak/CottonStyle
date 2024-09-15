@@ -131,7 +131,7 @@ const AdminOptions = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center py-8">
+    <div className="w-full flex flex-col items-center py-8 min-h-screen">
       <div className="w-[90%] 1000px:w-[70%] max-h-[70vh] overflow-y-auto grid grid-cols-1 gap-4">
         {/* Row 1: GST, Delivery Fee, Threshold Fee */}
         <div className="grid grid-cols-1 1000px:grid-cols-3 gap-4">

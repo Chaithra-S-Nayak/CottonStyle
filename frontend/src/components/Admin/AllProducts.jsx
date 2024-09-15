@@ -98,7 +98,7 @@ const AllProducts = () => {
     });
 
   return (
-    <div className="w-full flex items-center pt-5 mt-5 justify-center">
+    <div className="w-full flex items-center pt-5 mt-5 justify-center min-h-screen">
       <div className="w-[95%] ">
         <DataGrid
           className="bg-white"

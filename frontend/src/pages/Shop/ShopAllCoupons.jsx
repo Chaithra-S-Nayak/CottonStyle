@@ -8,7 +8,7 @@ const ShopAllCoupons = () => {
   return (
     <div>
       <DashboardHeader />
-      <div className={`${styles.section}`}>
+      <div className={`${styles.section} min-h-screen`}>
         <div className="flex justify-between w-full">
           <div className="w-full justify-center flex">
             <AllCoupons />
