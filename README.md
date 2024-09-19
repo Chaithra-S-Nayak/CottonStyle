@@ -100,3 +100,13 @@ npm run dev
 ## Running the Application
 
 Make sure both the frontend and backend are running. The backend should be running on `http://localhost:8000` and the frontend should be accessible at `http://localhost:3000`.
+
+###  Note Before Running the Application
+
+Before running the application, make sure to:
+
+- **Uncomment** any lines with `http://localhost` in your project.
+- **Comment out** any lines related to deployment URLs on Vercel.
+
+This applies to all relevant configuration files.
+
